@@ -1,8 +1,8 @@
-![latest tag](https://img.shields.io/badge/Tag-v1.6.0-color=brightgreen)
+
 
 ![image](https://github.com/RafaelMicro/RT58x_SDK/blob/main/Docs/RT58x_SDK_Reference_Guide/logo.JPG)
 
-## RT58x SDK Release Note
+## ![latest tag](https://img.shields.io/badge/Release-v1.6.0-color=brightgreen) RT58x SDK Release Note
  About the content of Software Release Note
 [RT58x SDK Release Note](https://github.com/RafaelMicro/RT58x_SDK/blob/main/RT58x_SDK_Release_Notes.pdf "link")
 
