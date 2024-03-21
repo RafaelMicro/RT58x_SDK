@@ -1111,7 +1111,24 @@ void _app_init(void)
     /* add user command */
     OT_ASSERT(otCliSetUserCommands(kCommands, OT_ARRAY_LENGTH(kCommands), g_app_instance) == OT_ERROR_NONE);
 
-    otCliOutputFormat("%s \r\n", otGetVersionString());
+    info("Thread version     : %s \r\n", otGetVersionString());
+
+    info("Link Mode           %d, %d, %d \r\n",
+         otThreadGetLinkMode(g_app_instance).mRxOnWhenIdle,
+         otThreadGetLinkMode(g_app_instance).mDeviceType,
+         otThreadGetLinkMode(g_app_instance).mNetworkData);
+    info("Network name        : %s \r\n", otThreadGetNetworkName(g_app_instance));
+    info("PAN ID              : %x \r\n", otLinkGetPanId(g_app_instance));
+
+    info("channel             : %d \r\n", otLinkGetChannel(g_app_instance));
+    info("networkkey          : ");
+    otNetworkKey networkKey;
+    otThreadGetNetworkKey(g_app_instance, &networkKey);
+    for (uint8_t i = 0; i < 16; i++)
+    {
+        info("%02x", networkKey.m8[i]);
+    }
+    info("\r\n");
 }
 
 static void app_main_loop(void *aContext)

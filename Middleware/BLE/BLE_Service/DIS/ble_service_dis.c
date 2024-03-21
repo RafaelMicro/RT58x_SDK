@@ -85,19 +85,6 @@ PnPId_Format dis_pnp_id =
 };
 
 
-/** DIS characteristic common presentation format.
- * @note DIS presentation format most of the definitions are the same that using the same presentation format table.
-*/
-char_presentation_format_t dis_common_presentation_format =
-{
-    GATT_CHARACTERISTIC_FORMAT_UTF8S,                                     //Format: UTF-8 string
-    0x00,                                                                 //Exponent: 0
-    0x0000,                                                               //Unit: [0x0000] **The Unit is a UUID**
-    GATT_CHARACTERISTIC_BLUETOOTH_NAMESPACE_BLUETOOTH_SIG,                //Name Space: 0x01
-    0x0000                                                                //Description: 0x0000
-};
-
-
 // Set DIS Server Default Data.
 string_format_t dis_serial_number =
 {
@@ -138,18 +125,12 @@ string_format_t dis_software_revision =
 ble_svcs_dis_data_t dis_data =
 {
     &dis_serial_number,
-    &dis_common_presentation_format,
     &dis_manufacturer_name,
-    &dis_common_presentation_format,
     &dis_system_id,
     &dis_firmware_revision,
-    &dis_common_presentation_format,
     &dis_model_number,
-    &dis_common_presentation_format,
     &dis_hardware_revision,
-    &dis_common_presentation_format,
     &dis_software_revision,
-    &dis_common_presentation_format,
     &dis_pnp_id,
 };
 
@@ -347,35 +328,6 @@ const ble_att_param_t att_dis_serial_number_string =
     ble_svcs_dis_handler,       //registered callback function
 };
 
-const ble_att_param_t att_dis_serial_number_string_presentation_format =
-{
-    (void *)attr_uuid_type_charc_presentation_format,
-    (void *)0,
-    0,
-    (
-        //GATT_DECLARATIONS_PROPERTIES_BROADCAST |
-        GATT_DECLARATIONS_PROPERTIES_READ |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE_WITHOUT_RESPONSE |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE |
-        //GATT_DECLARATIONS_PROPERTIES_NOTIFY |
-        //GATT_DECLARATIONS_PROPERTIES_INDICATE |
-        //GATT_DECLARATIONS_PROPERTIES_AUTHENTICATED_SIGNED_WRITES |
-        //GATT_DECLARATIONS_PROPERTIES_EXTENDED_PROPERTIES |
-        0x00
-    ),
-    (
-        ATT_TYPE_FORMAT_16UUID |            //otherwise, 128bit UUID
-        //ATT_VALUE_BOND_ENABLE |
-        //ATT_PERMISSION_ENC_READ |
-        //ATT_PERMISSION_ENC_WRITE |
-        //ATT_PERMISSION_AUTHE_READ |
-        //ATT_PERMISSION_AUTHE_WRITE |
-        //ATT_PERMISSION_AUTHO_READ |
-        //ATT_PERMISSION_AUTHO_WRITE |
-        0x00
-    ),
-    ble_svcs_dis_handler,       //registered callback function
-};
 
 const ble_att_param_t att_dis_characteristic_manufacturer_name_string =
 {
@@ -437,35 +389,6 @@ const ble_att_param_t att_dis_manufacturer_name_string =
     ble_svcs_dis_handler,       //registered callback function
 };
 
-const ble_att_param_t att_dis_manufacturer_name_string_presentation_format =
-{
-    (void *)attr_uuid_type_charc_presentation_format,
-    (void *)0,
-    0,
-    (
-        //GATT_DECLARATIONS_PROPERTIES_BROADCAST |
-        GATT_DECLARATIONS_PROPERTIES_READ |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE_WITHOUT_RESPONSE |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE |
-        //GATT_DECLARATIONS_PROPERTIES_NOTIFY |
-        //GATT_DECLARATIONS_PROPERTIES_INDICATE |
-        //GATT_DECLARATIONS_PROPERTIES_AUTHENTICATED_SIGNED_WRITES |
-        //GATT_DECLARATIONS_PROPERTIES_EXTENDED_PROPERTIES |
-        0x00
-    ),
-    (
-        ATT_TYPE_FORMAT_16UUID |            //otherwise, 128bit UUID
-        //ATT_VALUE_BOND_ENABLE |
-        //ATT_PERMISSION_ENC_READ |
-        //ATT_PERMISSION_ENC_WRITE |
-        //ATT_PERMISSION_AUTHE_READ |
-        //ATT_PERMISSION_AUTHE_WRITE |
-        //ATT_PERMISSION_AUTHO_READ |
-        //ATT_PERMISSION_AUTHO_WRITE |
-        0x00
-    ),
-    ble_svcs_dis_handler,       //registered callback function
-};
 
 const ble_att_param_t att_dis_characteristic_system_id =
 {
@@ -587,36 +510,6 @@ const ble_att_param_t att_dis_firmware_revision_string =
     ble_svcs_dis_handler,       //registered callback function
 };
 
-const ble_att_param_t att_dis_firmware_revision_string_presentation_format =
-{
-    (void *)attr_uuid_type_charc_presentation_format,
-    (void *)0,
-    0,
-    (
-        //GATT_DECLARATIONS_PROPERTIES_BROADCAST |
-        GATT_DECLARATIONS_PROPERTIES_READ |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE_WITHOUT_RESPONSE |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE |
-        //GATT_DECLARATIONS_PROPERTIES_NOTIFY |
-        //GATT_DECLARATIONS_PROPERTIES_INDICATE |
-        //GATT_DECLARATIONS_PROPERTIES_AUTHENTICATED_SIGNED_WRITES |
-        //GATT_DECLARATIONS_PROPERTIES_EXTENDED_PROPERTIES |
-        0x00
-    ),
-    (
-        ATT_TYPE_FORMAT_16UUID |            //otherwise, 128bit UUID
-        //ATT_VALUE_BOND_ENABLE |
-        //ATT_PERMISSION_ENC_READ |
-        //ATT_PERMISSION_ENC_WRITE |
-        //ATT_PERMISSION_AUTHE_READ |
-        //ATT_PERMISSION_AUTHE_WRITE |
-        //ATT_PERMISSION_AUTHO_READ |
-        //ATT_PERMISSION_AUTHO_WRITE |
-        0x00
-    ),
-    ble_svcs_dis_handler,       //registered callback function
-};
-
 const ble_att_param_t att_dis_characteristic_model_number_string =
 {
     (void *)attr_uuid_type_characteristic,
@@ -650,36 +543,6 @@ const ble_att_param_t att_dis_characteristic_model_number_string =
 const ble_att_param_t att_dis_model_number_string =
 {
     (void *)attr_uuid_dis_charc_model_number_string,
-    (void *)0,
-    0,
-    (
-        //GATT_DECLARATIONS_PROPERTIES_BROADCAST |
-        GATT_DECLARATIONS_PROPERTIES_READ |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE_WITHOUT_RESPONSE |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE |
-        //GATT_DECLARATIONS_PROPERTIES_NOTIFY |
-        //GATT_DECLARATIONS_PROPERTIES_INDICATE |
-        //GATT_DECLARATIONS_PROPERTIES_AUTHENTICATED_SIGNED_WRITES |
-        //GATT_DECLARATIONS_PROPERTIES_EXTENDED_PROPERTIES |
-        0x00
-    ),
-    (
-        ATT_TYPE_FORMAT_16UUID |            //otherwise, 128bit UUID
-        //ATT_VALUE_BOND_ENABLE |
-        //ATT_PERMISSION_ENC_READ |
-        //ATT_PERMISSION_ENC_WRITE |
-        //ATT_PERMISSION_AUTHE_READ |
-        //ATT_PERMISSION_AUTHE_WRITE |
-        //ATT_PERMISSION_AUTHO_READ |
-        //ATT_PERMISSION_AUTHO_WRITE |
-        0x00
-    ),
-    ble_svcs_dis_handler,       //registered callback function
-};
-
-const ble_att_param_t att_dis_model_number_string_presentation_format =
-{
-    (void *)attr_uuid_type_charc_presentation_format,
     (void *)0,
     0,
     (
@@ -767,36 +630,6 @@ const ble_att_param_t att_dis_hardware_revision_string =
     ble_svcs_dis_handler,       //registered callback function
 };
 
-const ble_att_param_t att_dis_hardware_revision_string_presentation_format =
-{
-    (void *)attr_uuid_type_charc_presentation_format,
-    (void *)0,
-    0,
-    (
-        //GATT_DECLARATIONS_PROPERTIES_BROADCAST |
-        GATT_DECLARATIONS_PROPERTIES_READ |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE_WITHOUT_RESPONSE |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE |
-        //GATT_DECLARATIONS_PROPERTIES_NOTIFY |
-        //GATT_DECLARATIONS_PROPERTIES_INDICATE |
-        //GATT_DECLARATIONS_PROPERTIES_AUTHENTICATED_SIGNED_WRITES |
-        //GATT_DECLARATIONS_PROPERTIES_EXTENDED_PROPERTIES |
-        0x00
-    ),
-    (
-        ATT_TYPE_FORMAT_16UUID |            //otherwise, 128bit UUID
-        //ATT_VALUE_BOND_ENABLE |
-        //ATT_PERMISSION_ENC_READ |
-        //ATT_PERMISSION_ENC_WRITE |
-        //ATT_PERMISSION_AUTHE_READ |
-        //ATT_PERMISSION_AUTHE_WRITE |
-        //ATT_PERMISSION_AUTHO_READ |
-        //ATT_PERMISSION_AUTHO_WRITE |
-        0x00
-    ),
-    ble_svcs_dis_handler,       //registered callback function
-};
-
 const ble_att_param_t att_dis_characteristic_software_revision_string =
 {
     (void *)attr_uuid_type_characteristic,
@@ -830,36 +663,6 @@ const ble_att_param_t att_dis_characteristic_software_revision_string =
 const ble_att_param_t att_dis_software_revision_string =
 {
     (void *)attr_uuid_dis_charc_software_revision_string,
-    (void *)0,
-    0,
-    (
-        //GATT_DECLARATIONS_PROPERTIES_BROADCAST |
-        GATT_DECLARATIONS_PROPERTIES_READ |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE_WITHOUT_RESPONSE |
-        //GATT_DECLARATIONS_PROPERTIES_WRITE |
-        //GATT_DECLARATIONS_PROPERTIES_NOTIFY |
-        //GATT_DECLARATIONS_PROPERTIES_INDICATE |
-        //GATT_DECLARATIONS_PROPERTIES_AUTHENTICATED_SIGNED_WRITES |
-        //GATT_DECLARATIONS_PROPERTIES_EXTENDED_PROPERTIES |
-        0x00
-    ),
-    (
-        ATT_TYPE_FORMAT_16UUID |            //otherwise, 128bit UUID
-        //ATT_VALUE_BOND_ENABLE |
-        //ATT_PERMISSION_ENC_READ |
-        //ATT_PERMISSION_ENC_WRITE |
-        //ATT_PERMISSION_AUTHE_READ |
-        //ATT_PERMISSION_AUTHE_WRITE |
-        //ATT_PERMISSION_AUTHO_READ |
-        //ATT_PERMISSION_AUTHO_WRITE |
-        0x00
-    ),
-    ble_svcs_dis_handler,       //registered callback function
-};
-
-const ble_att_param_t att_dis_software_revision_string_presentation_format =
-{
-    (void *)attr_uuid_type_charc_presentation_format,
     (void *)0,
     0,
     (
@@ -1206,26 +1009,7 @@ static void handle_dis_server(uint8_t index, ble_evt_att_param_t *p_param)
 
             ble_svcs_auto_handle_read_req(p_param, disDecodedBuffer, BLE_DIS_PNP_ID_LEN);
         }
-        else if ( (p_param->handle_num == dis_info[index]->server_info.handles.hdl_serial_number_string_presentation_format)     ||
-                  (p_param->handle_num == dis_info[index]->server_info.handles.hdl_manufacturer_name_string_presentation_format) ||
-                  (p_param->handle_num == dis_info[index]->server_info.handles.hdl_firmware_revision_string_presentation_format) ||
-                  (p_param->handle_num == dis_info[index]->server_info.handles.hdl_model_number_string_presentation_format)      ||
-                  (p_param->handle_num == dis_info[index]->server_info.handles.hdl_hardware_revision_string_presentation_format) ||
-                  (p_param->handle_num == dis_info[index]->server_info.handles.hdl_software_revision_string_presentation_format) )
-        {
-            disDecodedBuffer[0] = dis_data.firmware_rev_format->format;
-            disDecodedBuffer[1] = dis_data.firmware_rev_format->exponent;
 
-            disDecodedBuffer[2] = (uint8_t) ((dis_data.firmware_rev_format->unit & 0x00FF) >> 0);
-            disDecodedBuffer[3] = (uint8_t) ((dis_data.firmware_rev_format->unit & 0xFF00) >> 8);
-
-            disDecodedBuffer[4] = dis_data.firmware_rev_format->name_space;
-
-            disDecodedBuffer[5] = (uint8_t) ((dis_data.firmware_rev_format->description & 0x00FF) >> 0);
-            disDecodedBuffer[6] = (uint8_t) ((dis_data.firmware_rev_format->description & 0xFF00) >> 8);
-
-            ble_svcs_auto_handle_read_req(p_param, disDecodedBuffer, BLE_CHARAC_PRESENTATION_FORMAT_LEN);
-        }
         break;
 
     default:

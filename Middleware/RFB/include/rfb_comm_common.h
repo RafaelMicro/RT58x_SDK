@@ -66,5 +66,6 @@ RFB_EVENT_STATUS rfb_comm_tx_power_set(uint8_t band_type, uint8_t power_index);
 RFB_EVENT_STATUS rfb_comm_tx_power_set_oqpsk(uint8_t band_type, uint8_t power_index);
 RFB_EVENT_STATUS rfb_comm_key_set(uint8_t *pKey);
 RFB_EVENT_STATUS rfb_comm_pta_control_set(uint8_t enable, uint8_t inverse);
+RFB_EVENT_STATUS rfb_comm_wake_on_radio_set(uint32_t rf_frequency, uint16_t rx_on_time, uint32_t sleep_time);
 #endif
 

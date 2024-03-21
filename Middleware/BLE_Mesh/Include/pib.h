@@ -171,30 +171,12 @@ void pib_device_table_reset(void);
 uint16_t pib_device_address_get_by_idx(uint8_t device_idx);
 uint8_t pib_device_uuid_get_by_idx(uint8_t device_idx, uint8_t *p_uuid);
 
-#if 0
-pib_err_t pib_op(cfg_pib_id_t t_pibid, pib_op_t t_op, void *p_data_buf);
-
-/** Rafael pib table operation
- * @param t_pibid Rafael pib identifier
- * @param t_op table operation
- * @param p_entry_buffer the buffer of entry, the compare parameter must fill in this buffer
- * @param pu32_index the entry index of table
- * @return PIB_ERR_PASS is succcess, other is fail
- */
-pib_err_t pib_table_op(cfg_pib_id_t t_pibid, pib_table_op_t t_op, void *p_entry_buffer, uint32_t *pu32_index);
-#endif
 
 /** PIB data init
  * @return COMM_IF_ERR_OK is succcess, other is fail
  */
 int pib_data_init(void);
 
-#if 0
-/** get pib table pointer
- * @return pib table pointer
- */
-void *pib_get_table_ptr(cfg_pib_id_t t_pibid);
-#endif
 
 #ifdef __cplusplus
 };

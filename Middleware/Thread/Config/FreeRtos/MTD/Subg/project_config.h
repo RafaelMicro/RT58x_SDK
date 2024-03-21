@@ -45,9 +45,10 @@
 #define RFB_ZIGBEE_ENABLED          (TRUE)
 #endif
 
-#if RFB_SUBG_ENABLED
+#if RFB_SUBG_ENABLED == TRUE
 #define RFB_15p4_MAC_ENABLED         (TRUE)
-#endif
+#define RFB_SUBG_FREQUENCY_BAND      (0) //0: 915M, 1: 868M, 2: 433M, 3: 470M
+#endif //RFB_SUBG_ENABLED
 
 //==========================================================
 // <h> BLE

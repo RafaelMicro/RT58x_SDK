@@ -2,24 +2,9 @@
 #include "version_api.h"
 #include "git_ver_info.h"
 
+#define BOOTLOADER FALSE
 
-#ifdef BOOTLOADER
-
-void bootloader_ver_get(volatile const version_entry_t *pt_ver_info)
-{
-    (void) *pt_ver_info;
-
-    volatile const       version_entry_t bootloader_version_info =
-    {
-        .version_tag = "bootloader_ver",
-        .version_info = "170",
-    };
-    pt_ver_info = &bootloader_version_info;
-}
-
-
-#else
-
+#if BOOTLOADER
 void ble_lib_ver_get(volatile const version_entry_t *pt_ver_info)
 {
 
@@ -88,5 +73,19 @@ void matter_lib_ver_get(volatile const version_entry_t *pt_ver_info)
         .build_date = {""}
     };
     pt_ver_info = &matter_lib_version_info;
+}
+
+#else
+
+void bootloader_ver_get(volatile const version_entry_t *pt_ver_info)
+{
+    (void) *pt_ver_info;
+
+    volatile const       version_entry_t bootloader_version_info =
+    {
+        .version_tag = "bootloader_ver",
+        .version_info = "180",
+    };
+    pt_ver_info = &bootloader_version_info;
 }
 #endif

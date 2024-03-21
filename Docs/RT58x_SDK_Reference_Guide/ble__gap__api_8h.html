@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.BMP"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Rafael RT58x  SDK
-   &#160;<span id="projectnumber">v1.7.0</span>
+   &#160;<span id="projectnumber">v1.8.0</span>
    </div>
   </td>
  </tr>
@@ -116,6 +116,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a6207158a2ce577f8b909fd47c4852c93"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__ble__api.html#gaaa9cdbd64916ccb5402e05efce579d05">ble_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ble__gap__api_8h.html#a6207158a2ce577f8b909fd47c4852c93">ble_gap_phy_read</a> (<a class="el" href="group__ble__gap.html#gac4d98f7322f7f1e74bb0de282f87adc2">ble_gap_phy_read_param_t</a> *p_param)</td></tr>
 <tr class="memdesc:a6207158a2ce577f8b909fd47c4852c93"><td class="mdescLeft">&#160;</td><td class="mdescRight">BLE read PHY.  <a href="ble__gap__api_8h.html#a6207158a2ce577f8b909fd47c4852c93">More...</a><br /></td></tr>
 <tr class="separator:a6207158a2ce577f8b909fd47c4852c93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59737efb7d382eb1af9d011352db4110"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__ble__api.html#gaaa9cdbd64916ccb5402e05efce579d05">ble_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ble__gap__api_8h.html#a59737efb7d382eb1af9d011352db4110">ble_gap_default_phy_set</a> (<a class="el" href="group__ble__gap.html#ga3c921fab738f20d622ddf463ef51a5c9">ble_gap_default_phy_set_param_t</a> *p_param)</td></tr>
+<tr class="memdesc:a59737efb7d382eb1af9d011352db4110"><td class="mdescLeft">&#160;</td><td class="mdescRight">BLE set default PHY.  <a href="ble__gap__api_8h.html#a59737efb7d382eb1af9d011352db4110">More...</a><br /></td></tr>
+<tr class="separator:a59737efb7d382eb1af9d011352db4110"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c1933113745c2da007f5b0202c5272e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__ble__api.html#gaaa9cdbd64916ccb5402e05efce579d05">ble_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ble__gap__api_8h.html#a1c1933113745c2da007f5b0202c5272e">ble_gap_rssi_read</a> (<a class="el" href="group__ble__gap.html#gaa89586d0dd39d3e0482127853f74d8a5">ble_gap_rssi_read_param_t</a> *p_param)</td></tr>
 <tr class="memdesc:a1c1933113745c2da007f5b0202c5272e"><td class="mdescLeft">&#160;</td><td class="mdescRight">BLE read RSSI value.  <a href="ble__gap__api_8h.html#a1c1933113745c2da007f5b0202c5272e">More...</a><br /></td></tr>
 <tr class="separator:a1c1933113745c2da007f5b0202c5272e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -334,6 +337,33 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_param</td><td>: a pointer to the connection parameter.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__ble__api.html#ggaaa9cdbd64916ccb5402e05efce579d05a4b3ee10917919fa72598e8c8a0131342">BLE_ERR_OK</a> is success or an <a class="el" href="group__ble__api.html#gaaa9cdbd64916ccb5402e05efce579d05">error</a>. </dd></dl>
+
+</div>
+</div>
+<a id="a59737efb7d382eb1af9d011352db4110"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59737efb7d382eb1af9d011352db4110">&#9670;&nbsp;</a></span>ble_gap_default_phy_set()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__ble__api.html#gaaa9cdbd64916ccb5402e05efce579d05">ble_err_t</a> ble_gap_default_phy_set </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__ble__gap.html#ga3c921fab738f20d622ddf463ef51a5c9">ble_gap_default_phy_set_param_t</a> *&#160;</td>
+          <td class="paramname"><em>p_param</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>BLE set default PHY. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">p_param</td><td>: a pinter to the default phy set parameter.</td></tr>
   </table>
   </dd>
 </dl>

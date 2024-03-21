@@ -4813,6 +4813,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Library\RT58x\Peripheral\lpm.c</FilePath>
             </File>
+            <File>
+              <FileName>sadc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Library\RT58x\Peripheral\sadc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

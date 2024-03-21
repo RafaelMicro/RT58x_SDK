@@ -37,10 +37,10 @@ extern "C" {
 */
 typedef struct
 {
-    void     *acl_data_ptr;
+    void     *p_acl_data;
     uint16_t conn_handle;
-    uint16_t total_data_length;
-    uint16_t rcvd_data_length;
+    uint16_t total_data_len;
+    uint16_t rcvd_data_len;
 } hci_acl_data_reassemble;
 /** @} */
 

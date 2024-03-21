@@ -373,10 +373,10 @@ void _Network_Interface_State_Change(uint32_t aFlags, void *aContext)
             break;
         case OT_DEVICE_ROLE_LEADER:
             otCliOutputFormat("Change to leader \r\n");
-            show_ip = 1;
             gpio_pin_write(20, 0);
             gpio_pin_write(21, 0);
             gpio_pin_write(22, 0);
+            show_ip = 1;
             break;
         case OT_DEVICE_ROLE_ROUTER:
             otCliOutputFormat("Change to router \r\n");
@@ -544,7 +544,24 @@ void _app_init(void)
 
     OT_ASSERT(otCliSetUserCommands(kCommands, OT_ARRAY_LENGTH(kCommands), g_app_instance) == OT_ERROR_NONE);
 
-    otCliOutputFormat("%s \n", otGetVersionString());
+    info("Thread version     : %s \r\n", otGetVersionString());
+
+    info("Link Mode           %d, %d, %d \r\n",
+         otThreadGetLinkMode(g_app_instance).mRxOnWhenIdle,
+         otThreadGetLinkMode(g_app_instance).mDeviceType,
+         otThreadGetLinkMode(g_app_instance).mNetworkData);
+    info("Network name        : %s \r\n", otThreadGetNetworkName(g_app_instance));
+    info("PAN ID              : %x \r\n", otLinkGetPanId(g_app_instance));
+
+    info("channel             : %d \r\n", otLinkGetChannel(g_app_instance));
+    info("networkkey          : ");
+    otNetworkKey networkKey;
+    otThreadGetNetworkKey(g_app_instance, &networkKey);
+    for (uint8_t i = 0; i < OT_NETWORK_KEY_SIZE; i++)
+    {
+        info("%02x", networkKey.m8[i]);
+    }
+    info("\r\n");
 }
 
 void _app_process_action()

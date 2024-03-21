@@ -105,12 +105,12 @@ ble_hci_rx_acl_data_hdr_t;
 typedef struct __attribute__((packed))
 {
     uint8_t transport_id;   /**< Transport id. */
-    uint16_t sequence;       /**< Sequence number. */
+    uint16_t sequence;      /**< Sequence number. */
     uint16_t handle: 12;    /**< Connection id. */
     uint16_t pb_flag: 2;    /**< Packet boundary flag. */
     uint16_t bc_flag: 2;    /**< Broadcast flag. */
     uint16_t length;        /**< Data total length. */
-    void    *p_data;           /**< ACL data. */
+    void    *p_data;        /**< ACL data. */
 }
 ble_hci_tx_acl_data_hdr_t;
 
@@ -178,8 +178,8 @@ typedef struct
 
 typedef struct
 {
-    uint32_t                 hci_msg_tag;     /**< hci message tag. */
-    ble_hci_message_struct_t *hci_msg_ptr;    /**< hci message pointer. */
+    uint32_t                 hci_msg_tag;   /**< hci message tag. */
+    ble_hci_message_struct_t *p_hci_msg;    /**< hci message pointer. */
 } hci_task_common_queue_t;
 
 

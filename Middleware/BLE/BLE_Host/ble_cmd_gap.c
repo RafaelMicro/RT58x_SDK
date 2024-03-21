@@ -317,6 +317,43 @@ ble_err_t ble_cmd_phy_read(uint8_t host_id)
     return (ble_err_t)status;
 }
 
+/** BLE preferred PHY set.
+ *
+ */
+ble_err_t ble_cmd_default_phy_set(ble_gap_default_phy_set_param_t *p_param)
+{
+    int status;
+    ble_tlv_t                  *p_ble_tlv;
+    ble_gap_default_phy_set_param_t *ble_default_phy_set_param;
+
+    status = BLE_ERR_OK;
+    p_ble_tlv = pvPortMalloc(sizeof(ble_tlv_t) + sizeof(ble_gap_default_phy_set_param_t));
+
+    if (p_ble_tlv != NULL)
+    {
+        p_ble_tlv->type = TYPE_BLE_GAP_DEFAULT_PHY_SET;
+        p_ble_tlv->length = sizeof(ble_gap_default_phy_set_param_t);
+        ble_default_phy_set_param = (ble_gap_default_phy_set_param_t *)p_ble_tlv->value;
+
+        ble_default_phy_set_param->tx_phy = p_param->tx_phy;
+        ble_default_phy_set_param->rx_phy = p_param->rx_phy;
+
+        status = ble_event_msg_sendto(p_ble_tlv);
+        if (status != BLE_ERR_OK) // send to BLE stack
+        {
+            BLE_PRINTF(BLE_DEBUG_CMD_INFO, "<PHY_UPDATE> Send to BLE stack fail\n");
+        }
+        vPortFree(p_ble_tlv);
+    }
+    else
+    {
+        BLE_PRINTF(BLE_DEBUG_CMD_INFO, "<PHY_UPDATE> malloc fail\n");
+        status = BLE_ERR_ALLOC_MEMORY_FAIL;
+    }
+
+    return (ble_err_t)status;
+}
+
 /** BLE read RSSI.
  *
  */

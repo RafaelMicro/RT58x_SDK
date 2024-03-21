@@ -183,12 +183,19 @@ typedef enum
      */
     TYPE_BLE_GAP_PHY_UPDATE,
 
-    /** @brief BLE read RSSI value.
+    /** @brief BLE read PHY.
      *  @par   BLE_GAP_EVT_PHY_READ
      *
      *  @param @ref ble_gap_phy_read_param_t
      */
     TYPE_BLE_GAP_PHY_READ,
+
+    /** @brief BLE default PHY set.
+     *  @par   BLE_GAP_EVT_DEFAULT_PHY_SET
+     *
+     *  @param @ref ble_gap_default_phy_set_param_t
+     */
+    TYPE_BLE_GAP_DEFAULT_PHY_SET,
 
     /** @brief BLE read RSSI value.
      *  @par   BLE_GAP_EVT_RSSI_READ
@@ -540,7 +547,7 @@ typedef enum
      *
      *  @param none
      */
-    TYPE_BLE_LESC_INIT,
+    TYPE_BLE_SM_LESC_INIT,
 
     //====================================================================
     //     BLE VENDOR API

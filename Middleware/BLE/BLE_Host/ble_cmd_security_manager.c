@@ -301,7 +301,7 @@ ble_err_t ble_cmd_lesc_init(void)
 
     if (p_ble_tlv != NULL)
     {
-        p_ble_tlv->type = TYPE_BLE_LESC_INIT;
+        p_ble_tlv->type = TYPE_BLE_SM_LESC_INIT;
         p_ble_tlv->length = 0;
 
         status = ble_event_msg_sendto(p_ble_tlv);

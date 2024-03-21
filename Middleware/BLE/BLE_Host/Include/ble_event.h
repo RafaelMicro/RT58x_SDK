@@ -60,10 +60,11 @@ typedef uint8_t ble_module_evt_t;
 #define BLE_GAP_EVT_CONN_PARAM_UPDATE                           (BLE_GAP_EVT_BASE + 0x04)       /**< GAP module event: connection parameter update event.*/
 #define BLE_GAP_EVT_DISCONN_COMPLETE                            (BLE_GAP_EVT_BASE + 0x05)       /**< GAP module event: disconnect event. */
 #define BLE_GAP_EVT_PHY_READ                                    (BLE_GAP_EVT_BASE + 0x06)       /**< GAP module event: PHY read event. */
-#define BLE_GAP_EVT_PHY_UPDATE                                  (BLE_GAP_EVT_BASE + 0x07)       /**< GAP module event: PHY update event. */
-#define BLE_GAP_EVT_RSSI_READ                                   (BLE_GAP_EVT_BASE + 0x08)       /**< GAP module event: RSSI read event. */
-#define BLE_GAP_EVT_SET_LE_HOST_CH_CLASSIFICATION               (BLE_GAP_EVT_BASE + 0x09)       /**< GAP module event: set le host channel classification event. */
-#define BLE_GAP_EVT_READ_CHANNEL_MAP                            (BLE_GAP_EVT_BASE + 0x0A)       /**< GAP module event: channel map read event. */
+#define BLE_GAP_EVT_DEFAULT_PHY_SET                             (BLE_GAP_EVT_BASE + 0x07)       /**< GAP module event: default PHY set event. */
+#define BLE_GAP_EVT_PHY_UPDATE                                  (BLE_GAP_EVT_BASE + 0x08)       /**< GAP module event: PHY update event. */
+#define BLE_GAP_EVT_RSSI_READ                                   (BLE_GAP_EVT_BASE + 0x09)       /**< GAP module event: RSSI read event. */
+#define BLE_GAP_EVT_SET_LE_HOST_CH_CLASSIFICATION               (BLE_GAP_EVT_BASE + 0x0A)       /**< GAP module event: set le host channel classification event. */
+#define BLE_GAP_EVT_READ_CHANNEL_MAP                            (BLE_GAP_EVT_BASE + 0x0B)       /**< GAP module event: channel map read event. */
 
 #define BLE_CTE_EVT_BASE                                         0x20                           /**< CTE module event.*/
 #define BLE_CTE_EVT_SET_CONN_CTE_RX_PARAM                       (BLE_CTE_EVT_BASE + 0x00)       /**< CTE module event: set connection cte rx oaraneters event. */

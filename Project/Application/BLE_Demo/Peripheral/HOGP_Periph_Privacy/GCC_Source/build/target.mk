@@ -39,6 +39,7 @@ INCLUDE_FOLDERS += ../Config
 INCLUDE_FOLDERS += ../Include
 INCLUDE_FOLDERS += .eide/deps
 INCLUDE_FOLDERS += ../../../../../../Library/RT58x/PHY/rt569mp/include
+INCLUDE_FOLDERS += ../../../../../../Middleware/Third_Party/uecc
 
 # library search folders
 
@@ -76,12 +77,15 @@ C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/ble_common_api.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/ble_event_app.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/ble_event_module.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/ble_gap_api.c
+C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/ble_lesc.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/ble_memory.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/ble_privacy.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/ble_scan_api.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/ble_security_manager_api.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/host_management.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/l2cap.c
+C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/sec_aes.c
+C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/sec_aes_cmac.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Host_Internal/smp.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Service/Ble_Service_Common/ble_service_common.c
 C_SOURCES += ../../../../../../Middleware/BLE/BLE_Service/DIS/ble_service_dis.c
@@ -126,6 +130,7 @@ C_SOURCES += ../../../../../../Middleware/Third_Party/FreeRTOS/Source/portable/M
 C_SOURCES += ../../../../../../Middleware/Third_Party/FreeRTOS/Source/queue.c
 C_SOURCES += ../../../../../../Middleware/Third_Party/FreeRTOS/Source/tasks.c
 C_SOURCES += ../../../../../../Middleware/Third_Party/FreeRTOS/Source/timers.c
+C_SOURCES += ../../../../../../Middleware/Third_Party/uecc/uECC.c
 C_SOURCES += ../../../../../../Middleware/Version_Information/version_api.c
 C_SOURCES += ../../../../../../Middleware/Version_Information/version_info.c
 C_SOURCES += ../BLE_App_Profile/ble_profile_app.c

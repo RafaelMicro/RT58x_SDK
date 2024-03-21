@@ -53,9 +53,9 @@
  */
 #ifndef OPENTHREAD_CONFIG_CLI_UART_RX_BUFFER_SIZE
 #if OPENTHREAD_CONFIG_REFERENCE_DEVICE_ENABLE
-#define OPENTHREAD_CONFIG_CLI_UART_RX_BUFFER_SIZE (OPENTHREAD_CONFIG_CLI_MAX_LINE_LENGTH*2)
+#define OPENTHREAD_CONFIG_CLI_UART_RX_BUFFER_SIZE (OPENTHREAD_CONFIG_CLI_MAX_LINE_LENGTH)
 #else
-#define OPENTHREAD_CONFIG_CLI_UART_RX_BUFFER_SIZE (OPENTHREAD_CONFIG_CLI_MAX_LINE_LENGTH*2)
+#define OPENTHREAD_CONFIG_CLI_UART_RX_BUFFER_SIZE (OPENTHREAD_CONFIG_CLI_MAX_LINE_LENGTH)
 #endif
 #endif
 
@@ -66,7 +66,7 @@
  *
  */
 #ifndef OPENTHREAD_CONFIG_CLI_UART_TX_BUFFER_SIZE
-#define OPENTHREAD_CONFIG_CLI_UART_TX_BUFFER_SIZE (OPENTHREAD_CONFIG_CLI_MAX_LINE_LENGTH*2)
+#define OPENTHREAD_CONFIG_CLI_UART_TX_BUFFER_SIZE (OPENTHREAD_CONFIG_CLI_MAX_LINE_LENGTH)
 #endif
 
 #if OPENTHREAD_CONFIG_DIAG_ENABLE
@@ -245,8 +245,32 @@ static void ReceiveTask(const uint8_t *aBuf, uint16_t aBufLength)
             exit(EXIT_SUCCESS);
             break;
 #endif
-        
-        case 0x1b:
+        case '\b':
+        case 127:
+            if (sRxLength > 0)
+            {
+                if(sLefcount > 0)
+                {
+                    Output(sEraseString, sizeof(sEraseString));
+                    memcpy(&sRxBuffer[sRxLength-sLefcount-1],&sRxBuffer[sRxLength-sLefcount],sLefcount);
+                    sRxBuffer[--sRxLength] = '\0';
+                    Output(&sRxBuffer[sRxLength-sLefcount], sLefcount);
+                    Output(sEscRighString,strlen(sEscRighString));
+                    Output(sEraseString, sizeof(sEraseString));
+                    for(i = 0; i < sLefcount; i++)
+                    {
+                        Output(sEscLeftString,strlen(sEscLeftString));
+                    }
+                }
+                else
+                {
+					Output(sEraseString, sizeof(sEraseString));
+                    sRxBuffer[--sRxLength] = '\0';
+                }
+            }
+
+            break;
+		case 0x1b:
             ++move;
             break;
 
@@ -285,17 +309,10 @@ static void ReceiveTask(const uint8_t *aBuf, uint16_t aBufLength)
                 {
                     History_Index--;
                 }
+				move = 0;
+				break;
             }
-            else
-            {
-                if (sRxLength < kRxBufferSize - 1)
-                {
-                    Output(reinterpret_cast<const char *>(aBuf), 1);
-                    sRxBuffer[sRxLength++] = static_cast<char>(*aBuf);
-                }
-            }
-            move = 0;
-            break;
+            
         case 67:
             if(move == 2)
             {
@@ -307,9 +324,9 @@ static void ReceiveTask(const uint8_t *aBuf, uint16_t aBufLength)
                         sLefcount--;
                     }
                 }
+				move = 0;
+				break;
             }
-            move = 0;
-            break;
         case 68:
             if(move == 2)
             {
@@ -318,36 +335,9 @@ static void ReceiveTask(const uint8_t *aBuf, uint16_t aBufLength)
                     Output(sEscLeftString,strlen(sEscLeftString));
                     sLefcount++;
                 }
+				move = 0;
+				break;
             }
-            move = 0;
-            break;
-        
-        case '\b':
-        case 127:
-            if (sRxLength > 0)
-            {
-                if(sLefcount > 0)
-                {
-                    Output(sEraseString, sizeof(sEraseString));
-                    memcpy(&sRxBuffer[sRxLength-sLefcount-1],&sRxBuffer[sRxLength-sLefcount],sLefcount);
-                    sRxBuffer[--sRxLength] = '\0';
-                    Output(&sRxBuffer[sRxLength-sLefcount], sLefcount);
-                    Output(sEscRighString,strlen(sEscRighString));
-                    Output(sEraseString, sizeof(sEraseString));
-                    for(i = 0; i < sLefcount; i++)
-                    {
-                        Output(sEscLeftString,strlen(sEscLeftString));
-                    }
-                }
-                else
-                {
-					Output(sEraseString, sizeof(sEraseString));
-                    sRxBuffer[--sRxLength] = '\0';
-                }
-            }
-
-            break;
-
         default:
             if (sRxLength < kRxBufferSize - 1)
             {

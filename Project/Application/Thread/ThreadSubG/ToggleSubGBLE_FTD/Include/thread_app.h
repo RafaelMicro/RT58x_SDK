@@ -5,10 +5,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#if OPENTHREAD_CONFIG_RADIO_915MHZ_OQPSK_SUPPORT
-#define DEF_CHANNEL 6
+#if PLAFFORM_CONFIG_ENABLE_SUBG == TRUE
+#define DEF_CHANNEL 1
 #else
-#define DEF_CHANNEL 21
+#define DEF_CHANNEL 11
 #endif
 
 #define UDP_PORT 5678

@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.BMP"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Rafael RT58x  SDK
-   &#160;<span id="projectnumber">v1.7.0</span>
+   &#160;<span id="projectnumber">v1.8.0</span>
    </div>
   </td>
  </tr>
@@ -575,39 +575,40 @@ $(function() {
 <div class="line"><a name="l01039"></a><span class="lineno"> 1039</span>&#160;        ble_hci_return_param_encrypt_t                              set_encrypt;</div>
 <div class="line"><a name="l01040"></a><span class="lineno"> 1040</span>&#160;        ble_hci_return_param_rand_t                                 set_rand;</div>
 <div class="line"><a name="l01041"></a><span class="lineno"> 1041</span>&#160;        ble_hci_return_param_read_phy_t                             read_phy;</div>
-<div class="line"><a name="l01042"></a><span class="lineno"> 1042</span>&#160;        ble_hci_return_param_set_data_length_t                      set_data_length;</div>
-<div class="line"><a name="l01043"></a><span class="lineno"> 1043</span>&#160;        ble_hci_return_param_read_suggested_default_data_length_t   read_suggested_default_data_length;</div>
-<div class="line"><a name="l01044"></a><span class="lineno"> 1044</span>&#160;        ble_hci_return_param_write_suggested_default_data_length_t  write_suggested_default_data_length;</div>
-<div class="line"><a name="l01045"></a><span class="lineno"> 1045</span>&#160;        ble_hci_return_param_read_ch_map_t                          read_channel_map;</div>
-<div class="line"><a name="l01046"></a><span class="lineno"> 1046</span>&#160;        ble_hci_return_param_set_ctrl_info_t                        set_ctrl_info;</div>
-<div class="line"><a name="l01047"></a><span class="lineno"> 1047</span>&#160;        ble_hci_return_param_cte_rx_t                               set_cte_rx_param;</div>
-<div class="line"><a name="l01048"></a><span class="lineno"> 1048</span>&#160;        ble_hci_return_param_cte_tx_t                               set_cte_tx_param;</div>
-<div class="line"><a name="l01049"></a><span class="lineno"> 1049</span>&#160;        ble_hci_return_param_cte_req_t                              set_cte_req;</div>
-<div class="line"><a name="l01050"></a><span class="lineno"> 1050</span>&#160;        ble_hci_return_param_cte_rsp_t                              set_cte_rsp;</div>
-<div class="line"><a name="l01051"></a><span class="lineno"> 1051</span>&#160;        ble_hci_return_param_read_antenna_info_t                    read_antenna_info;</div>
-<div class="line"><a name="l01052"></a><span class="lineno"> 1052</span>&#160;    }</div>
-<div class="line"><a name="l01053"></a><span class="lineno"> 1053</span>&#160;    para;</div>
-<div class="line"><a name="l01054"></a><span class="lineno"> 1054</span>&#160;}</div>
-<div class="line"><a name="l01055"></a><span class="lineno"> 1055</span>&#160;ble_hci_evt_param_cmd_complete_t;</div>
-<div class="line"><a name="l01065"></a><span class="lineno"> 1065</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="group__hci__evt__disconn__complete.html#ga9f4521461ba71ad3da62ee2383d97b9e">__attribute__</a>((packed))</div>
-<div class="line"><a name="l01066"></a><span class="lineno"> 1066</span>&#160;{</div>
-<div class="line"><a name="l01067"></a><span class="lineno"> 1067</span>&#160;    uint8_t subevent_code;</div>
-<div class="line"><a name="l01068"></a><span class="lineno"> 1068</span>&#160;    <span class="keyword">union </span><a class="code" href="group__hci__evt__disconn__complete.html#ga9f4521461ba71ad3da62ee2383d97b9e">__attribute__</a>((packed))</div>
-<div class="line"><a name="l01069"></a><span class="lineno"> 1069</span>&#160;    {</div>
-<div class="line"><a name="l01070"></a><span class="lineno"> 1070</span>&#160;        ble_hci_le_meta_evt_param_conn_complete_t                    conn_complete;</div>
-<div class="line"><a name="l01071"></a><span class="lineno"> 1071</span>&#160;        ble_hci_le_meta_evt_param_conn_iq_report_t                   conn_iq_report;</div>
-<div class="line"><a name="l01072"></a><span class="lineno"> 1072</span>&#160;        ble_hci_le_meta_evt_param_cte_req_failed_t                   cte_req_failed;</div>
-<div class="line"><a name="l01073"></a><span class="lineno"> 1073</span>&#160;    }</div>
-<div class="line"><a name="l01074"></a><span class="lineno"> 1074</span>&#160;    para;</div>
-<div class="line"><a name="l01075"></a><span class="lineno"> 1075</span>&#160;}</div>
-<div class="line"><a name="l01076"></a><span class="lineno"> 1076</span>&#160;ble_hci_le_meta_evt_t;</div>
-<div class="line"><a name="l01082"></a><span class="lineno"> 1082</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l01083"></a><span class="lineno"> 1083</span>&#160;};</div>
-<div class="line"><a name="l01084"></a><span class="lineno"> 1084</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l01085"></a><span class="lineno"> 1085</span>&#160; </div>
-<div class="line"><a name="l01086"></a><span class="lineno"> 1086</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __BLE_HCI_EVENT_H__*/</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l01042"></a><span class="lineno"> 1042</span>&#160;        ble_hci_return_param_set_default_phy_t                      default_phy;</div>
+<div class="line"><a name="l01043"></a><span class="lineno"> 1043</span>&#160;        ble_hci_return_param_set_data_length_t                      set_data_length;</div>
+<div class="line"><a name="l01044"></a><span class="lineno"> 1044</span>&#160;        ble_hci_return_param_read_suggested_default_data_length_t   read_suggested_default_data_length;</div>
+<div class="line"><a name="l01045"></a><span class="lineno"> 1045</span>&#160;        ble_hci_return_param_write_suggested_default_data_length_t  write_suggested_default_data_length;</div>
+<div class="line"><a name="l01046"></a><span class="lineno"> 1046</span>&#160;        ble_hci_return_param_read_ch_map_t                          read_channel_map;</div>
+<div class="line"><a name="l01047"></a><span class="lineno"> 1047</span>&#160;        ble_hci_return_param_set_ctrl_info_t                        set_ctrl_info;</div>
+<div class="line"><a name="l01048"></a><span class="lineno"> 1048</span>&#160;        ble_hci_return_param_cte_rx_t                               set_cte_rx_param;</div>
+<div class="line"><a name="l01049"></a><span class="lineno"> 1049</span>&#160;        ble_hci_return_param_cte_tx_t                               set_cte_tx_param;</div>
+<div class="line"><a name="l01050"></a><span class="lineno"> 1050</span>&#160;        ble_hci_return_param_cte_req_t                              set_cte_req;</div>
+<div class="line"><a name="l01051"></a><span class="lineno"> 1051</span>&#160;        ble_hci_return_param_cte_rsp_t                              set_cte_rsp;</div>
+<div class="line"><a name="l01052"></a><span class="lineno"> 1052</span>&#160;        ble_hci_return_param_read_antenna_info_t                    read_antenna_info;</div>
+<div class="line"><a name="l01053"></a><span class="lineno"> 1053</span>&#160;    }</div>
+<div class="line"><a name="l01054"></a><span class="lineno"> 1054</span>&#160;    para;</div>
+<div class="line"><a name="l01055"></a><span class="lineno"> 1055</span>&#160;}</div>
+<div class="line"><a name="l01056"></a><span class="lineno"> 1056</span>&#160;ble_hci_evt_param_cmd_complete_t;</div>
+<div class="line"><a name="l01066"></a><span class="lineno"> 1066</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="group__hci__evt__disconn__complete.html#ga9f4521461ba71ad3da62ee2383d97b9e">__attribute__</a>((packed))</div>
+<div class="line"><a name="l01067"></a><span class="lineno"> 1067</span>&#160;{</div>
+<div class="line"><a name="l01068"></a><span class="lineno"> 1068</span>&#160;    uint8_t subevent_code;</div>
+<div class="line"><a name="l01069"></a><span class="lineno"> 1069</span>&#160;    <span class="keyword">union </span><a class="code" href="group__hci__evt__disconn__complete.html#ga9f4521461ba71ad3da62ee2383d97b9e">__attribute__</a>((packed))</div>
+<div class="line"><a name="l01070"></a><span class="lineno"> 1070</span>&#160;    {</div>
+<div class="line"><a name="l01071"></a><span class="lineno"> 1071</span>&#160;        ble_hci_le_meta_evt_param_conn_complete_t                    conn_complete;</div>
+<div class="line"><a name="l01072"></a><span class="lineno"> 1072</span>&#160;        ble_hci_le_meta_evt_param_conn_iq_report_t                   conn_iq_report;</div>
+<div class="line"><a name="l01073"></a><span class="lineno"> 1073</span>&#160;        ble_hci_le_meta_evt_param_cte_req_failed_t                   cte_req_failed;</div>
+<div class="line"><a name="l01074"></a><span class="lineno"> 1074</span>&#160;    }</div>
+<div class="line"><a name="l01075"></a><span class="lineno"> 1075</span>&#160;    para;</div>
+<div class="line"><a name="l01076"></a><span class="lineno"> 1076</span>&#160;}</div>
+<div class="line"><a name="l01077"></a><span class="lineno"> 1077</span>&#160;ble_hci_le_meta_evt_t;</div>
+<div class="line"><a name="l01083"></a><span class="lineno"> 1083</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l01084"></a><span class="lineno"> 1084</span>&#160;};</div>
+<div class="line"><a name="l01085"></a><span class="lineno"> 1085</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l01086"></a><span class="lineno"> 1086</span>&#160; </div>
+<div class="line"><a name="l01087"></a><span class="lineno"> 1087</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __BLE_HCI_EVENT_H__*/</span><span class="preprocessor"></span></div>
 <div class="ttc" id="able__gap_8h_html"><div class="ttname"><a href="ble__gap_8h.html">ble_gap.h</a></div><div class="ttdoc">BLE GAP header file.</div></div>
-<div class="ttc" id="agroup__hci__event_html_ga31ec6f0239c42d596b8350465d5b3c6c"><div class="ttname"><a href="group__hci__event.html#ga31ec6f0239c42d596b8350465d5b3c6c">host_prcss_hci_event</a></div><div class="ttdeci">int8_t(*const host_prcss_hci_event[])(uint8_t *p_data, uint8_t length)</div><div class="ttdoc">BLE host HCI event handler.</div><div class="ttdef"><b>Definition:</b> hci_event.c:1569</div></div>
+<div class="ttc" id="agroup__hci__event_html_ga31ec6f0239c42d596b8350465d5b3c6c"><div class="ttname"><a href="group__hci__event.html#ga31ec6f0239c42d596b8350465d5b3c6c">host_prcss_hci_event</a></div><div class="ttdeci">int8_t(*const host_prcss_hci_event[])(uint8_t *p_data, uint8_t length)</div><div class="ttdoc">BLE host HCI event handler.</div><div class="ttdef"><b>Definition:</b> hci_event.c:1589</div></div>
 <div class="ttc" id="agroup__hci__evt__disconn__complete_html_ga9f4521461ba71ad3da62ee2383d97b9e"><div class="ttname"><a href="group__hci__evt__disconn__complete.html#ga9f4521461ba71ad3da62ee2383d97b9e">__attribute__</a></div><div class="ttdeci">struct __attribute__((packed)) ble_hci_evt_param_disconn_complete_s</div><div class="ttdoc">Advertising Parameter Event Parameters.</div><div class="ttdef"><b>Definition:</b> ble_hci_event.h:170</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

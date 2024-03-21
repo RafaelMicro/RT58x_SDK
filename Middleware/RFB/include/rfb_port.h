@@ -29,6 +29,9 @@ typedef struct _rfb_t
     bool rx_continuous;
 } rfb_t;
 
+#ifndef RFB_FIX_TX_POWER_SUPPORT
+#define RFB_FIX_TX_POWER_SUPPORT    FALSE
+#endif
 
 /**************************************************************************************************
  *    GLOBAL FUNCTIONS
@@ -64,6 +67,11 @@ RFB_EVENT_STATUS rfb_port_subg_tx_config_set(tx_power_level_t tx_power, uint8_t 
 RFB_EVENT_STATUS rfb_port_sleep_set(void);
 RFB_EVENT_STATUS rfb_port_idle_set(void);
 RFB_EVENT_STATUS rfb_port_rx_start(void);
+RFB_EVENT_STATUS rfb_port_tx_power_set(uint8_t band_type, uint8_t power_index);
+RFB_EVENT_STATUS rfb_port_tx_power_set_oqpsk(uint8_t band_type, uint8_t power_index);
+#if RFB_FIX_TX_POWER_SUPPORT
+RFB_EVENT_STATUS rfb_port_fix_15dbm_tx_power_set(bool enable, uint8_t band_type);
+#endif
 #endif
 
 #if (defined RFB_BLE_ENABLED && RFB_BLE_ENABLED == 1)
@@ -85,5 +93,6 @@ uint8_t rfb_port_ack_packet_read(uint8_t *rx_data_address, uint8_t *rx_time_addr
 uint32_t rfb_port_rx_rtc_time_get(uint8_t rx_cnt);
 uint8_t rfb_port_current_channel_get(void);
 uint32_t rfb_port_frame_counter_get(void);
+RFB_EVENT_STATUS rfb_port_wake_on_radio_set(uint32_t rf_frequency, uint16_t rx_on_time, uint32_t sleep_time);
 #endif
 

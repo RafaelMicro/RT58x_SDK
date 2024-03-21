@@ -38,6 +38,16 @@
 rfb_t g_rfb;
 bool rfb_comm_init_done = 0;
 
+#if RFB_FIX_TX_POWER_SUPPORT
+/* fix tx power variables */
+bool g_fix_power_enable = 0;
+uint8_t g_fp_band_type;
+uint8_t g_fp_power_index = 24;
+sadc_value_t g_fp_threshold_15_dbm[9] = {3500, 3300, 3000, 2700, 2500, 2400, 2300, 2200, 0};
+sadc_value_t g_fp_bat_voltage;
+sadc_convert_state_t sadc_convert_status = SADC_CONVERT_IDLE;
+#endif
+
 /**************************************************************************************************
  *    LOCAL FUNCTIONS
  *************************************************************************************************/
@@ -70,6 +80,45 @@ void rfb_debug_port_init(void)
     outp32(0x4080003C, (inp32(0x4080003C) | 0x07000000));
 #endif
 }
+
+#if RFB_FIX_TX_POWER_SUPPORT
+void rfb_port_fix_tx_power_check(void)
+{
+    uint8_t i = 0;
+    uint8_t power_index = 23;
+
+    while (Sadc_Channel_Read(SADC_CH_VBAT) != STATUS_SUCCESS)
+    {
+        printf("Fix Txpower error: fail to read VBAT\n");
+    }
+
+    while (g_fp_bat_voltage < g_fp_threshold_15_dbm[i])
+    {
+        power_index++;
+        i++;
+    }
+    if (g_fp_power_index != power_index)
+    {
+        g_fp_power_index = power_index;
+        if (g_rfb.modem_type == RFB_MODEM_FSK)
+        {
+            rfb_port_tx_power_set(g_fp_band_type, g_fp_power_index);
+        }
+        else
+        {
+            rfb_port_tx_power_set_oqpsk(g_fp_band_type, g_fp_power_index);
+        }
+    }
+}
+
+void Sadc_Int_Callback_Handler(sadc_cb_t *p_cb)
+{
+    if (p_cb->type == SADC_CB_SAMPLE)
+    {
+        g_fp_bat_voltage = p_cb->data.sample.value;
+    }
+}
+#endif
 /**************************************************************************************************
  *    GLOBAL FUNCTIONS
  *************************************************************************************************/
@@ -209,6 +258,26 @@ RFB_EVENT_STATUS rfb_port_frequency_set(uint32_t rf_frequency)
     return event_status;
 }
 
+RFB_EVENT_STATUS rfb_port_wake_on_radio_set(uint32_t rf_frequency, uint16_t rx_on_time, uint32_t sleep_time)
+{
+    RFB_EVENT_STATUS event_status = RFB_EVENT_SUCCESS;
+
+    /* unit of rx_on_time & sleep_time: us. sleep_time should < 0x400000. */
+    if (sleep_time > 0x400000)
+    {
+        printf("Error: rfb_comm_wake_on_radio_set fail, sleep_time %d is too big\n", sleep_time);
+        return RFB_CNF_EVENT_INVALID_CMD;
+    }
+
+    event_status = rfb_comm_wake_on_radio_set(rf_frequency, rx_on_time, sleep_time);
+    if (event_status != RFB_EVENT_SUCCESS)
+    {
+        printf("[W] rfb_comm_wake_on_radio_set fail, status:%d\n", event_status);
+    }
+
+    return event_status;
+}
+
 #if (defined RFB_ZIGBEE_ENABLED && RFB_ZIGBEE_ENABLED == 1)
 bool rfb_port_zb_is_channel_free(uint32_t rf_frequency, uint8_t rssi_threshold)
 {
@@ -313,6 +382,13 @@ bool rfb_port_subg_is_channel_free(uint32_t rf_frequency, uint8_t rssi_threshold
 RFB_WRITE_TXQ_STATUS rfb_port_data_send(uint8_t *tx_data_address, uint16_t packet_length, uint8_t InitialCwAckRequest, uint8_t Dsn)
 {
     RFB_WRITE_TXQ_STATUS rfb_write_tx_queue_status;
+
+#if RFB_FIX_TX_POWER_SUPPORT
+    if (g_fix_power_enable)
+    {
+        rfb_port_fix_tx_power_check();
+    }
+#endif
     rfb_write_tx_queue_status = rfb_comm_tx_data_send(packet_length, tx_data_address, InitialCwAckRequest, Dsn);
     if (rfb_write_tx_queue_status != RFB_WRITE_TXQ_SUCCESS)
     {
@@ -800,6 +876,40 @@ RFB_EVENT_STATUS rfb_port_tx_power_set_oqpsk(uint8_t band_type, uint8_t power_in
 
     return event_status;
 }
+
+#if RFB_FIX_TX_POWER_SUPPORT
+RFB_EVENT_STATUS rfb_port_fix_15dbm_tx_power_set(bool enable, uint8_t band_type)
+{
+    if (band_type != BAND_SUBG_433M) // only support SUBG 433M now
+    {
+        printf("[W] rfb_port_fix_15dbm_tx_power_set fail, unsupported band type: %d\n", band_type);
+        return RFB_CNF_EVENT_INVALID_CMD;
+    }
+    g_fix_power_enable = enable;
+    g_fp_band_type = band_type;
+
+    if (g_fix_power_enable)
+    {
+        if (g_rfb.modem_type == RFB_MODEM_FSK)
+        {
+            rfb_port_tx_power_set(g_fp_band_type, g_fp_power_index);
+        }
+        else if (g_rfb.modem_type == RFB_MODEM_OQPSK)
+        {
+            rfb_port_tx_power_set_oqpsk(g_fp_band_type, g_fp_power_index);
+        }
+        else
+        {
+            printf("Fix Txpower error: unsupported band type: %d\n", g_rfb.modem_type);
+            g_fix_power_enable = 0;
+            return RFB_CNF_EVENT_INVALID_CMD;
+        }
+        Sadc_Config_Enable(SADC_RES_12BIT, SADC_OVERSAMPLE_256, Sadc_Int_Callback_Handler);
+        Sadc_Compensation_Init(1);
+    }
+    return RFB_EVENT_SUCCESS;
+}
+#endif
 
 RFB_EVENT_STATUS rfb_port_15p4_src_addr_match_ctrl(uint8_t ctrl_type)
 {
