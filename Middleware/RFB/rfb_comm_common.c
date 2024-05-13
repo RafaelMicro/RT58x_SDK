@@ -263,6 +263,39 @@ RFB_EVENT_STATUS rfb_comm_wake_on_radio_set(uint32_t rf_frequency, uint16_t rx_o
     return RFB_EVENT_SUCCESS;
 }
 
+RFB_EVENT_STATUS rfb_comm_2ch_scan_frequency_set(uint8_t scan_enable, uint32_t rf_freq1, uint32_t rf_freq2)
+{
+    ruci_para_set_2ch_scan_frequency_t sSetScanCmd = {0};
+    ruci_para_cnf_event_t sCnfEvent = {0};
+    uint8_t event_len = 0;
+    RF_MCU_RX_CMDQ_ERROR event_status = RF_MCU_RX_CMDQ_ERR_INIT;
+
+    SET_RUCI_PARA_SET_2CH_SCAN_FREQUENCY(&sSetScanCmd, scan_enable, rf_freq1, rf_freq2);
+
+    RUCI_ENDIAN_CONVERT((uint8_t *)&sSetScanCmd, RUCI_SET_2CH_SCAN_FREQUENCY);
+
+    enter_critical_section();
+    rfb_send_cmd((uint8_t *)&sSetScanCmd, RUCI_LEN_SET_2CH_SCAN_FREQUENCY);
+    event_status = rfb_event_read(&event_len, (uint8_t *)&sCnfEvent);
+    leave_critical_section();
+
+    RUCI_ENDIAN_CONVERT((uint8_t *)&sCnfEvent, RUCI_CNF_EVENT);
+    if (event_status != RF_MCU_RX_CMDQ_GET_SUCCESS)
+    {
+        return RFB_CNF_EVENT_NOT_AVAILABLE;
+    }
+    if (sCnfEvent.pci_cmd_subheader != RUCI_CODE_SET_2CH_SCAN_FREQUENCY)
+    {
+        return RFB_CNF_EVENT_CONTENT_ERROR;
+    }
+    if (sCnfEvent.status != RFB_EVENT_SUCCESS)
+    {
+        return (RFB_EVENT_STATUS)sCnfEvent.status;
+    }
+
+    return RFB_EVENT_SUCCESS;
+}
+
 RFB_EVENT_STATUS rfb_comm_single_tone_mode_set(uint8_t single_tone_mode)
 {
     ruci_para_set_single_tone_mode_t sStModeEnCmd_t = {0};

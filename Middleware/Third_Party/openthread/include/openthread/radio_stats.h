@@ -47,9 +47,6 @@ extern "C" {
 /**
  * @addtogroup api-radio
  *
- * @brief
- *   This module includes functions for radio statistics.
- *
  * @{
  *
  */

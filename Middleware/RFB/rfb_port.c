@@ -278,6 +278,19 @@ RFB_EVENT_STATUS rfb_port_wake_on_radio_set(uint32_t rf_frequency, uint16_t rx_o
     return event_status;
 }
 
+RFB_EVENT_STATUS rfb_port_2ch_scan_frequency_set(uint8_t scan_enable, uint32_t rf_freq1, uint32_t rf_freq2)
+{
+    RFB_EVENT_STATUS event_status = RFB_EVENT_SUCCESS;
+
+    event_status = rfb_comm_2ch_scan_frequency_set(scan_enable, rf_freq1, rf_freq2);
+    if (event_status != RFB_EVENT_SUCCESS)
+    {
+        printf("[W] rfb_comm_2ch_scan_frequency_set fail, status:%d\n", event_status);
+    }
+
+    return event_status;
+}
+
 #if (defined RFB_ZIGBEE_ENABLED && RFB_ZIGBEE_ENABLED == 1)
 bool rfb_port_zb_is_channel_free(uint32_t rf_frequency, uint8_t rssi_threshold)
 {
@@ -1177,21 +1190,31 @@ uint32_t rfb_port_rx_rtc_time_get(uint8_t rx_cnt)
     return rtc_time;
 }
 
-uint8_t rfb_port_current_channel_get(void)
+uint8_t rfb_port_current_channel_get(uint8_t rx_cnt)
 {
     uint8_t channel_tmp;
     uint32_t temp_data;
     uint8_t page;
     uint16_t q_addr;
 
+
     /* get address of 2nd page in local data q */
     RfMcu_MemoryGet(0x04038, (uint8_t *)&temp_data, 4);
     page = (uint8_t)((temp_data >> 8) & 0xff) + 1;
 
-    /* Start from 0x4000 + (page*64), the 7th 4-byte*/
-    q_addr = 0x4000 + (page * 64) + (6 * 4);
-    RfMcu_MemoryGet(q_addr, (uint8_t *)&temp_data, 4);
-    channel_tmp = temp_data & 0xff;
+    /* Start from 0x4000 + (page*64), the 9th 4-byte*/
+    if (rx_cnt < 4)
+    {
+        q_addr = 0x4000 + (page * 64) + (9 * 4);
+        RfMcu_MemoryGet(q_addr, (uint8_t *)&temp_data, 4);
+        channel_tmp = (temp_data >> (8 * rx_cnt)) & 0xff;
+    }
+    else
+    {
+        q_addr = 0x4000 + (page * 64) + (10 * 4);
+        RfMcu_MemoryGet(q_addr, (uint8_t *)&temp_data, 4);
+        channel_tmp = temp_data & 0xff;
+    }
 
     return channel_tmp;
 }

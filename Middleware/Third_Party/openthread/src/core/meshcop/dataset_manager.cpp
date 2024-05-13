@@ -315,12 +315,23 @@ void DatasetManager::HandleMgmtSetResponse(Coap::Message *aMessage, const Ip6::M
     uint8_t state;
 
     SuccessOrExit(error = aError);
-    VerifyOrExit(Tlv::Find<StateTlv>(*aMessage, state) == kErrorNone && state != StateTlv::kPending,
-                 error = kErrorParse);
+    VerifyOrExit(Tlv::Find<StateTlv>(*aMessage, state) == kErrorNone, error = kErrorParse);
+
+    switch (state)
+    {
+    case StateTlv::kReject:
+        error = kErrorRejected;
+        break;
+    case StateTlv::kAccept:
+        error = kErrorNone;
+        break;
+    default:
+        error = kErrorParse;
+        break;
+    }
 
 exit:
-    LogInfo("MGMT_SET finished: %s",
-            error == kErrorNone ? StateTlv::StateToString(static_cast<StateTlv::State>(state)) : ErrorToString(error));
+    LogInfo("MGMT_SET finished: %s", ErrorToString(error));
 
     mMgmtPending = false;
 

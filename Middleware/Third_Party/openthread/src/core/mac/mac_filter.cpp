@@ -38,7 +38,7 @@
 #include "common/array.hpp"
 #include "common/as_core_type.hpp"
 #include "common/code_utils.hpp"
-#include "thread/neighbor.hpp"
+#include "thread/topology.hpp"
 
 namespace ot {
 namespace Mac {

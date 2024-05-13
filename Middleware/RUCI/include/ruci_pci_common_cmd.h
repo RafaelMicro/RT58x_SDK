@@ -136,6 +136,37 @@ typedef struct ruci_para_set_single_tone_mode_s
         ((ruci_para_set_single_tone_mode_t *)msg)->st_mode                        = st_mode_in;                             \
         }while(0)
 
+// RUCI: Set2ChScanFrequency --------------------------------------------------------
+#define RUCI_SET_2CH_SCAN_FREQUENCY             RUCI_NUM_SET_2CH_SCAN_FREQUENCY, ruci_elmt_type_set_2ch_scan_frequency, ruci_elmt_num_set_2ch_scan_frequency
+#define RUCI_CODE_SET_2CH_SCAN_FREQUENCY        0x05
+#define RUCI_LEN_SET_2CH_SCAN_FREQUENCY         12
+#define RUCI_NUM_SET_2CH_SCAN_FREQUENCY         6
+#define RUCI_PARA_LEN_SET_2CH_SCAN_FREQUENCY    9
+#if (RUCI_ENDIAN_INVERSE)
+extern const uint8_t ruci_elmt_type_set_2ch_scan_frequency[];
+extern const uint8_t ruci_elmt_num_set_2ch_scan_frequency[];
+#endif /* RUCI_ENDIAN_INVERSE */
+typedef struct ruci_para_set_2ch_scan_frequency_s
+{
+    ruci_head_t     ruci_header;
+    uint8_t         sub_header;
+    uint8_t         length;
+    uint8_t         enable_flag;
+    uint32_t        rf_frequency1;
+    uint32_t        rf_frequency2;
+} ruci_para_set_2ch_scan_frequency_t;
+
+/* User should provide msg buffer is greater than sizeof(ruci_para_set_rf_frequency_t) */
+#define SET_RUCI_PARA_SET_2CH_SCAN_FREQUENCY(msg, scan_enable_in, rf_frequency1_in, rf_frequency2_in)              \
+        do{                                                                                                              \
+        ((ruci_para_set_2ch_scan_frequency_t *)msg)->ruci_header.u8               = RUCI_PCI_COMMON_CMD_HEADER;             \
+        ((ruci_para_set_2ch_scan_frequency_t *)msg)->sub_header                   = RUCI_CODE_SET_2CH_SCAN_FREQUENCY;       \
+        ((ruci_para_set_2ch_scan_frequency_t *)msg)->length                       = RUCI_PARA_LEN_SET_2CH_SCAN_FREQUENCY;   \
+        ((ruci_para_set_2ch_scan_frequency_t *)msg)->enable_flag                  = scan_enable_in;                         \
+        ((ruci_para_set_2ch_scan_frequency_t *)msg)->rf_frequency1                = rf_frequency1_in;                       \
+        ((ruci_para_set_2ch_scan_frequency_t *)msg)->rf_frequency2                = rf_frequency2_in;                       \
+        }while(0)
+
 // RUCI: get_crc_count ---------------------------------------------------------
 #define RUCI_GET_CRC_COUNT                      RUCI_NUM_GET_CRC_COUNT, ruci_elmt_type_get_crc_count, ruci_elmt_num_get_crc_count
 #define RUCI_CODE_GET_CRC_COUNT                 0x0C

@@ -230,6 +230,6 @@ void zigbee_app_init(void)
     sys_queue_new(&app_msg_q, 16, sizeof(app_queue_t));
 
     info("Create app task\n");
-    sys_task_new("app", app_main_task, NULL, 128, TASK_PRIORITY_APP);
+    sys_task_new("app", app_main_task, NULL, 256, TASK_PRIORITY_APP);
 }
 

@@ -337,7 +337,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls> -fno-exceptions -fdata-sections -ffunction-sections</MiscControls>
-              <Define>NDEBUG,OPENTHREAD_FTD, OPENTHREAD_PROJECT_CORE_CONFIG_FILE='\"openthread-core-RT58x-config.h\"' ,OPENTHREAD_CONFIG_FILE='\"openthread-core-RT58x-config.h\"', OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE='\"openthread-core-RT58x-config-check.h\"', MBEDTLS_CONFIG_FILE='\"openthread-mbedtls-config.h\"',PACKAGE_NAME='\"Rafael\"',PACKAGE_VERSION='\"1.3.0\"'</Define>
+              <Define>NDEBUG,OPENTHREAD_FTD, OPENTHREAD_PROJECT_CORE_CONFIG_FILE='\"openthread-core-RT58x-config.h\"' ,OPENTHREAD_CONFIG_FILE='\"openthread-core-RT58x-config.h\"', OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE='\"openthread-core-RT58x-config-check.h\"', MBEDTLS_CONFIG_FILE='\"openthread-mbedtls-config.h\"',PACKAGE_NAME='\"Rafael\"',PACKAGE_VERSION='\"1.8.3\"'</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\..\..\..\Middleware\Thread\Config\NoOs\Subg;..\..\..\..\..\..\Middleware\Thread\Source\Include;..\..\..\..\..\..\Middleware\Third_Party\openthread\examples\platforms;..\..\..\..\..\..\Middleware\Third_Party\openthread\examples\platforms\utils;..\..\..\..\..\..\Middleware\Third_Party\openthread\include;..\..\..\..\..\..\Middleware\Third_Party\openthread\include\openthread;..\..\..\..\..\..\Middleware\Third_Party\openthread\src;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\api;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\backbone_router;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\border_router;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\coap;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\config;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\crypto;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\diags;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\mac;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\net;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\radio;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\include;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\include\mbedtls;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\include\psa;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\tcplp;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\tcplp\lib;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\tcplp\bsdtcp;..\..\..\..\..\..\Middleware\MemoryMgmt\Include;..\..\..\..\..\..\Middleware\Portable\bsp_for_ref_design\bsp_for_thread\Include;..\..\..\..\..\..\Middleware\Portable\Utility\include;..\..\..\..\..\..\Middleware\Portable\Uart\Include;..\..\..\..\..\..\Middleware\RFB\include;..\..\..\..\..\..\Middleware\RUCI\include;..\..\..\..\..\..\Library\RT58x\Include;..\..\..\..\..\..\Library\RT58x\Crypto\include;..\..\..\..\..\..\Library\RT58x\Peripheral\Include;..\..\..\..\..\..\Library\RT58x\PHY\include;..\..\..\..\..\..\Library\RT58x\PHY\rt569mp\include;..\Include</IncludePath>
             </VariousControls>
@@ -1315,11 +1315,6 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\anycast_locator.cpp</FilePath>
             </File>
             <File>
-              <FileName>child.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\child.cpp</FilePath>
-            </File>
-            <File>
               <FileName>child_supervision.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\child_supervision.cpp</FilePath>
@@ -1420,11 +1415,6 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\mlr_manager.cpp</FilePath>
             </File>
             <File>
-              <FileName>neighbor.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\neighbor.cpp</FilePath>
-            </File>
-            <File>
               <FileName>neighbor_table.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\neighbor_table.cpp</FilePath>
@@ -1480,11 +1470,6 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\network_diagnostic.cpp</FilePath>
             </File>
             <File>
-              <FileName>network_diagnostic_tlvs.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\network_diagnostic_tlvs.cpp</FilePath>
-            </File>
-            <File>
               <FileName>panid_query_server.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\panid_query_server.cpp</FilePath>
@@ -1493,11 +1478,6 @@
               <FileName>radio_selector.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\radio_selector.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>router.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\router.cpp</FilePath>
             </File>
             <File>
               <FileName>router_table.cpp</FileName>
@@ -1525,6 +1505,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\tmf.cpp</FilePath>
             </File>
             <File>
+              <FileName>topology.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\topology.cpp</FilePath>
+            </File>
+            <File>
               <FileName>uri_paths.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\uri_paths.cpp</FilePath>
@@ -1535,9 +1520,24 @@
           <GroupName>OT-Utils</GroupName>
           <Files>
             <File>
+              <FileName>channel_manager.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\channel_manager.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>channel_monitor.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\channel_monitor.cpp</FilePath>
+            </File>
+            <File>
               <FileName>flash.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\flash.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>heap.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\heap.cpp</FilePath>
             </File>
             <File>
               <FileName>history_tracker.cpp</FileName>
@@ -1584,31 +1584,11 @@
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\srp_client_buffers.cpp</FilePath>
             </File>
-            <File>
-              <FileName>channel_manager.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\channel_manager.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>channel_monitor.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\channel_monitor.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>heap.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\heap.cpp</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>OT-CLI</GroupName>
           <Files>
-            <File>
-              <FileName>cli_extension_example.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_extension_example.c</FilePath>
-            </File>
             <File>
               <FileName>cli.cpp</FileName>
               <FileType>8</FileType>
@@ -1693,6 +1673,11 @@
               <FileName>cli_udp.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_udp.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>cli_extension_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_extension_example.c</FilePath>
             </File>
           </Files>
         </Group>

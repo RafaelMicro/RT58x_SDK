@@ -34,7 +34,7 @@
 #define SET_SYS_CLK    SYS_CLK_64MHZ
 #define RF_FW_INCLUDE_PCI           (TRUE)
 #define RF_FW_INCLUDE_BLE           (FALSE)
-#define RF_FW_INCLUDE_MULTI_2P4G    (FALSE)
+#define RF_FW_INCLUDE_MULTI_2P4G    (TRUE)
 
 #define PLAFFORM_CONFIG_ENABLE_SUBG (FALSE)
 
@@ -44,8 +44,10 @@
 #define RFB_ZIGBEE_ENABLED          (TRUE)
 #endif
 
-#if RFB_SUBG_ENABLED
+#if RFB_SUBG_ENABLED == TRUE
 #define RFB_15p4_MAC_ENABLED         (TRUE)
-#endif
+#define RFB_FIX_TX_POWER_SUPPORT            1
+#define RFB_SUBG_FREQUENCY_BAND      (0) //0: 915M, 1: 868M, 2: 433M, 3: 470M
+#endif //RFB_SUBG_ENABLED
 
 #define __reloc __attribute__ ((used, section("reloc_text")))

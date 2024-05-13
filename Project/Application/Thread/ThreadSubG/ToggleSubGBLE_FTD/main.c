@@ -20,7 +20,9 @@
 #include "util_log.h"
 #include "util_printf.h"
 #if PLAFFORM_CONFIG_ENABLE_SUBG
+#define RFB_POWER_STAGLE_INDEX       (30) //7~30
 #define RFB_DATA_RATE FSK_300K // Supported Value: [FSK_50K; FSK_100K; FSK_150K; FSK_200K; FSK_300K]
+extern void rafael_radio_subg_power_index_set(uint8_t stage_index);
 extern void rafael_radio_subg_datarate_set(uint8_t datarate);
 extern void rafael_radio_subg_band_set(uint8_t ch_min, uint8_t ch_max, uint8_t band);
 #endif
@@ -93,6 +95,7 @@ int main()
         OPENTHREAD_CONFIG_PLATFORM_RADIO_PROPRIETARY_CHANNEL_MIN,
         OPENTHREAD_CONFIG_PLATFORM_RADIO_PROPRIETARY_CHANNEL_MAX,
         RFB_SUBG_FREQUENCY_BAND);
+    rafael_radio_subg_power_index_set(RFB_POWER_STAGLE_INDEX);
 #endif //PLAFFORM_CONFIG_ENABLE_SUBG
     rafael_radio_cca_threshold_set(RFB_CCA_THRESHOLD);
 

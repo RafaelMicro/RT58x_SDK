@@ -36,6 +36,36 @@
 #ifndef OPENTHREAD_CORE_RT58X_CONFIG_H_
 #define OPENTHREAD_CORE_RT58X_CONFIG_H_
 
+/**
+ * @def OPENTHREAD_CONFIG_NET_DIAG_VENDOR_NAME
+ *
+ * Specifies the default Vendor Name string.
+ *
+ */
+#ifndef OPENTHREAD_CONFIG_NET_DIAG_VENDOR_NAME
+#define OPENTHREAD_CONFIG_NET_DIAG_VENDOR_NAME "Rafael"
+#endif
+
+/**
+ * @def OPENTHREAD_CONFIG_NET_DIAG_VENDOR_MODEL
+ *
+ * Specifies the default Vendor Model string.
+ *
+ */
+#ifndef OPENTHREAD_CONFIG_NET_DIAG_VENDOR_MODEL
+#define OPENTHREAD_CONFIG_NET_DIAG_VENDOR_MODEL "RT58x"
+#endif
+
+/**
+ * @def OPENTHREAD_CONFIG_NET_DIAG_VENDOR_SW_VERSION
+ *
+ * Specifies the default Vendor SW Version string.
+ *
+ */
+#ifndef OPENTHREAD_CONFIG_NET_DIAG_VENDOR_SW_VERSION
+#define OPENTHREAD_CONFIG_NET_DIAG_VENDOR_SW_VERSION "1.8.3"
+#endif
+
 /*
  * @def OPENTHREAD_CONFIG_PLATFORM_INFO
  *

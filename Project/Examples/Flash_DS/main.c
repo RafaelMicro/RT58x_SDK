@@ -52,7 +52,7 @@ int main(void)
     ds_config_t ds_init_cfg;
     uint32_t ds_ret = 0;
     uint8_t rd_buf[0xFF], wr_buf[0xFF];
-    int i, j, ds_count = 0xFF;
+    int i, j, ds_count = 80;
     ds_rw_t t_ds_r, t_ds_w;
 
     /*we should set pinmux here or in SystemInit */
@@ -66,27 +66,23 @@ int main(void)
     printf("Flash DataSet Demo build %s %s\r\n", __DATE__, __TIME__);
 
 
-    for (i = 0x84000; i < 0xA4000; i += 0x1000)
-    {
-        flash_erase(FLASH_ERASE_SECTOR, i);
-        flush_cache();
-    }
-
     //config record flash address range
-    ds_init_cfg.start_address = 0x84000;
-    ds_init_cfg.end_address = 0xA4000;
+    ds_init_cfg.start_address = 0xF2000;
+    ds_init_cfg.end_address = 0xF4000;
     ds_ret = ds_initinal(ds_init_cfg);
 
     if (ds_ret != STATUS_SUCCESS)
     {
-        printf("ds_initial fail %d\r\n", ds_ret);
+        printf("ds_initial fail\r\n");
         while (1);
     }
 
+    ds_reset_to_default();
+
     //write data buffer init
-    for (i = 0; i < ds_count; i++)
+    for (i = 0; i < 256; i++)
     {
-        wr_buf[i] = i;
+        wr_buf[i] = (i + 1);
     }
 
     //DS_TABLE_TYPE_MAX default is 255, that can adjust the define value. in flashds.h
@@ -99,10 +95,9 @@ int main(void)
 
         ds_ret = ds_write(&t_ds_w);
 
-        printf("type %d len %d address %x\r\n", t_ds_w.type, t_ds_w.len, t_ds_w.address);
         if (ds_ret != STATUS_SUCCESS)
         {
-            printf("ds_write failed %d\r\n", ds_ret);
+            printf("ds_write type %d failed\r\n", i);
         }
         else
         {
@@ -121,28 +116,30 @@ int main(void)
 
         if (ds_ret != STATUS_SUCCESS)
         {
-            printf("ds_read failed %d\r\n", ds_ret);
-        }
-
-        if (t_ds_r.address != 0 && t_ds_r.len != 0)
-        {
-            for (j = 0; j < t_ds_r.len; j++)
-            {
-                rd_buf[j] = flash_read_byte(t_ds_r.address + j);
-            }
-
-            if (memcmp(rd_buf, wr_buf, t_ds_r.len) != 0)
-            {
-                printf("ds %d verifiy fail!\r\n", i);
-            }
-            else
-            {
-                printf("ds read type %d success!\r\n", i);
-            }
+            printf("ds_read type %d failed \r\n", i);
         }
         else
         {
-            printf("ds type %d not found!\r\n", i);
+            if (t_ds_r.address != 0 && t_ds_r.len != 0)
+            {
+                for (j = 0; j < t_ds_r.len; j++)
+                {
+                    rd_buf[j] = flash_read_byte(t_ds_r.address + j);
+                }
+
+                if (memcmp(rd_buf, wr_buf, t_ds_r.len) != 0)
+                {
+                    printf("ds %d verifiy fail!\r\n", i);
+                }
+                else
+                {
+                    printf("ds read type %d success!\r\n", i);
+                }
+            }
+            else
+            {
+                printf("ds type %d not found!\r\n", i);
+            }
         }
 
     }
@@ -154,7 +151,7 @@ int main(void)
 
         if (ds_ret != STATUS_SUCCESS)
         {
-            printf("ds_delete_type fail %d\r\n", ds_ret);
+            printf("ds_delete_type %d fail\r\n", i);
         }
         else
         {

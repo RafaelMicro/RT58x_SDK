@@ -38,7 +38,7 @@
 
 #include "common/locator.hpp"
 #include "common/non_copyable.hpp"
-#include "thread/neighbor.hpp"
+#include "thread/topology.hpp"
 
 namespace ot {
 

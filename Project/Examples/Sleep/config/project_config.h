@@ -39,4 +39,7 @@
 /*Support MP Sector for chip calibration and application information*/
 #define USE_MP_SECTOR                      1
 
+/*Support Sleep current measure */
+#define  USE_SLEEP_CURRENT_VERIFY          1
+
 #endif

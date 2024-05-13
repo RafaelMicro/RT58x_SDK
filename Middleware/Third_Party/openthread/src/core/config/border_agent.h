@@ -58,7 +58,7 @@
 /**
  * @def OPENTHREAD_CONFIG_BORDER_AGENT_ID_ENABLE
  *
- * Define to 1 to enable Border Agent ID support.
+ * Define ro 1 to enable Border Agent ID support.
  *
  */
 #ifndef OPENTHREAD_CONFIG_BORDER_AGENT_ID_ENABLE

@@ -275,7 +275,6 @@ private:
 
     void HandleSentFrame(const Mac::TxFrame &aFrame, Error aError, Child &aChild);
     void ProcessPendingPolls(void);
-    void ResetTxAttempts(Child &aChild);
 
     // In the current implementation of `DataPollHandler`, we can have a
     // single indirect tx operation active at MAC layer at each point of

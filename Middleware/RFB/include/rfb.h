@@ -467,13 +467,13 @@ typedef struct rfb_zb_ctrl_s
     /**
     * @brief Read RFB current channel
     *
-    * @param None
+    * @param rx_cnt: total_rx_done_cnt%5 (start from 0)
     * @return The channel number (for 2.4G)
     * @date 6 Mar. 2023
     * @see
     * @image
     */
-    uint8_t (*current_channel_get)(void);
+    uint8_t (*current_channel_get)(uint8_t rx_cnt);
     /**
     * @brief Read RFB current frame counter
     *
@@ -887,13 +887,13 @@ typedef struct rfb_subg_ctrl_s
     /**
     * @brief Read RFB current channel
     *
-    * @param None
+    * @param rx_cnt: total_rx_done_cnt%5 (start from 0)
     * @return The channel number (for 2.4G)
     * @date 6 Mar. 2023
     * @see
     * @image
     */
-    uint8_t (*current_channel_get)(void);
+    uint8_t (*current_channel_get)(uint8_t rx_cnt);
 
     /**
     * @brief Read RFB current frame counter
