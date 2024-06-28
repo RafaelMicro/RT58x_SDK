@@ -64,7 +64,8 @@
 /**************************************************************************************************
  *    TYPEDEFS
  *************************************************************************************************/
-
+extern RFB_EVENT_STATUS rfb_port_tx_power_set(uint8_t band_type, uint8_t power_index);
+extern RFB_EVENT_STATUS rfb_port_tx_power_set_oqpsk(uint8_t band_type, uint8_t power_index);
 /**************************************************************************************************
  *    GLOBAL VARIABLES
  *************************************************************************************************/
@@ -348,6 +349,8 @@ void rfb_tx_init(void)
 #else
     g_rfb_ctrl->frequency_set(g_100k_freq_support[0]);
 #endif
+
+    rfb_port_tx_power_set(BAND_SUBG_915M, 30);
 
     g_tx_len = PHY_MIN_LENGTH;
 }

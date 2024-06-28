@@ -64,6 +64,8 @@
 extern bool RF_Rx_Switch;
 bool RF_Time = 0;
 extern RFB_EVENT_STATUS rfb_port_auto_state_set(bool rxOnWhenIdle);
+extern RFB_EVENT_STATUS rfb_port_tx_power_set(uint8_t band_type, uint8_t power_index);
+extern RFB_EVENT_STATUS rfb_port_tx_power_set_oqpsk(uint8_t band_type, uint8_t power_index);
 /**************************************************************************************************
  *    GLOBAL VARIABLES
  *************************************************************************************************/
@@ -248,6 +250,16 @@ void rfb_tx_init(uint8_t data_rate, rfb_keying_type_t keying_mode, uint8_t filte
     else
     {
         g_rfb_ctrl->frequency_set(g_freq_support[0]);
+    }
+
+
+    if (keying_mode == RFB_KEYING_FSK)
+    {
+        rfb_port_tx_power_set(BAND_SUBG_915M, 30);
+    }
+    else
+    {
+        rfb_port_tx_power_set_oqpsk(BAND_SUBG_915M, 30);
     }
 
     g_tx_len = PHY_MIN_LENGTH;

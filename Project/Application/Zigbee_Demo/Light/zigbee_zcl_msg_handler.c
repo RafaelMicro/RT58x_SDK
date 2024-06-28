@@ -680,7 +680,9 @@ static void _zcl_group_process(uint16_t cmd, uint16_t datalen, uint8_t *pdata)
 static void _zcl_level_ctrl_process(uint16_t cmd, uint16_t datalen, uint8_t *pdata)
 {
     uint8_t current_lv;
+    uint8_t temp_option, optionmask, optionmaskoverride;
     current_lv = get_current_level();
+    temp_option = get_level_option();
 
     do
     {
@@ -688,22 +690,25 @@ static void _zcl_level_ctrl_process(uint16_t cmd, uint16_t datalen, uint8_t *pda
         {
             tmr_level_ctrl = xTimerCreate("t_lv", pdMS_TO_TICKS(20), pdFALSE, (void *)0, tmr_level_ctrl_cb);
         }
-        if (!(get_level_option() & 0x01) && get_on_off_status() == 0
-                && (cmd == ZB_ZCL_CMD_LEVEL_CONTROL_STEP ||
-                    cmd == ZB_ZCL_CMD_LEVEL_CONTROL_MOVE_TO_LEVEL ||
-                    cmd == ZB_ZCL_CMD_LEVEL_CONTROL_MOVE ||
-                    cmd == ZB_ZCL_CMD_LEVEL_CONTROL_STOP)
-           )
-        {
-            info("Do not execute!!\n");
-            break;
-        }
         if (cmd == ZB_ZCL_CMD_LEVEL_CONTROL_STEP ||
                 cmd == ZB_ZCL_CMD_LEVEL_CONTROL_STEP_WITH_ON_OFF)
         {
+            if (datalen == 6)
+            {
+                optionmask = pdata[4];
+                optionmaskoverride = pdata[5];
+                info("optionmask %x\noptionoverride %x\n", optionmask, optionmaskoverride);
+                temp_option = (optionmask & optionmaskoverride) | (~optionmask & get_level_option());
+            }
+            if (cmd == ZB_ZCL_CMD_LEVEL_CONTROL_STEP
+                    && get_on_off_status() == 0
+                    && !(temp_option & 0x1))
+            {
+                info("Do not execute!!\n");
+                break;
+            }
             if (pdata[0] == 0)
             {
-
                 info_color(LOG_YELLOW, "Move up step :%d\n", pdata[1]);
                 current_lv = (current_lv > 0) ? current_lv - 1 : 0;
                 if ((current_lv + pdata[1]) < ZB_ZCL_LEVEL_CONTROL_LEVEL_MAX_VALUE)
@@ -740,6 +745,20 @@ static void _zcl_level_ctrl_process(uint16_t cmd, uint16_t datalen, uint8_t *pda
         else if (cmd == ZB_ZCL_CMD_LEVEL_CONTROL_MOVE_TO_LEVEL ||
                  cmd == ZB_ZCL_CMD_LEVEL_CONTROL_MOVE_TO_LEVEL_WITH_ON_OFF)
         {
+            if (datalen == 5)
+            {
+                optionmask = pdata[3];
+                optionmaskoverride = pdata[4];
+                info("optionmask %x\noptionoverride %x\n", optionmask, optionmaskoverride);
+                temp_option = (optionmask & optionmaskoverride) | (~optionmask & get_level_option());
+            }
+            if (cmd == ZB_ZCL_CMD_LEVEL_CONTROL_MOVE_TO_LEVEL
+                    && get_on_off_status() == 0
+                    && !(temp_option & 0x1))
+            {
+                info("Do not execute!!\n");
+                break;
+            }
             info_color(LOG_CYAN, "Move to level :%d\n", pdata[0]);
             target_level = pdata[0];
             if (target_level < ZB_ZCL_LEVEL_CONTROL_LEVEL_MIN_VALUE)
@@ -759,6 +778,20 @@ static void _zcl_level_ctrl_process(uint16_t cmd, uint16_t datalen, uint8_t *pda
         else if (cmd == ZB_ZCL_CMD_LEVEL_CONTROL_MOVE ||
                  cmd == ZB_ZCL_CMD_LEVEL_CONTROL_MOVE_WITH_ON_OFF)
         {
+            if (datalen == 4)
+            {
+                optionmask = pdata[2];
+                optionmaskoverride = pdata[3];
+                info("optionmask %x\noptionoverride %x\n", optionmask, optionmaskoverride);
+                temp_option = (optionmask & optionmaskoverride) | (~optionmask & get_level_option());
+            }
+            if (cmd == ZB_ZCL_CMD_LEVEL_CONTROL_MOVE
+                    && get_on_off_status() == 0
+                    && !(temp_option & 0x1))
+            {
+                info("Do not execute!!\n");
+                break;
+            }
             if (pdata[0] == 0)
             {
                 info_color(LOG_YELLOW, "Move up rate :%d\n", pdata[1]);
@@ -782,6 +815,20 @@ static void _zcl_level_ctrl_process(uint16_t cmd, uint16_t datalen, uint8_t *pda
         else if (cmd == ZB_ZCL_CMD_LEVEL_CONTROL_STOP ||
                  cmd == ZB_ZCL_CMD_LEVEL_CONTROL_STOP_WITH_ON_OFF)
         {
+            if (datalen == 2)
+            {
+                optionmask = pdata[0];
+                optionmaskoverride = pdata[1];
+                info("optionmask %x\noptionoverride %x\n", optionmask, optionmaskoverride);
+                temp_option = (optionmask & optionmaskoverride) | (~optionmask & get_level_option());
+            }
+            if (cmd == ZB_ZCL_CMD_LEVEL_CONTROL_STOP
+                    && get_on_off_status() == 0
+                    && !(temp_option & 0x1))
+            {
+                info("Do not execute!!\n");
+                break;
+            }
             if (xTimerIsTimerActive(tmr_level_ctrl))
             {
                 xTimerStop(tmr_level_ctrl, 0);

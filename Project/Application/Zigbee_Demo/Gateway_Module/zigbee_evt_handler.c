@@ -178,6 +178,7 @@ static void _zdo_evt_permit_join_status(sys_tlv_t *pt_tlv)
             //info("enlarge permit join\n");
             //zigbee_send_permit_join(0x0000, 180);
             //zigbee_send_permit_join(0xfffc, 180);
+            zigbee_gateway_cmd_send(0x8037, 0, 0, 0, NULL, 0);
             break;
         }
     } while (0);

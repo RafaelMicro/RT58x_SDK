@@ -39,7 +39,7 @@ typedef struct _rfb_t
 RFB_EVENT_STATUS rfb_port_modem_set(rfb_modem_type_t modem, uint8_t band_type);
 RFB_EVENT_STATUS rfb_port_frequency_set(uint32_t rf_frequency);
 RFB_WRITE_TXQ_STATUS rfb_port_data_send(uint8_t *tx_data_address, uint16_t packet_length, uint8_t InitialCwAckRequest, uint8_t Dsn);
-RFB_EVENT_STATUS rfb_port_tx_continuous_wave_set(uint32_t rf_frequency, tx_power_level_t tx_power);
+RFB_EVENT_STATUS rfb_port_tx_continuous_wave_set(bool tx_enable);
 uint8_t rfb_port_rssi_read(rfb_modem_type_t modem);
 RFB_EVENT_STATUS rfb_port_auto_state_set(bool rxOnWhenIdle);
 uint32_t rfb_port_version_get(void);

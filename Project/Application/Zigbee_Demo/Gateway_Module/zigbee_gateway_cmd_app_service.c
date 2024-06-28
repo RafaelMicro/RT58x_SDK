@@ -184,6 +184,23 @@ typedef enum
     GW_CMD_APP_SRV_COLOR_MOVE_COLOR_TEMPERATURE     = 0x0000004b,
     GW_CMD_APP_SRV_COLOR_STEP_COLOR_TEMPERATURE     = 0x0000004c,
 } e_color_ctrl;
+
+#define GW_CMD_APP_SRV_DOOR_LOCK_BASE              0x240000
+typedef enum
+{
+    GW_CMD_APP_SRV_LOCK_DOOR = 0x00,
+    GW_CMD_APP_SRV_UNLOCK_DOOR,
+    GW_CMD_APP_SRV_TOGGLE,
+    GW_CMD_APP_SRV_GET_LOG_RECORD,
+    GW_CMD_APP_SRV_SET_PIN_CODE = 0x05,
+    GW_CMD_APP_SRV_GET_PIN_CODE,
+    GW_CMD_APP_SRV_CLEAR_PIN_CODE,
+    GW_CMD_APP_SRV_CLEAR_ALL_PIN_CODES,
+    GW_CMD_APP_SRV_SET_USER_STATUS,
+    GW_CMD_APP_SRV_GET_USER_STATUS,
+    GW_CMD_APP_SRV_SET_USER_TYPE = 0x14,
+    GW_CMD_APP_SRV_GET_USER_TYPE,
+} e_door_lock;
 //=============================================================================
 //                Private ENUM
 //=============================================================================
@@ -902,7 +919,7 @@ static void _cmd_dev_level_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
     gateway_cmd_pd *pt_pd = (gateway_cmd_pd *)&pkt[5];
 
     zigbee_zcl_data_req_t *pt_data_req;
-
+    uint8_t parameter_len = pkt[4] - 8;
     uint8_t disable_default_rsp = 1;
     uint8_t attr_data_len = 0;
     uint8_t *p_attr_data = NULL;
@@ -911,7 +928,7 @@ static void _cmd_dev_level_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
     {
     case GW_CMD_APP_SRV_LEVEL_MOVE_TO_LEVEL:
     case GW_CMD_APP_SRV_LEVEL_MOVE_TO_LEVEL_WITH_ONOFF:
-        attr_data_len = 3;
+        attr_data_len = 5;
         p_attr_data = sys_malloc(attr_data_len);
 
         if (p_attr_data == NULL)
@@ -919,23 +936,20 @@ static void _cmd_dev_level_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
             break;
         }
         disable_default_rsp = pt_pd->parameter[1];
-        memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        if (parameter_len == 6)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len - 2);
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
         break;
 
     case GW_CMD_APP_SRV_LEVEL_MOVE:
     case GW_CMD_APP_SRV_LEVEL_MOVE_WITH_ONOFF:
-        attr_data_len = 2;
-        p_attr_data = sys_malloc(attr_data_len);
-
-        if (p_attr_data == NULL)
-        {
-            break;
-        }
-        disable_default_rsp = pt_pd->parameter[1];
-        memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
-        break;
-    case GW_CMD_APP_SRV_LEVEL_STEP:
-    case GW_CMD_APP_SRV_LEVEL_STEP_WITH_ONOFF:
         attr_data_len = 4;
         p_attr_data = sys_malloc(attr_data_len);
 
@@ -944,11 +958,58 @@ static void _cmd_dev_level_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
             break;
         }
         disable_default_rsp = pt_pd->parameter[1];
-        memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        if (parameter_len == 5)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len - 2);
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
+        break;
+    case GW_CMD_APP_SRV_LEVEL_STEP:
+    case GW_CMD_APP_SRV_LEVEL_STEP_WITH_ONOFF:
+        attr_data_len = 6;
+        p_attr_data = sys_malloc(attr_data_len);
+
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        disable_default_rsp = pt_pd->parameter[1];
+        if (parameter_len == 7)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len - 2);
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
         break;
     case GW_CMD_APP_SRV_LEVEL_STOP:
-        attr_data_len = 0;
+        attr_data_len = 2;
         disable_default_rsp = pt_pd->parameter[1];
+
+        p_attr_data = sys_malloc(attr_data_len);
+
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        disable_default_rsp = pt_pd->parameter[1];
+        if (parameter_len == 3)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
         break;
     default:
         break;
@@ -969,7 +1030,9 @@ static void _cmd_dev_level_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
             {
                 memcpy(pt_data_req->cmdFormat, p_attr_data, attr_data_len);
             }
+            util_log_mem(UTIL_LOG_INFO, "  ", (uint8_t *)p_attr_data, attr_data_len, 0);
             zigbee_zcl_request(pt_data_req, pt_data_req->cmdFormatLen);
+
             sys_free(pt_data_req);
         }
         if (p_attr_data)
@@ -1066,6 +1129,7 @@ static void _cmd_dev_color_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
     zigbee_zcl_data_req_t *pt_data_req;
 
     uint8_t disable_default_rsp = 1;
+    uint8_t parameter_len = pkt[4] - 8;
     uint8_t attr_data_len = 0;
     uint8_t *p_attr_data = NULL;
 
@@ -1073,46 +1137,6 @@ static void _cmd_dev_color_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
     {
     case GW_CMD_APP_SRV_COLOR_MOVE_TO_HUE:
     case GW_CMD_APP_SRV_COLOR_MOVE_TO_HUE_AND_SATURATION:
-        attr_data_len = 4;
-        p_attr_data = sys_malloc(attr_data_len);
-
-        if (p_attr_data == NULL)
-        {
-            break;
-        }
-        disable_default_rsp = pt_pd->parameter[1];
-        memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
-        break;
-
-    case GW_CMD_APP_SRV_COLOR_MOVE_HUE:
-    case GW_CMD_APP_SRV_COLOR_MOVE_SATURATION:
-        attr_data_len = 2;
-        p_attr_data = sys_malloc(attr_data_len);
-
-        if (p_attr_data == NULL)
-        {
-            break;
-        }
-        disable_default_rsp = pt_pd->parameter[1];
-        memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
-        break;
-
-    case GW_CMD_APP_SRV_COLOR_STEP_HUE:
-    case GW_CMD_APP_SRV_COLOR_MOVE_TO_SATURATION:
-    case GW_CMD_APP_SRV_COLOR_STEP_SATURATION:
-        attr_data_len = 3;
-        p_attr_data = sys_malloc(attr_data_len);
-
-        if (p_attr_data == NULL)
-        {
-            break;
-        }
-        disable_default_rsp = pt_pd->parameter[1];
-        memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
-        break;
-
-    case GW_CMD_APP_SRV_COLOR_STEP_COLOR:
-    case GW_CMD_APP_SRV_COLOR_MOVE_TO_COLOR:
         attr_data_len = 6;
         p_attr_data = sys_malloc(attr_data_len);
 
@@ -1121,11 +1145,20 @@ static void _cmd_dev_color_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
             break;
         }
         disable_default_rsp = pt_pd->parameter[1];
-        memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        if (parameter_len == 7)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len - 2);
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
         break;
 
-    case GW_CMD_APP_SRV_COLOR_MOVE_COLOR:
-    case GW_CMD_APP_SRV_COLOR_MOVE_TO_COLOR_TEMPERATURE:
+    case GW_CMD_APP_SRV_COLOR_MOVE_HUE:
+    case GW_CMD_APP_SRV_COLOR_MOVE_SATURATION:
         attr_data_len = 4;
         p_attr_data = sys_malloc(attr_data_len);
 
@@ -1134,11 +1167,22 @@ static void _cmd_dev_color_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
             break;
         }
         disable_default_rsp = pt_pd->parameter[1];
-        memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        if (parameter_len == 5)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len - 2);
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
         break;
 
-    case GW_CMD_APP_SRV_COLOR_MOVE_COLOR_TEMPERATURE:
-        attr_data_len = 7;
+    case GW_CMD_APP_SRV_COLOR_STEP_HUE:
+    case GW_CMD_APP_SRV_COLOR_MOVE_TO_SATURATION:
+    case GW_CMD_APP_SRV_COLOR_STEP_SATURATION:
+        attr_data_len = 5;
         p_attr_data = sys_malloc(attr_data_len);
 
         if (p_attr_data == NULL)
@@ -1146,10 +1190,63 @@ static void _cmd_dev_color_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
             break;
         }
         disable_default_rsp = pt_pd->parameter[1];
-        memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        if (parameter_len == 6)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len - 2);
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
         break;
 
-    case GW_CMD_APP_SRV_COLOR_STEP_COLOR_TEMPERATURE:
+    case GW_CMD_APP_SRV_COLOR_STEP_COLOR:
+    case GW_CMD_APP_SRV_COLOR_MOVE_TO_COLOR:
+        attr_data_len = 8;
+        p_attr_data = sys_malloc(attr_data_len);
+
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        disable_default_rsp = pt_pd->parameter[1];
+        if (parameter_len == 9)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len - 2);
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
+        break;
+
+    case GW_CMD_APP_SRV_COLOR_MOVE_COLOR:
+    case GW_CMD_APP_SRV_COLOR_MOVE_TO_COLOR_TEMPERATURE:
+        attr_data_len = 6;
+        p_attr_data = sys_malloc(attr_data_len);
+
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        disable_default_rsp = pt_pd->parameter[1];
+        if (parameter_len == 7)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len - 2);
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
+        break;
+
+    case GW_CMD_APP_SRV_COLOR_MOVE_COLOR_TEMPERATURE:
         attr_data_len = 9;
         p_attr_data = sys_malloc(attr_data_len);
 
@@ -1158,7 +1255,37 @@ static void _cmd_dev_color_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
             break;
         }
         disable_default_rsp = pt_pd->parameter[1];
-        memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        if (parameter_len == 10)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len - 2);
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
+        break;
+
+    case GW_CMD_APP_SRV_COLOR_STEP_COLOR_TEMPERATURE:
+        attr_data_len = 11;
+        p_attr_data = sys_malloc(attr_data_len);
+
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        disable_default_rsp = pt_pd->parameter[1];
+        if (parameter_len == 12)
+        {
+            //if the optionMask & optionoverride both present
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len);
+        }
+        else
+        {
+            memcpy(p_attr_data, &pt_pd->parameter[2], attr_data_len - 2);
+            memset(p_attr_data + attr_data_len - 2, 0, 2);
+        }
         break;
 
     default:
@@ -1170,6 +1297,109 @@ static void _cmd_dev_color_ctrl_handle(uint32_t cmd_id, uint8_t *pkt)
         ZIGBEE_ZCL_DATA_REQ(pt_data_req, pt_pd->address, pt_pd->address_mode,
                             pt_pd->parameter[0], ZIGBEE_DEFAULT_ENDPOINT,
                             ZB_ZCL_CLUSTER_ID_COLOR_CONTROL,
+                            cmd_id,
+                            TRUE, disable_default_rsp,
+                            ZCL_FRAME_CLIENT_SERVER_DIR, 0, attr_data_len)
+
+        if (pt_data_req)
+        {
+            if (attr_data_len > 0 && p_attr_data)
+            {
+                memcpy(pt_data_req->cmdFormat, p_attr_data, attr_data_len);
+            }
+            zigbee_zcl_request(pt_data_req, pt_data_req->cmdFormatLen);
+            sys_free(pt_data_req);
+        }
+        if (p_attr_data)
+        {
+            sys_free(p_attr_data);
+        }
+    } while (0);
+}
+
+static void _cmd_dev_door_lock_handle(uint32_t cmd_id, uint8_t *pkt)
+{
+    gateway_cmd_pd *pt_pd = (gateway_cmd_pd *)&pkt[5];
+
+    zigbee_zcl_data_req_t *pt_data_req;
+
+    uint8_t parameter_len = pkt[4] - 8;
+    uint8_t disable_default_rsp = 1;
+    uint8_t attr_data_len = 0;
+    uint8_t *p_attr_data = NULL;
+
+    switch (cmd_id)
+    {
+    case GW_CMD_APP_SRV_LOCK_DOOR:
+    case GW_CMD_APP_SRV_UNLOCK_DOOR:
+    case GW_CMD_APP_SRV_TOGGLE:
+        disable_default_rsp = 0x01;
+        attr_data_len = pt_pd->parameter[1] + 1;
+        p_attr_data = pvPortMalloc(attr_data_len);
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        p_attr_data[0] = attr_data_len - 1;
+        memcpy(&p_attr_data[1], &pt_pd->parameter[2], attr_data_len);
+        break;
+    case GW_CMD_APP_SRV_SET_PIN_CODE:
+        attr_data_len = parameter_len;
+        p_attr_data = pvPortMalloc(attr_data_len);
+
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        disable_default_rsp = 0x01;
+        memcpy(p_attr_data, &pt_pd->parameter[1], attr_data_len);
+        break;
+    case GW_CMD_APP_SRV_GET_PIN_CODE:
+    case GW_CMD_APP_SRV_CLEAR_PIN_CODE:
+    case GW_CMD_APP_SRV_GET_USER_STATUS:
+    case GW_CMD_APP_SRV_GET_USER_TYPE:
+        attr_data_len = 2;
+        disable_default_rsp = 0x01;
+        p_attr_data = pvPortMalloc(attr_data_len);
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        memcpy(p_attr_data, &pt_pd->parameter[1], attr_data_len);
+        break;
+    case GW_CMD_APP_SRV_CLEAR_ALL_PIN_CODES:
+        attr_data_len = 0;
+        disable_default_rsp = 0x01;
+        break;
+    case GW_CMD_APP_SRV_SET_USER_STATUS:
+        attr_data_len = 3;
+        disable_default_rsp = 0x01;
+        p_attr_data = pvPortMalloc(attr_data_len);
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        memcpy(p_attr_data, &pt_pd->parameter[1], attr_data_len);
+        break;
+    case GW_CMD_APP_SRV_SET_USER_TYPE:
+        attr_data_len = 3;
+        disable_default_rsp = 0x01;
+        p_attr_data = pvPortMalloc(attr_data_len);
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        memcpy(p_attr_data, &pt_pd->parameter[1], attr_data_len);
+        break;
+    default:
+        break;
+    }
+
+    do
+    {
+        ZIGBEE_ZCL_DATA_REQ(pt_data_req, pt_pd->address, pt_pd->address_mode,
+                            pt_pd->parameter[0], ZIGBEE_DEFAULT_ENDPOINT,
+                            ZB_ZCL_CLUSTER_ID_DOOR_LOCK,
                             cmd_id,
                             TRUE, disable_default_rsp,
                             ZCL_FRAME_CLIENT_SERVER_DIR, 0, attr_data_len)
@@ -1233,5 +1463,12 @@ void gw_cmd_app_service_handle(uint32_t cmd_id, uint8_t *pkt)
     {
         _cmd_dev_color_ctrl_handle(cmd_id - GW_CMD_APP_SRV_COLOR_CTRL_BASE, pkt);
     }
+
+    else if ( (cmd_id >= GW_CMD_APP_SRV_DOOR_LOCK_BASE) &&
+              (cmd_id < GW_CMD_APP_SRV_DOOR_LOCK_BASE + GW_CMD_APP_CMD_OFFSET))
+    {
+        _cmd_dev_door_lock_handle(cmd_id - GW_CMD_APP_SRV_DOOR_LOCK_BASE, pkt);
+    }
+
 
 }

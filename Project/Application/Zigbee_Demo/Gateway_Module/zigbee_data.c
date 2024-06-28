@@ -19,7 +19,7 @@
 //                Private Global Variables
 //=============================================================================
 #define GW_IN_CLUSTER_NUM           4
-#define GW_OUT_CLUSTER_NUM          13
+#define GW_OUT_CLUSTER_NUM          14
 
 #define GW_DEVICE_VER               0
 #define GW_DEVICE_ID                0
@@ -211,12 +211,19 @@ zb_zcl_cluster_desc_t g_zigbee_cluster_list[] =
         NULL,
         ZB_ZCL_CLUSTER_CLIENT_ROLE,
         ZB_ZCL_MANUF_CODE_INVALID
+    ),
+    ZB_ZCL_CLUSTER_DESC(
+        ZB_ZCL_CLUSTER_ID_DOOR_LOCK,
+        0,
+        NULL,
+        ZB_ZCL_CLUSTER_CLIENT_ROLE,
+        ZB_ZCL_MANUF_CODE_INVALID
     )
 };
 //=============================================================================
 //                Simple desc definitions
 //=============================================================================
-ZB_DECLARE_SIMPLE_DESC(4, 13);
+ZB_DECLARE_SIMPLE_DESC(4, 14);
 
 ZB_AF_SIMPLE_DESC_TYPE(GW_IN_CLUSTER_NUM, GW_OUT_CLUSTER_NUM) simple_desc_gateway =
 {
@@ -245,6 +252,7 @@ ZB_AF_SIMPLE_DESC_TYPE(GW_IN_CLUSTER_NUM, GW_OUT_CLUSTER_NUM) simple_desc_gatewa
         ZB_ZCL_CLUSTER_ID_METERING,
         ZB_ZCL_CLUSTER_ID_ELECTRICAL_MEASUREMENT,
         ZB_ZCL_CLUSTER_ID_CUSTOM,
+        ZB_ZCL_CLUSTER_ID_DOOR_LOCK,
         ZB_ZCL_CLUSTER_ID_IDENTIFY,
     }
 };

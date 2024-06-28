@@ -22,6 +22,9 @@
 #include "util_log.h"
 #include "util_printf.h"
 
+#define RAIDO_MAC_ADDR_FLASH_ID_MODE 0
+#define RAIDO_MAC_ADDR_MP_SECTOR_MODE 1
+extern void rafael_radio_mac_read_config_set(uint8_t mode);
 #if PLAFFORM_CONFIG_ENABLE_SUBG
 #define RFB_POWER_STAGLE_INDEX       (30) //7~30
 #define RFB_DATA_RATE FSK_300K // Supported Value: [FSK_50K; FSK_100K; FSK_150K; FSK_200K; FSK_300K]
@@ -191,6 +194,7 @@ static void gpio6_handler()
 
 int main()
 {
+    rafael_radio_mac_read_config_set(RAIDO_MAC_ADDR_FLASH_ID_MODE);
 #if PLAFFORM_CONFIG_ENABLE_SUBG
     rafael_radio_subg_datarate_set(RFB_DATA_RATE);
     rafael_radio_subg_band_set(

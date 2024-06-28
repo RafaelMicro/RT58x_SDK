@@ -43,6 +43,7 @@ C_SOURCES += ../../../../../Library/RT58x/Peripheral/flashctl.c
 C_SOURCES += ../../../../../Library/RT58x/Peripheral/gpio.c
 C_SOURCES += ../../../../../Library/RT58x/Peripheral/lpm.c
 C_SOURCES += ../../../../../Library/RT58x/Peripheral/mp_sector.c
+C_SOURCES += ../../../../../Library/RT58x/Peripheral/sadc.c
 C_SOURCES += ../../../../../Library/RT58x/Peripheral/sysctrl.c
 C_SOURCES += ../../../../../Library/RT58x/Peripheral/sysfun.c
 C_SOURCES += ../../../../../Library/RT58x/Peripheral/timer.c

@@ -71,6 +71,7 @@
 #define SUPPORT_FREERTOS_NEST_CRITICAL     0
 #define RFB_SUBG_ENABLED                   TRUE
 #define RFB_15p4_MAC_ENABLED               TRUE
+#define RFB_FIX_TX_POWER_SUPPORT           TRUE
 
 #endif
 

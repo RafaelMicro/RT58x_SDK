@@ -42,6 +42,7 @@ void rafael_rfb_init(void);
 void platformRadioProcess(otInstance *aInstance);
 void rafael_radio_short_addr_ctrl(uint8_t ctrl_type, uint8_t *short_addr);
 void rafael_radio_extend_addr_ctrl(uint8_t ctrl_type, uint8_t *extend_addr);
+void rafael_radio_mac_read_config_set(uint8_t mode);
 
 /*entropy.c*/
 void random_number_init(void);

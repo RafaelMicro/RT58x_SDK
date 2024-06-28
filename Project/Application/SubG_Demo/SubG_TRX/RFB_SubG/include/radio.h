@@ -157,15 +157,13 @@ typedef struct rfb_ctrl_s
     /**
      * @brief Set TX continuous wave (for testing, tx timeout is not supported)
      *
-     * @param RF frequency [116250~930000 (kHz)]
-     * @param TX power [0: TX_POWER_20dBm , 1:TX_POWER_14dBm, 2:TX_POWER_0dBm]
-     * @param Timeout [N/A]
+     * @param tx_enable [1: start, 0: stop]
      * @return None
      * @date 14 Dec. 2020
      * @see
      * @image
      */
-    void (*tx_continuous_wave_set)(uint32_t rf_frequency, tx_power_level_t tx_power);
+    void (*tx_continuous_wave_set)(bool tx_enable);
     /**
      * @brief Read RSSI
      *

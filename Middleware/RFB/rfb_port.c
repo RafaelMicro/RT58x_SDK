@@ -411,47 +411,48 @@ RFB_WRITE_TXQ_STATUS rfb_port_data_send(uint8_t *tx_data_address, uint16_t packe
     return rfb_write_tx_queue_status;
 }
 
-RFB_EVENT_STATUS rfb_port_tx_continuous_wave_set(uint32_t rf_frequency, tx_power_level_t tx_power)
+RFB_EVENT_STATUS rfb_port_tx_continuous_wave_set(bool tx_enable)
 {
     static uint8_t dummy_tx_data[10];
     RFB_EVENT_STATUS event_status = RFB_EVENT_SUCCESS;
     RFB_WRITE_TXQ_STATUS rfb_write_tx_queue_status;
-    /*Set RF State to Idle*/
-    event_status = rfb_comm_rf_idle_set();
-    if (event_status != RFB_EVENT_SUCCESS)
-    {
-        printf("[W] rfb_comm_rf_idle_set fail, status:%d\n", event_status);
 
-        return event_status;
+    if (tx_enable)
+    {
+        /*Set RF State to Idle*/
+        event_status = rfb_comm_rf_idle_set();
+        if (event_status != RFB_EVENT_SUCCESS)
+        {
+            printf("[W] rfb_comm_rf_idle_set fail, status:%d\n", event_status);
+
+            return event_status;
+        }
+
+        event_status = rfb_comm_single_tone_mode_set(2);
+        if (event_status != RFB_EVENT_SUCCESS)
+        {
+            printf("[W] rfb_comm_single_tone_mode_set fail, status:%d\n", event_status);
+
+            return event_status;
+        }
+
+        rfb_write_tx_queue_status = rfb_comm_tx_data_send(10, &dummy_tx_data[0], 0, 0);
+        if (rfb_write_tx_queue_status != RFB_WRITE_TXQ_SUCCESS)
+        {
+            printf("[W] rfb_comm_tx_data_send fail, status:%d\n", rfb_write_tx_queue_status);
+
+            return event_status;
+        }
     }
-
-    /*
-    * Set channel frequency :
-    * For band is subg, units is kHz
-    * For band is 2.4g, units is mHz
-    */
-    event_status = rfb_comm_frequency_set(rf_frequency);
-    if (event_status != RFB_EVENT_SUCCESS)
+    else
     {
-        printf("[W] rfb_comm_frequency_set fail, status:%d\n", event_status);
+        event_status = rfb_comm_single_tone_mode_set(0);
+        if (event_status != RFB_EVENT_SUCCESS)
+        {
+            printf("[W] rfb_comm_single_tone_mode_set fail, status:%d\n", event_status);
 
-        return event_status;
-    }
-
-    event_status = rfb_comm_single_tone_mode_set(2);
-    if (event_status != RFB_EVENT_SUCCESS)
-    {
-        printf("[W] rfb_comm_single_tone_mode_set fail, status:%d\n", event_status);
-
-        return event_status;
-    }
-
-    rfb_write_tx_queue_status = rfb_comm_tx_data_send(10, &dummy_tx_data[0], 0, 0);
-    if (rfb_write_tx_queue_status != RFB_WRITE_TXQ_SUCCESS)
-    {
-        printf("[W] rfb_comm_tx_data_send fail, status:%d\n", rfb_write_tx_queue_status);
-
-        return event_status;
+            return event_status;
+        }
     }
 
     return event_status;
@@ -866,9 +867,14 @@ RFB_EVENT_STATUS rfb_port_rx_start(void)
 
 RFB_EVENT_STATUS rfb_port_tx_power_set(uint8_t band_type, uint8_t power_index)
 {
-    /* Band type 0: 2.4GHz, 1: Sub-1GHz band 0, 2: Sub-1GHz band 1, 3: Sub-1GHz band 2 */
     RFB_EVENT_STATUS event_status = RFB_EVENT_SUCCESS;
-    event_status = rfb_comm_tx_power_set(band_type, power_index);
+    uint8_t band_type_ruci;
+
+    /* RUCI band type: [0: 2.4GHz, 1: SubG 915MHz, 2: SubG 868MHz, 3: SubG 433MHz, 4: SubG 315MHz] */
+    band_type_ruci = (band_type < BAND_SUBG_868M) ? (band_type ^ 1) : band_type;
+
+    event_status = rfb_comm_tx_power_set(band_type_ruci, power_index);
+
     if (event_status != RFB_EVENT_SUCCESS)
     {
         printf("[W] rfb_port_tx_power_set fail, status:%d\n", event_status);
@@ -879,9 +885,14 @@ RFB_EVENT_STATUS rfb_port_tx_power_set(uint8_t band_type, uint8_t power_index)
 
 RFB_EVENT_STATUS rfb_port_tx_power_set_oqpsk(uint8_t band_type, uint8_t power_index)
 {
-    /* Band type 0: 2.4GHz, 1: Sub-1GHz band 0, 2: Sub-1GHz band 1, 3: Sub-1GHz band 2 */
     RFB_EVENT_STATUS event_status = RFB_EVENT_SUCCESS;
-    event_status = rfb_comm_tx_power_set_oqpsk(band_type, power_index);
+    uint8_t band_type_ruci;
+
+    /* RUCI band type: [0: 2.4GHz, 1: SubG 915MHz, 2: SubG 868MHz, 3: SubG 433MHz, 4: SubG 315MHz] */
+    band_type_ruci = (band_type < BAND_SUBG_868M) ? (band_type ^ 1) : band_type;
+
+    event_status = rfb_comm_tx_power_set_oqpsk(band_type_ruci, power_index);
+
     if (event_status != RFB_EVENT_SUCCESS)
     {
         printf("[W] rfb_port_tx_power_set_oqpsk fail, status:%d\n", event_status);

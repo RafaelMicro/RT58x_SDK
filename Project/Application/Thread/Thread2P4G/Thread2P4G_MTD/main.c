@@ -27,6 +27,9 @@
 #include "util_log.h"
 #include "util_printf.h"
 
+#define RAIDO_MAC_ADDR_FLASH_ID_MODE 0
+#define RAIDO_MAC_ADDR_MP_SECTOR_MODE 1
+extern void rafael_radio_mac_read_config_set(uint8_t mode);
 #if PLAFFORM_CONFIG_ENABLE_SUBG
 #define APP_RFB_FIX_TX_POWER_SUPPORT  0
 #define RFB_POWER_STAGLE_INDEX       (30) //7~30
@@ -117,6 +120,7 @@ static void pin_mux_init(void)
 
 int main(int argc, char *argv[])
 {
+    rafael_radio_mac_read_config_set(RAIDO_MAC_ADDR_FLASH_ID_MODE);
 #if PLAFFORM_CONFIG_ENABLE_SUBG
     rafael_radio_subg_datarate_set(RFB_DATA_RATE);
     rafael_radio_subg_band_set(

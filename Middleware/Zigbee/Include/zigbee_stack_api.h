@@ -155,6 +155,7 @@ extern "C"
 #include "zb_zcl_el_measurement.h"
 #include "zb_zcl_illuminance_measurement.h"
 #include "zb_zcl_rel_humidity_measurement.h"
+#include "zb_zcl_door_lock.h"
 #endif
 /** @addtogroup ZigBee_Stack
  *  @{
@@ -410,8 +411,9 @@ typedef enum RAF_CMD
     RAF_CMD_PERMIT_JOIN_REQUEST,
     RAF_CMD_NETWORK_UPDATE_REQUEST                      = 0x00000038,
     RAF_CMD_NETWORK_START_REQUEST,
-    RAF_CMD_DEVICE_RESET_REQUEST                      = 0x00000040,
+    RAF_CMD_DEVICE_RESET_REQUEST                        = 0x00000040,
     RAF_CMD_GATEWAY_EXT_ADDRESS_REQUEST                 = 0x00000041,
+    RAF_CMD_GATEWAY_PERMIT_JOIN_STATUS_REQUEST          = 0x00000042,
     RAF_CMD_FINISH,
 } raf_cmd_t;
 
