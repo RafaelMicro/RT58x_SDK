@@ -119,15 +119,9 @@ static void _zcl_doorlock_process(uint16_t cmd, uint16_t datalen, uint8_t *pdata
         uint8_t code_len;
         info("\n");
         info("Received %s command\n", c);
-        if (datalen > 0)
+        if (datalen > 0 && get_pincode()[0] > 0)
         {
             code_len = pdata[0];
-            info("Received PIN code:");
-            for (uint8_t i = 0; i < code_len; i++)
-            {
-                info("%c", pdata[i + 1]);
-            }
-            info("\n");
             if (code_len > 0 && !memcmp(pdata, get_pincode(), code_len))
             {
                 info("PIN code match\n");
@@ -138,17 +132,10 @@ static void _zcl_doorlock_process(uint16_t cmd, uint16_t datalen, uint8_t *pdata
             }
             else
             {
-                uint8_t *buf;
-                buf = get_pincode();
-                info_color(LOG_RED, "PIN code not match, expected PIN code:");
-                for (uint8_t i = 0; i < buf[0]; i++)
-                {
-                    info_color(LOG_RED, "%c", buf[i + 1]);
-                }
-                info_color(LOG_RED, "\n");
+                info_color(LOG_RED, "PIN code not match\n");
             }
         }
-        else if (datalen == 0 && get_pincode()[0] == 0)
+        else if (get_pincode()[0] == 0)
         {
             set_lock_state((cmd == ZB_ZCL_CMD_DOOR_LOCK_LOCK_DOOR) ? ZB_ZCL_ATTR_DOOR_LOCK_LOCK_STATE_LOCKED :
                            (cmd == ZB_ZCL_CMD_DOOR_LOCK_UNLOCK_DOOR) ? ZB_ZCL_ATTR_DOOR_LOCK_LOCK_STATE_UNLOCKED :
@@ -162,19 +149,19 @@ static void _zcl_doorlock_process(uint16_t cmd, uint16_t datalen, uint8_t *pdata
         uint8_t status = 0;
         if (datalen > 4)
         {
-            info("\n");
+            if ((pdata[4] + 5) != datalen)
+            {
+                info_color(LOG_RED, "pincode len error\n");
+                status = 1;// generic error
+            }
             info("Set PIN code:");
             for (uint8_t i = 0; i < pdata[4]; i++)
             {
                 info("%c", pdata[i + 5]);
             }
             info("\n");
-            if ((pdata[4] + 5) != datalen)
-            {
-                info_color(LOG_RED, "pincode len error\n");
-                status = 1;// generic error
-            }
             set_pincode(pdata + 4);
+            pincode_update();
             zigbee_zcl_data_req_t *pt_data_req;
 
             ZIGBEE_ZCL_DATA_REQ(pt_data_req, srcAddr, ZB_APS_ADDR_MODE_16_ENDP_PRESENT, srcEndpint, ZIGBEE_DEFAULT_ENDPOINT,

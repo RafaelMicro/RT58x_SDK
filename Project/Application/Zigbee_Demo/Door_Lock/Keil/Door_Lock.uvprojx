@@ -518,6 +518,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\Library\RT58x\Crypto\crypto_util.c</FilePath>
             </File>
+            <File>
+              <FileName>flashds.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\Library\RT58x\Peripheral\flashds.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

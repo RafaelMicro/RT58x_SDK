@@ -307,36 +307,36 @@ void rfb_tx_init(void)
     switch (g_data_rate)
     {
     case 6250:
-        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, OQPSK_6P25K, 8, MOD_UNDEF, CRC_16, WHITEN_DISABLE, OQPSK);
+        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, OQPSK_6P25K, 8, MOD_UNDEF, CRC_16, WHITEN_ENABLE, OQPSK);
         break;
     case 12500:
-        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, OQPSK_12P5K, 8, MOD_UNDEF, CRC_16, WHITEN_DISABLE, OQPSK);
+        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, OQPSK_12P5K, 8, MOD_UNDEF, CRC_16, WHITEN_ENABLE, OQPSK);
         break;
     case 25000:
-        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, OQPSK_25K, 8, MOD_UNDEF, CRC_16, WHITEN_DISABLE, OQPSK);
+        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, OQPSK_25K, 8, MOD_UNDEF, CRC_16, WHITEN_ENABLE, OQPSK);
         break;
     case 50000:
-        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_50K, 8, MOD_1, CRC_16, WHITEN_DISABLE, GFSK);
+        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_50K, 8, MOD_1, CRC_16, WHITEN_ENABLE, GFSK);
         break;
     case 100000:
-        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_100K, 8, MOD_1, CRC_16, WHITEN_DISABLE, GFSK);
+        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_100K, 8, MOD_1, CRC_16, WHITEN_ENABLE, GFSK);
         break;
     case 150000:
-        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_150K, 8, MOD_1, CRC_16, WHITEN_DISABLE, GFSK);
+        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_150K, 8, MOD_1, CRC_16, WHITEN_ENABLE, GFSK);
         break;
     case 200000:
-        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_200K, 8, MOD_1, CRC_16, WHITEN_DISABLE, GFSK);
+        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_200K, 8, MOD_1, CRC_16, WHITEN_ENABLE, GFSK);
         break;
     case 300000:
-        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_300K, 8, MOD_1, CRC_16, WHITEN_DISABLE, GFSK);
+        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_300K, 8, MOD_1, CRC_16, WHITEN_ENABLE, GFSK);
         break;
 
     default:
-        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_100K, 8, MOD_1, CRC_16, WHITEN_DISABLE, GFSK);
+        g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_100K, 8, MOD_1, CRC_16, WHITEN_ENABLE, GFSK);
         break;
     }
 #else
-    g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_100K, 8, MOD_1, CRC_16, WHITEN_DISABLE, GFSK);
+    g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_100K, 8, MOD_1, CRC_16, WHITEN_ENABLE, GFSK);
 #endif
     /*
     * Set channel frequency :
@@ -367,41 +367,41 @@ void rfb_rx_init(uint32_t rx_timeout_timer, bool rx_continuous)
         switch (g_data_rate)
         {
         case 6250:
-            g_rfb_ctrl->rx_config_set(OQPSK_6P25K, 8, MOD_UNDEF, CRC_16, WHITEN_DISABLE, 0, rx_continuous, OQPSK);
+            g_rfb_ctrl->rx_config_set(OQPSK_6P25K, 8, MOD_UNDEF, CRC_16, WHITEN_ENABLE, 0, rx_continuous, OQPSK);
             break;
         case 12500:
-            g_rfb_ctrl->rx_config_set(OQPSK_12P5K, 8, MOD_UNDEF, CRC_16, WHITEN_DISABLE, 0, rx_continuous, OQPSK);
+            g_rfb_ctrl->rx_config_set(OQPSK_12P5K, 8, MOD_UNDEF, CRC_16, WHITEN_ENABLE, 0, rx_continuous, OQPSK);
             break;
         case 25000:
-            g_rfb_ctrl->rx_config_set(OQPSK_25K, 8, MOD_UNDEF, CRC_16, WHITEN_DISABLE, 0, rx_continuous, OQPSK);
+            g_rfb_ctrl->rx_config_set(OQPSK_25K, 8, MOD_UNDEF, CRC_16, WHITEN_ENABLE, 0, rx_continuous, OQPSK);
             break;
         case 50000:
-            g_rfb_ctrl->rx_config_set(FSK_50K, 8, MOD_1, CRC_16, WHITEN_DISABLE, 0, rx_continuous, GFSK);
+            g_rfb_ctrl->rx_config_set(FSK_50K, 8, MOD_1, CRC_16, WHITEN_ENABLE, 0, rx_continuous, GFSK);
             break;
         case 100000:
-            g_rfb_ctrl->rx_config_set(FSK_100K, 8, MOD_1, CRC_16, WHITEN_DISABLE, 0, rx_continuous, GFSK);
+            g_rfb_ctrl->rx_config_set(FSK_100K, 8, MOD_1, CRC_16, WHITEN_ENABLE, 0, rx_continuous, GFSK);
             break;
         case 150000:
-            g_rfb_ctrl->rx_config_set(FSK_150K, 8, MOD_1, CRC_16, WHITEN_DISABLE, 0, rx_continuous, GFSK);
+            g_rfb_ctrl->rx_config_set(FSK_150K, 8, MOD_1, CRC_16, WHITEN_ENABLE, 0, rx_continuous, GFSK);
             break;
         case 200000:
-            g_rfb_ctrl->rx_config_set(FSK_200K, 8, MOD_1, CRC_16, WHITEN_DISABLE, 0, rx_continuous, GFSK);
+            g_rfb_ctrl->rx_config_set(FSK_200K, 8, MOD_1, CRC_16, WHITEN_ENABLE, 0, rx_continuous, GFSK);
             break;
         case 300000:
-            g_rfb_ctrl->rx_config_set(FSK_300K, 8, MOD_1, CRC_16, WHITEN_DISABLE, 0, rx_continuous, GFSK);
+            g_rfb_ctrl->rx_config_set(FSK_300K, 8, MOD_1, CRC_16, WHITEN_ENABLE, 0, rx_continuous, GFSK);
             break;
 
         default:
-            g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, FSK_100K, 8, MOD_1, CRC_16, WHITEN_DISABLE, GFSK);
+            g_rfb_ctrl->rx_config_set(FSK_100K, 8, MOD_1, CRC_16, WHITEN_ENABLE, 0, rx_continuous, GFSK);
             break;
         }
 #else
-        g_rfb_ctrl->rx_config_set(FSK_100K, 8, MOD_1, CRC_16, WHITEN_DISABLE, 0, rx_continuous, GFSK);
+        g_rfb_ctrl->rx_config_set(FSK_100K, 8, MOD_1, CRC_16, WHITEN_ENABLE, 0, rx_continuous, GFSK);
 #endif
     }
     else
     {
-        g_rfb_ctrl->rx_config_set(FSK_100K, 8, MOD_1, CRC_16, WHITEN_DISABLE, rx_timeout_timer, rx_continuous, GFSK);
+        g_rfb_ctrl->rx_config_set(FSK_100K, 8, MOD_1, CRC_16, WHITEN_ENABLE, rx_timeout_timer, rx_continuous, GFSK);
     }
     /* Set channel frequency */
 #if (SUBG_TEST_PLAN_BER)

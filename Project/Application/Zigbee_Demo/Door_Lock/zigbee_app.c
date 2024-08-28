@@ -79,6 +79,29 @@ extern uint8_t reset_to_default;
 //=============================================================================
 //                Functions
 //=============================================================================
+void pincode_init(void)
+{
+    ds_rw_t pincode_dataset_read;
+    pincode_dataset_read.type = DS_TYPE_PINCODE;
+    if (ds_read(&pincode_dataset_read) == STATUS_SUCCESS)
+    {
+        set_pincode((uint8_t *)pincode_dataset_read.address);
+    }
+    else
+    {
+        /*Store default pincode if there's no pincode in flash*/
+        pincode_update();
+    }
+}
+
+void pincode_update(void)
+{
+    ds_rw_t pincode_dataset_write;
+    pincode_dataset_write.type = DS_TYPE_PINCODE;
+    pincode_dataset_write.len = 16;
+    pincode_dataset_write.address = (uint32_t) get_pincode();
+    ds_write(&pincode_dataset_write);
+}
 static void app_main_loop(uint32_t event)
 {
     uint8_t  extPANID[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};  //address all zero is able to join to any suitable PAN
@@ -88,6 +111,14 @@ static void app_main_loop(uint32_t event)
     case APP_INIT_EVT:
         if (zigbee_ed_nwk_start_request(ZIGBEE_CHANNEL_ALL_MASK(), 0x0 /*ZIGBEE_CHANNEL_MASK(26)*/, false, APP_KEEP_ALIVE_TIMEOUT, extPANID, reset_to_default) == 0)
         {
+            if (reset_to_default)
+            {
+                pincode_update();
+            }
+            else
+            {
+                pincode_init();
+            }
             app_event_state = APP_IDLE_EVT;
         }
         break;
@@ -248,6 +279,12 @@ void zigbee_app_init(void)
     utility_register_stdout(bsp_console_stdout_char, bsp_console_stdout_string);
     util_log_init();
     //util_log_on(UTIL_LOG_PROTOCOL);
+
+    /* flash dataset init*/
+    ds_config_t app_ds_config;
+    app_ds_config.start_address = DEVICE_DB_START_ADDRESS;
+    app_ds_config.end_address = DEVICE_DB_END_ADDRESS;
+    ds_initinal(app_ds_config);
 
     gt_app_cfg.p_zigbee_device_contex_t = &simple_desc_door_sens_ctx;
     gt_app_cfg.pf_evt_indication = app_evt_indication_cb;

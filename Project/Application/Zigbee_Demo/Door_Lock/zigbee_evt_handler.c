@@ -90,6 +90,13 @@ static void _zdo_evt_device_leave_idc(sys_tlv_t *pt_tlv)
                    pt_dev_leave->ieeeAddr[1], pt_dev_leave->ieeeAddr[0]);
         info_color(LOG_RED, "\tShort address 0x%04x, rejoin %02X\n", pt_dev_leave->shortAddr, pt_dev_leave->rejoin);
 
+        if (memcmp(pt_dev_leave->ieeeAddr, long_addr, 8) == 0 && pt_dev_leave->rejoin == 0)
+        {
+            ds_reset_to_default();
+            info("clear device DB\n");
+            Sys_Software_Reset();
+        }
+
     } while (0);
 }
 

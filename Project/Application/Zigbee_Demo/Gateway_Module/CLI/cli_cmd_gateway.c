@@ -1164,6 +1164,110 @@ _cli_cmd_ic_add(int argc, char **argv, cb_shell_out_t log_out, void *pExtra)
     return 0;
 }
 
+static int
+_cli_cmd_zcl_door_lock(int argc, char **argv, cb_shell_out_t log_out, void *pExtra)
+{
+    zigbee_zcl_data_req_t *pt_data_req;
+    uint16_t addr;
+    uint8_t ep, cmd;
+    uint8_t pincode_len = 8;
+    uint8_t pin_code[] = {8, '1', '2', '3', '4', '5', '6', '7', '8'};
+    do
+    {
+        if (argc < 5)
+        {
+            break;
+        }
+
+        if (memcmp("lock", argv[1], 4) == 0)
+        {
+            cmd = ZB_ZCL_CMD_DOOR_LOCK_LOCK_DOOR;
+        }
+        else if (memcmp("unlock", argv[1], 6) == 0)
+        {
+            cmd = ZB_ZCL_CMD_DOOR_LOCK_UNLOCK_DOOR;
+        }
+        addr = (*(argv[2] + 1) == 'x')
+               ? utility_strtox(argv[2] + 2, 0)
+               : utility_strtol(argv[2], 0);
+
+        ep = (*(argv[3] + 1) == 'x')
+             ? utility_strtox(argv[3] + 2, 0)
+             : utility_strtol(argv[3], 0);
+
+        pincode_len = strlen(argv[4]);
+        memset(pin_code + 1, 0, pincode_len);
+        pin_code[0] = pincode_len;
+        memcpy(pin_code + 1, argv[4], pincode_len);
+
+
+        ZIGBEE_ZCL_DATA_REQ(pt_data_req, addr, ZB_APS_ADDR_MODE_16_ENDP_PRESENT, ep, ZIGBEE_DEFAULT_ENDPOINT,
+                            ZB_ZCL_CLUSTER_ID_DOOR_LOCK,
+                            cmd,
+                            TRUE, TRUE,
+                            ZCL_FRAME_CLIENT_SERVER_DIR, 0, pincode_len + 1)
+
+        if (pt_data_req)
+        {
+            memcpy(pt_data_req->cmdFormat, pin_code, pincode_len + 1);
+            zigbee_zcl_request(pt_data_req, pt_data_req->cmdFormatLen);
+            sys_free(pt_data_req);
+        }
+
+    } while (0);
+    return 0;
+}
+static int
+
+_cli_cmd_zcl_door_lock_set_pin_code(int argc, char **argv, cb_shell_out_t log_out, void *pExtra)
+{
+    zigbee_zcl_data_req_t *pt_data_req;
+    uint16_t addr;
+    uint8_t ep, pincode_len;
+    char *pincode;
+
+    do
+    {
+        if (argc < 4)
+        {
+            break;
+        }
+
+
+        pincode_len = strlen(argv[1]);
+        pincode = argv[1];
+
+        addr = (*(argv[2] + 1) == 'x')
+               ? utility_strtox(argv[2] + 2, 0)
+               : utility_strtol(argv[2], 0);
+
+        ep = (*(argv[3] + 1) == 'x')
+             ? utility_strtox(argv[3] + 2, 0)
+             : utility_strtol(argv[3], 0);
+
+
+
+        ZIGBEE_ZCL_DATA_REQ(pt_data_req, addr, ZB_APS_ADDR_MODE_16_ENDP_PRESENT, ep, ZIGBEE_DEFAULT_ENDPOINT,
+                            ZB_ZCL_CLUSTER_ID_DOOR_LOCK,
+                            ZB_ZCL_CMD_DOOR_LOCK_SET_PIN_CODE,
+                            TRUE, TRUE,
+                            ZCL_FRAME_CLIENT_SERVER_DIR, 0, 5 + pincode_len)
+
+        if (pt_data_req)
+        {
+            pt_data_req->cmdFormat[0] = 0x00;
+            pt_data_req->cmdFormat[1] = 0x00;
+            pt_data_req->cmdFormat[2] = 0x01;
+            pt_data_req->cmdFormat[3] = 0x00;
+            pt_data_req->cmdFormat[4] = pincode_len;
+            memcpy(&pt_data_req->cmdFormat[5], pincode, pincode_len);
+            zigbee_zcl_request(pt_data_req, pt_data_req->cmdFormatLen);
+            sys_free(pt_data_req);
+        }
+
+    } while (0);
+    return 0;
+}
 //=============================================================================
 //                  Public Function Definition
 //=============================================================================
@@ -1366,6 +1470,23 @@ const sh_cmd_t  g_cli_cmd_zcl_send_custom __cli_cmd_pool =
     "  usage: cs [value]\n"
     "    e.g. cs 0xaa\n",
 };
+const sh_cmd_t  g_cli_cmd_door_lock __cli_cmd_pool =
+{
+    .pCmd_name      = "doorlock",
+    .cmd_exec       = _cli_cmd_zcl_door_lock,
+    .pDescription   = "send doorlock command\n"
+    "  usage: doorlock [lock/unlock] [short address] [end point] pincode\n"
+    "    e.g. doorlock lock 0x1234 2 12345678\n",
+};
+const sh_cmd_t  g_cli_cmd_set_pin_code __cli_cmd_pool =
+{
+    .pCmd_name      = "pincode",
+    .cmd_exec       = _cli_cmd_zcl_door_lock_set_pin_code,
+    .pDescription   = "set pin code command\n"
+    "  usage: pincode [pincode] [short address] [end point]\n"
+    "    e.g. pincode 12345678 0x1234 2\n",
+};
+
 
 const sh_cmd_t  g_cli_cmd_ic_add __cli_cmd_pool =
 {

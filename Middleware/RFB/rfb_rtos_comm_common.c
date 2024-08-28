@@ -369,6 +369,43 @@ RFB_EVENT_STATUS rfb_comm_rx_enable_set(bool rx_continuous, uint32_t rx_timeout)
 }
 
 
+RFB_EVENT_STATUS rfb_comm_rx_reserve_set(uint32_t rx_start_time, uint32_t rx_on_time)
+{
+    ruci_para_set_rx_reserve_enable_t sRxReqCmd = {0};
+    ruci_para_cnf_event_t sCnfEvent = {0};
+    uint8_t event_len = 0;
+    RF_MCU_RX_CMDQ_ERROR event_status = RF_MCU_RX_CMDQ_ERR_INIT;
+
+    SET_RUCI_PARA_SET_RX_RESERVE_ENABLE(&sRxReqCmd, rx_start_time, rx_on_time);
+
+    RUCI_ENDIAN_CONVERT((uint8_t *)&sRxReqCmd, RUCI_SET_RX_RESERVE_ENABLE);
+
+    //enter_critical_section();
+    if (rfb_send_cmd((uint8_t *)&sRxReqCmd, RUCI_LEN_SET_RX_RESERVE_ENABLE) == false)
+    {
+        return RFB_CNF_EVENT_TX_BUSY;
+    }
+    event_status = rfb_event_read(&event_len, (uint8_t *)&sCnfEvent);
+    //leave_critical_section();
+
+    RUCI_ENDIAN_CONVERT((uint8_t *)&sCnfEvent, RUCI_CNF_EVENT);
+    if (event_status != RF_MCU_RX_CMDQ_GET_SUCCESS)
+    {
+        return RFB_CNF_EVENT_NOT_AVAILABLE;
+    }
+    if (sCnfEvent.pci_cmd_subheader != RUCI_CODE_SET_RX_RESERVE_ENABLE)
+    {
+        return RFB_CNF_EVENT_CONTENT_ERROR;
+    }
+    if (sCnfEvent.status != RFB_EVENT_SUCCESS)
+    {
+        return (RFB_EVENT_STATUS)sCnfEvent.status;
+    }
+
+    return RFB_EVENT_SUCCESS;
+}
+
+
 RFB_EVENT_STATUS rfb_comm_rf_idle_set(void)
 {
     ruci_para_set_rf_idle_t sRfIdleSetCmd = {0};

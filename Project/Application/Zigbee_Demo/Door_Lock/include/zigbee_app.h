@@ -9,6 +9,8 @@ extern "C" {
 #endif
 
 #include "zigbee_stack_api.h"
+#define DEVICE_DB_START_ADDRESS 0xF0000
+#define DEVICE_DB_END_ADDRESS 0xF2000
 
 typedef enum
 {
@@ -28,11 +30,16 @@ typedef enum
     APP_QUEUE_ISR_BUTTON_EVT,
 } app_queue_evt_t;
 
+typedef enum
+{
+    DS_TYPE_PINCODE = 0x01,
+} dataset_type_t;
 extern zb_af_device_ctx_t simple_desc_door_sens_ctx;
 
 void zigbee_app_init(void);
 void zigbee_app_evt_change(uint32_t evt);
-
+void pincode_init(void);
+void pincode_update(void);
 
 uint32_t get_identify_time(void);
 

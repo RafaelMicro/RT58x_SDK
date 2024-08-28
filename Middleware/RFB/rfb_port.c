@@ -278,6 +278,27 @@ RFB_EVENT_STATUS rfb_port_wake_on_radio_set(uint32_t rf_frequency, uint16_t rx_o
     return event_status;
 }
 
+RFB_EVENT_STATUS rfb_port_receive_at(uint8_t rf_channel, uint32_t rx_start_time, uint32_t rx_on_time)
+{
+    uint32_t rf_frequency;
+    RFB_EVENT_STATUS event_status = RFB_EVENT_SUCCESS;
+
+    rf_frequency = (rf_channel - 10) * 5 + 2400;
+    event_status = rfb_comm_frequency_set(rf_frequency);
+    if (event_status != RFB_EVENT_SUCCESS)
+    {
+        printf("[W] rfb_comm_frequency_set fail, status:%d\n", event_status);
+    }
+
+    event_status = rfb_comm_rx_reserve_set(rx_start_time, rx_on_time);
+    if (event_status != RFB_EVENT_SUCCESS)
+    {
+        printf("[W] rfb_comm_rx_reserve_set fail, status:%d\n", event_status);
+    }
+
+    return event_status;
+}
+
 RFB_EVENT_STATUS rfb_port_2ch_scan_frequency_set(uint8_t scan_enable, uint32_t rf_freq1, uint32_t rf_freq2)
 {
     RFB_EVENT_STATUS event_status = RFB_EVENT_SUCCESS;

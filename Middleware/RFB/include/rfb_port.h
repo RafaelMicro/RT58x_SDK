@@ -94,5 +94,6 @@ uint32_t rfb_port_rx_rtc_time_get(uint8_t rx_cnt);
 uint8_t rfb_port_current_channel_get(uint8_t rx_cnt);
 uint32_t rfb_port_frame_counter_get(void);
 RFB_EVENT_STATUS rfb_port_wake_on_radio_set(uint32_t rf_frequency, uint16_t rx_on_time, uint32_t sleep_time);
+RFB_EVENT_STATUS rfb_port_receive_at(uint8_t rf_channel, uint32_t rx_start_time, uint32_t rx_on_time);
 #endif
 

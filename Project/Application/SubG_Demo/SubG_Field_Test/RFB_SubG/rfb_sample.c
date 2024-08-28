@@ -212,7 +212,7 @@ void rfb_tx_init(uint8_t data_rate, rfb_keying_type_t keying_mode, uint8_t filte
     }
 
     /*Set TX config*/
-    g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, data_rate, 8, MOD_1, CRC_16, WHITEN_DISABLE, filter_type);
+    g_rfb_ctrl->tx_config_set(TX_POWER_20dBm, data_rate, 8, MOD_1, CRC_16, WHITEN_ENABLE, filter_type);
 
     /*
     * Set channel frequency :
@@ -283,10 +283,10 @@ void rfb_rx_init(uint32_t rx_timeout_timer, bool rx_continuous, uint8_t data_rat
     /*Set RX config*/
     if (rx_continuous == true)
         g_rfb_ctrl->rx_config_set(data_rate, 8, MOD_1, CRC_16,
-                                  WHITEN_DISABLE, 0, rx_continuous, filter_type);
+                                  WHITEN_ENABLE, 0, rx_continuous, filter_type);
     else
         g_rfb_ctrl->rx_config_set(data_rate, 8, MOD_1, CRC_16,
-                                  WHITEN_DISABLE, rx_timeout_timer, rx_continuous, filter_type);
+                                  WHITEN_ENABLE, rx_timeout_timer, rx_continuous, filter_type);
     /* Set channel frequency */
     if (gpio_pin_get(31) == 0)
     {
