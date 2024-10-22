@@ -1,26 +1,12 @@
-#include "openthread-core-RT58x-config.h"
-#include <openthread-core-config.h>
-#include <openthread/config.h>
-#include <openthread/thread.h>
-
-#include "openthread-system.h"
-#include "cm3_mcu.h"
-#include "rfb.h"
 #include "bsp.h"
 #include "bsp_button.h"
-#include "util_log.h"
-#include "app.h"
-#include "app_uart_handler.h"
-#include "ble_app.h"
-#include "thread_app.h"
+#include "main.h"
+#include "app_uart.h"
+#include "rfb.h"
 #include "rtc.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "platform-rt58x.h"
 #include "uart_stdio.h"
-/* Utility Library APIs */
-#include "util_log.h"
-#include "util_printf.h"
 
 #define RAIDO_MAC_ADDR_FLASH_ID_MODE 0
 #define RAIDO_MAC_ADDR_MP_SECTOR_MODE 1
@@ -194,7 +180,7 @@ static void gpio6_handler()
 
 int main()
 {
-    rafael_radio_mac_read_config_set(RAIDO_MAC_ADDR_FLASH_ID_MODE);
+    rafael_radio_mac_read_config_set(RAIDO_MAC_ADDR_MP_SECTOR_MODE);
 #if PLAFFORM_CONFIG_ENABLE_SUBG
     rafael_radio_subg_datarate_set(RFB_DATA_RATE);
     rafael_radio_subg_band_set(
@@ -223,6 +209,9 @@ int main()
     uart_stdio_init(otSysEventSignalPending);
     utility_register_stdout(uart_stdio_write_ch, uart_stdio_write);
     util_log_init();
+
+    info("Rafale Toggle SubG over Thread FTD and ble \r\n");
+    info("=================================\r\n");
 
     app_commission_t commission;
     rtc_time_t current_time, alarm_tm;

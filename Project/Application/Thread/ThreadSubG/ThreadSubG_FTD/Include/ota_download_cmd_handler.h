@@ -7,7 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "app_uart_handler.h"
 
 /**
  * @name APS addressing mode constants

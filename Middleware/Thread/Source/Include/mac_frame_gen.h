@@ -1,17 +1,22 @@
-/**
- * @file mac_frame_gen.h
- * @author Rex Huang (rex.huang@rafaelmicro.com)
+/**************************************************************************//**
+ * @file     mac_frame_gen.h
+ * @version
+ * $Revision:
+ * $Date:
  * @brief
- * @version 0.1
- * @date 2022-04-08
+ * @note
+ * Copyright (C) 2019 Rafael Microelectronics Inc. All rights reserved.
  *
- * @copyright Copyright (c) 2022
- *
- */
+ ******************************************************************************/
 #ifndef _MAC_FRAME_GEN_H_
 #define _MAC_FRAME_GEN_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define MAX_DATA_SIZE 125 // The maximum data length is 127bytes in IEEE 802.15.4
+#define FSK_MAX_DATA_SIZE 2045
+#define OQPSK_MAX_DATA_SIZE 125
+#define MAX_DATA_SIZE FSK_MAX_DATA_SIZE
 
 typedef enum _transmission_algorithm_e
 {
@@ -129,5 +134,14 @@ typedef struct _mac_hdr_t
     MacKeyid_t      keyIdentifier;  // Key identifier
 } MacHdr_t;
 
-
+void mac_genHeader(MacBuffer_t *buf, MacHdr_t *hdr);
+void Rfb_MacFrameGen(MacBuffer_t *pbuf, uint8_t *InitialCwAckRequest, uint8_t Dsn, uint16_t MacDataLength);
+void mac_genAck(MacBuffer_t *pbuf, bool framePending, uint8_t dsn);
+#ifdef RT569_P2P_Example
+void Rfb_MacFrameGen_example(MacBuffer_t *pbuf, uint8_t *InitialCwAckRequest, uint8_t Dsn, uint8_t MacDataLength, uint16_t src_panid, uint16_t src_short_addr, uint16_t dst_panid, uint16_t dst_short_addr, uint16_t *data);
 #endif
+
+#ifdef __cplusplus
+};
+#endif
+#endif // _MAC_FRAME_GEN_H_

@@ -1221,6 +1221,7 @@ void sys_malloc_info_printf(void)
 void *sys_malloc_fn(uint32_t u32_size, const char *pc_func_ptr, uint32_t u32_line)
 {
     void *ptr;
+    ptr = NULL;
     /*-----------------------------------*/
     /* A.Input Parameter Range Check     */
     /*-----------------------------------*/

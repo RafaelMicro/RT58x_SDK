@@ -86,19 +86,35 @@ constexpr uint16_t kUdpPort = 19788; ///< MLE UDP Port
  * MLE Protocol delays and timeouts.
  *
  */
+#if OPENTHREAD_CONFIG_RADIO_915MHZ_OQPSK_SUPPORT || OPENTHREAD_CONFIG_PLATFORM_RADIO_PROPRIETARY_SUPPORT
+constexpr uint32_t kParentRequestRouterTimeout     = 3000;  ///< Router Parent Request timeout (in msec)
+#else
 constexpr uint32_t kParentRequestRouterTimeout     = 750;  ///< Router Parent Request timeout (in msec)
+#endif
 constexpr uint32_t kParentRequestDuplicateMargin   = 50;   ///< Margin for duplicate parent request
+#if OPENTHREAD_CONFIG_RADIO_915MHZ_OQPSK_SUPPORT || OPENTHREAD_CONFIG_PLATFORM_RADIO_PROPRIETARY_SUPPORT
+constexpr uint32_t kParentRequestReedTimeout       = 3500; ///< Router and REEDs Parent Request timeout (in msec)
+#else
 constexpr uint32_t kParentRequestReedTimeout       = 1250; ///< Router and REEDs Parent Request timeout (in msec)
+#endif
 constexpr uint32_t kChildIdResponseTimeout         = 1250; ///< Wait time to receive Child ID Response (in msec)
 constexpr uint32_t kAttachStartJitter              = 50;   ///< Max jitter time added to start of attach (in msec)
 constexpr uint32_t kAnnounceProcessTimeout         = 250;  ///< Delay after Announce rx before channel/pan-id change
+#if OPENTHREAD_CONFIG_RADIO_915MHZ_OQPSK_SUPPORT || OPENTHREAD_CONFIG_PLATFORM_RADIO_PROPRIETARY_SUPPORT
+constexpr uint32_t kAnnounceTimeout                = 1400*2; ///< Total timeout for sending Announce messages (in msec)
+#else
 constexpr uint32_t kAnnounceTimeout                = 1400; ///< Total timeout for sending Announce messages (in msec)
+#endif
 constexpr uint16_t kMinAnnounceDelay               = 80;   ///< Min delay between Announcement messages (in msec)
 constexpr uint32_t kParentResponseMaxDelayRouters  = 500;  ///< Max response delay for Parent Req to routers (in msec)
 constexpr uint32_t kParentResponseMaxDelayAll      = 1000; ///< Max response delay for Parent Req to all (in msec)
 constexpr uint32_t kUnicastRetransmissionDelay     = 1000; ///< Base delay before an MLE unicast retx (in msec)
 constexpr uint32_t kChildUpdateRequestPendingDelay = 100;  ///< Delay for aggregating Child Update Req (in msec)
+#if OPENTHREAD_CONFIG_RADIO_915MHZ_OQPSK_SUPPORT || OPENTHREAD_CONFIG_PLATFORM_RADIO_PROPRIETARY_SUPPORT
+constexpr uint8_t  kMaxTransmissionCount           = 2;    ///< Max number of times an MLE message may be transmitted
+#else
 constexpr uint8_t  kMaxTransmissionCount           = 3;    ///< Max number of times an MLE message may be transmitted
+#endif
 constexpr uint32_t kMaxResponseDelay               = 1000; ///< Max response delay for a multicast request (in msec)
 constexpr uint32_t kChildIdRequestTimeout          = 5000; ///< Max delay to rx a Child ID Request (in msec)
 constexpr uint32_t kLinkRequestTimeout             = 2000; ///< Max delay to rx a Link Accept
@@ -144,7 +160,11 @@ constexpr uint32_t kAdvertiseIntervalMax = 5; ///< Max Advertise interval (in se
 constexpr uint32_t kAdvertiseIntervalMax = 32; ///< Max Advertise interval (in sec)
 #endif
 
+#if OPENTHREAD_CONFIG_RADIO_915MHZ_OQPSK_SUPPORT || OPENTHREAD_CONFIG_PLATFORM_RADIO_PROPRIETARY_SUPPORT
+constexpr uint8_t kFailedRouterTransmissions = 10;
+#else
 constexpr uint8_t kFailedRouterTransmissions = 4;
+#endif
 #if OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE
 constexpr uint8_t kFailedCslDataPollTransmissions = 15;
 #endif
@@ -162,9 +182,12 @@ constexpr uint8_t  kMaxRouteCost         = 16;
 constexpr uint8_t kMaxRouterId           = OT_NETWORK_MAX_ROUTER_ID; ///< Max Router ID
 constexpr uint8_t kInvalidRouterId       = kMaxRouterId + 1;         ///< Value indicating incorrect Router ID
 constexpr uint8_t kMaxRouters            = OPENTHREAD_CONFIG_MLE_MAX_ROUTERS;
+#if OPENTHREAD_CONFIG_RADIO_915MHZ_OQPSK_SUPPORT || OPENTHREAD_CONFIG_PLATFORM_RADIO_PROPRIETARY_SUPPORT
+constexpr uint8_t kMinDowngradeNeighbors = 5;
+#else
 constexpr uint8_t kMinDowngradeNeighbors = 7;
-
-constexpr uint8_t kNetworkIdTimeout           = 120; ///< (in sec)
+#endif
+constexpr uint8_t kNetworkIdTimeout           = 255; ///< (in sec)
 constexpr uint8_t kParentRouteToLeaderTimeout = 20;  ///< (in sec)
 constexpr uint8_t kRouterSelectionJitter      = 120; ///< (in sec)
 

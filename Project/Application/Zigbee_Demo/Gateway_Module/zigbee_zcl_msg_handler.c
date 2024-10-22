@@ -347,6 +347,22 @@ void zigbee_zcl_msg_handler(sys_tlv_t *pt_tlv)
             {
                 zigbee_gateway_cmd_send(0x00248000 | pt_zcl_msg->cmd, pt_zcl_msg->srcAddr, 0, pt_zcl_msg->srcEndpint, (uint8_t *)pt_zcl_msg->cmdFormat, pt_zcl_msg->cmdFormatLen);
             }
+            else if (pt_zcl_msg->clusterID >= 0xFC00)
+            {
+                uint8_t custom_payload_data[pt_zcl_msg->cmdFormatLen + 6];
+                custom_payload_data[0] = pt_zcl_msg->clusterID & 0xFF;
+                custom_payload_data[1] = (pt_zcl_msg->clusterID >> 8) & 0xFF;
+                custom_payload_data[2] = pt_zcl_msg->manuCode & 0xFF;
+                custom_payload_data[3] = (pt_zcl_msg->manuCode >> 8) & 0xFF;
+                custom_payload_data[4] = pt_zcl_msg->cmd;
+                custom_payload_data[5] = pt_zcl_msg->cmdFormatLen;
+                if (pt_zcl_msg->cmdFormatLen > 0)
+                {
+                    memcpy(&custom_payload_data[6], pt_zcl_msg->cmdFormat, pt_zcl_msg->cmdFormatLen);
+                }
+                zigbee_gateway_cmd_send(0xFC008000, pt_zcl_msg->srcAddr, 0,
+                                        pt_zcl_msg->srcEndpint, custom_payload_data, pt_zcl_msg->cmdFormatLen + 6);
+            }
             else
             {
                 info_color(LOG_RED, "Not support cluser %04X\n", pt_zcl_msg->clusterID);

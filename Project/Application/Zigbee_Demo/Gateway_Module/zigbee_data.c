@@ -118,7 +118,7 @@ zb_zcl_cluster_desc_t g_zigbee_cluster_list[] =
         ZB_ZCL_ARRAY_SIZE(custom_attr_list, zb_zcl_attr_t),
         (custom_attr_list),
         ZB_ZCL_CLUSTER_SERVER_ROLE,
-        ZB_ZCL_MANUF_CODE_INVALID
+        ZB_ZCL_MANUFACTURE_CODE_CUSTOM_CLUSTER
     ),
 
     ZB_ZCL_CLUSTER_DESC(
@@ -203,7 +203,7 @@ zb_zcl_cluster_desc_t g_zigbee_cluster_list[] =
         ZB_ZCL_ARRAY_SIZE(custom_attr_list, zb_zcl_attr_t),
         (custom_attr_list),
         ZB_ZCL_CLUSTER_CLIENT_ROLE,
-        ZB_ZCL_MANUF_CODE_INVALID
+        ZB_ZCL_MANUFACTURE_CODE_CUSTOM_CLUSTER
     ),
     ZB_ZCL_CLUSTER_DESC(
         ZB_ZCL_CLUSTER_ID_IDENTIFY,

@@ -32,16 +32,25 @@
  *
  */
 
-#ifndef PLATFORM_EFR32_H_
-#define PLATFORM_EFR32_H_
+#ifndef PLATFORM_RT58X_H_
+#define PLATFORM_RT58X_H_
 
 #include <openthread/instance.h>
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 /*radio.c*/
 void rafael_rfb_init(void);
 void platformRadioProcess(otInstance *aInstance);
 void rafael_radio_short_addr_ctrl(uint8_t ctrl_type, uint8_t *short_addr);
 void rafael_radio_extend_addr_ctrl(uint8_t ctrl_type, uint8_t *extend_addr);
+void rafael_radio_phy_wake_on_period_set(uint32_t wake_on_period);
+void rafael_radio_phy_wake_on_start();
+void rafael_radio_phy_wake_on_stop();
+void radio_mac_broadcast_send(otInstance *aInstance, uint8_t *data, uint16_t lens);
+int radio_mac_unicast_send(otInstance *aInstance, uint8_t *dst_mac_addr, uint8_t *data, uint16_t lens);
+void radio_mac_received_callback(void (*mac_rcb)(uint8_t *data, uint16_t lens, int8_t rssi, uint8_t *src_addr));
+uint32_t Get_Wake_On_Period();
 void rafael_radio_mac_read_config_set(uint8_t mode);
 
 /*entropy.c*/
@@ -49,12 +58,14 @@ void random_number_init(void);
 
 /*uart.c*/
 void UartProcessReceive(void);
-void bsp_uart0_isr_event_handle(uint8_t event);
-void bsp_uart1_isr_event_handle(uint8_t event);
 
 /*alarm.c*/
 void rt58x_alarm_init();
 void rt58x_alarm_process(otInstance *aInstance);
 uint64_t otPlatTimeGet(void);
+uint32_t otPlatAlarmMilliGetNow(void);
 
-#endif // PLATFORM_EFR32_H_
+#ifdef __cplusplus
+};
+#endif
+#endif // PLATFORM_RT58X_H_

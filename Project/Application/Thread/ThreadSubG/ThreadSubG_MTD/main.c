@@ -1,31 +1,10 @@
-#include "openthread-core-RT58x-config.h"
-#include <openthread-core-config.h>
-#include <openthread/config.h>
-
-#include <openthread/cli.h>
-#include <openthread/diag.h>
-#include <openthread/tasklet.h>
-#include <openthread/platform/logging.h>
-#include <openthread/thread.h>
-#include <openthread/udp.h>
-#include <openthread/logging.h>
-
-#include "openthread-system.h"
-#include "cli/cli_config.h"
-#include "common/code_utils.hpp"
-
-#include "project_config.h"
+#include "main.h"
 #include "rfb.h"
 #include "rfb_port.h"
-#include "cm3_mcu.h"
 #include "bsp.h"
-#include "app.h"
-#include "mem_mgmt.h"
 #include "ota_handler.h"
 #include "uart_stdio.h"
-/* Utility Library APIs */
-#include "util_log.h"
-#include "util_printf.h"
+#include "sw_timer.h"
 
 #define RAIDO_MAC_ADDR_FLASH_ID_MODE 0
 #define RAIDO_MAC_ADDR_MP_SECTOR_MODE 1
@@ -41,65 +20,6 @@ extern void rafael_radio_subg_band_set(uint8_t ch_min, uint8_t ch_max, uint8_t b
 
 #define RFB_CCA_THRESHOLD 75 // Default: 75 (-75 dBm)
 extern void rafael_radio_cca_threshold_set(uint8_t datarate);
-
-otInstance *otGetInstance(void);
-
-void _Sleep_Init()
-{
-    otError error;
-
-    otLinkModeConfig config;
-
-    error = otLinkSetPollPeriod(otGetInstance(), 1000);
-    if (error != OT_ERROR_NONE)
-    {
-        err("otLinkSetPollPeriod failed with %d %s\r\n", error, otThreadErrorToString(error));
-    }
-    config.mRxOnWhenIdle = false;
-    config.mNetworkData = false;
-    config.mDeviceType = false;
-
-    error = otThreadSetLinkMode(otGetInstance(), config);
-
-    if (error != OT_ERROR_NONE)
-    {
-        err("otThreadSetLinkMode failed with %d %s\r\n", error, otThreadErrorToString(error));
-    }
-
-    /* low power mode init */
-    Lpm_Set_Low_Power_Level(LOW_POWER_LEVEL_SLEEP0);
-    Lpm_Enable_Low_Power_Wakeup((LOW_POWER_WAKEUP_32K_TIMER | LOW_POWER_WAKEUP_UART0_RX));
-}
-
-void UdpReceiveCallBack(void *aContext, otMessage *aMessage, const otMessageInfo *aMessageInfo)
-{
-    OT_UNUSED_VARIABLE(aContext);
-
-    uint8_t *buf = NULL;
-    uint8_t data_seq = 0, cmd = 0xFF;
-    int length;
-    char string[OT_IP6_ADDRESS_STRING_SIZE];
-
-    otIp6AddressToString(&aMessageInfo->mPeerAddr, string, sizeof(string));
-    length = otMessageGetLength(aMessage) - otMessageGetOffset(aMessage);
-    info("%d bytes from \n", length);
-    info("ip : %s\n", string);
-    info("port : %d \n", aMessageInfo->mSockPort);
-    buf = mem_malloc(length);
-    if (buf)
-    {
-        otMessageRead(aMessage, otMessageGetOffset(aMessage), buf, length);
-
-        info("Message Received : ");
-        for (int i = 0; i < length; i++)
-        {
-            info("%02x", buf[i]);
-        }
-        info("\n");
-
-        mem_free(buf);
-    }
-}
 
 /* pin mux setting init*/
 static void pin_mux_init(void)
@@ -119,7 +39,7 @@ static void pin_mux_init(void)
 
 int main(int argc, char *argv[])
 {
-    rafael_radio_mac_read_config_set(RAIDO_MAC_ADDR_FLASH_ID_MODE);
+    rafael_radio_mac_read_config_set(RAIDO_MAC_ADDR_MP_SECTOR_MODE);
 #if PLAFFORM_CONFIG_ENABLE_SUBG
     rafael_radio_subg_datarate_set(RFB_DATA_RATE);
     rafael_radio_subg_band_set(
@@ -152,18 +72,27 @@ int main(int argc, char *argv[])
     utility_register_stdout(uart_stdio_write_ch, uart_stdio_write);
     util_log_init();
 
+    info("Rafale SubG over Thread MTD \r\n");
+    info("=================================\r\n");
     otSysInit(argc, argv);
+    app_task_init();
 
-    info("SubG Thread Init ability MTD \n");
+    /*bin download will use uart 1 */
+    app_uart_init();
 
-    _app_init();
-
+    //not use freertos
+    sw_timer_init();
     while (!otSysPseudoResetWasRequested())
     {
-        _app_process_action();
+        /*sw timer use*/
+        sw_timer_proc();
+        /*bin download will use uart 1 */
+        app_uart_recv();
+        /*openthread use*/
+        app_task_process_action();
     }
 
-    _app_exit();
+    app_task_exit();
 
     return 0;
 }

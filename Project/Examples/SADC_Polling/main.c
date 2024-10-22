@@ -21,7 +21,7 @@
 #include "project_config.h"
 #include "retarget.h"
 #include "rf_mcu_ahb.h"
-
+#include "inttypes.h"
 /**************************************************************************************************
  *    MACROS
  *************************************************************************************************/
@@ -45,6 +45,7 @@
 sadc_convert_state_t sadc_convert_status = SADC_CONVERT_IDLE;
 uint32_t             sadc_convert_input;
 sadc_value_t         sadc_convert_value;
+sadc_cb_t            sadc_result;
 /**************************************************************************************************
  *    LOCAL FUNCTIONS
  *************************************************************************************************/
@@ -82,21 +83,6 @@ void Comm_Subsystem_Disable_LDO_Mode(void)
     reg_buf[0] &= ~SUBSYSTEM_CFG_LDO_MODE_DISABLE;
     RfMcu_MemorySetAhb(SUBSYSTEM_CFG_PMU_MODE, reg_buf, 4);
 }
-/**
- * @ingroup Sadc_example_group
- * @brief Sadc Interrupt callback handler
- * @param[in] p_cb  point a sadc callback function
- * @return None
- */
-void Sadc_Int_Callback_Handler(sadc_cb_t *p_cb)
-{
-    if (p_cb->type == SADC_CB_SAMPLE)
-    {
-        sadc_convert_input = p_cb->data.sample.channel;
-        sadc_convert_value = p_cb->data.sample.value;
-        sadc_convert_status = SADC_CONVERT_DONE;
-    }
-}
 
 int main(void)
 {
@@ -114,31 +100,56 @@ int main(void)
 
     sadc_input_ch_t read_ch = SADC_CH_VBAT;
 
-    Sadc_Config_Enable(SADC_RES_12BIT, SADC_OVERSAMPLE_256, Sadc_Int_Callback_Handler);
+    Sadc_Config_Enable(SADC_RES_12BIT, SADC_OVERSAMPLE_64, NULL);
 
     Sadc_Compensation_Init(1);
 
 
     while (1)
     {
-        if (sadc_convert_status == SADC_CONVERT_DONE)
-        {
-            printf("VBAT=%dmv\r\n", sadc_convert_value);
-
-            Delay_ms(100); //For wait printf VBAT Data;
-
-            sadc_convert_status = SADC_CONVERT_IDLE;
-
-            read_ch = SADC_CH_VBAT;
-        }
-        else if (sadc_convert_status == SADC_CONVERT_IDLE)
+        if (sadc_convert_status == SADC_CONVERT_IDLE)
         {
             sadc_convert_status = SADC_CONVERT_START;
 
-            if (Sadc_Channel_Read(read_ch) != STATUS_SUCCESS)
+            while (sadc_convert_status != SADC_CONVERT_DONE)
             {
-                sadc_convert_status = SADC_CONVERT_IDLE;
+                if (Sadc_Channel_Polling_Read(read_ch) != STATUS_SUCCESS)
+                {
+                    sadc_convert_status = SADC_CONVERT_IDLE;
+                }
+                else
+                {
+                    sadc_convert_status = SADC_CONVERT_DONE;
+                }
             }
+
+
+            sadc_result = Sadc_Get_Result();
+
+            switch (read_ch)
+            {
+            case SADC_CH_VBAT:
+                printf("VBAT = %"PRIu32" mv \r\n", sadc_voltage_result(sadc_result.data.sample.value));
+                read_ch = SADC_CH_AIN7;
+                break;
+
+            case SADC_CH_AIN7:
+                printf("AIO7 = %"PRIu32" mv \r\n", sadc_voltage_result(sadc_result.data.sample.value));
+                read_ch = SADC_CH_AIN6;
+                break;
+
+            case SADC_CH_AIN6:
+                printf("AIO6 = %"PRIu32" mv \r\n", sadc_voltage_result(sadc_result.data.sample.value));
+                read_ch = SADC_CH_VBAT;
+                break;
+
+            default:
+                break;
+            }
+            sadc_convert_status = SADC_CONVERT_IDLE;
+
+            Delay_ms(100);
+
         }
     }
 }

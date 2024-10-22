@@ -30,7 +30,7 @@
 #include "timers.h"
 #include "queue.h"
 #include "rf_mcu_ahb.h"
-
+#include "inttypes.h"
 /**************************************************************************************************
  *    MACROS
  *************************************************************************************************/
@@ -62,7 +62,7 @@
  *************************************************************************************************/
 sadc_convert_state_t sadc_convert_status = SADC_CONVERT_IDLE;
 uint32_t             sadc_convert_input;
-sadc_value_t         sadc_convert_value;
+sadc_value_t         sadc_convert_value, sadc_convert_thers_value;
 
 
 /**************************************************************************************************
@@ -120,7 +120,7 @@ void Sadc_Int_Callback_Handler(sadc_cb_t *p_cb)
         sadc_convert_value = p_cb->data.sample.value;
         sadc_convert_status = SADC_CONVERT_DONE;
 
-        printf("\nADC CH%d: adc = %d, comp = %d, cal = %d\n", p_cb->data.sample.channel, p_cb->raw.conversion_value, p_cb->raw.compensation_value, p_cb->raw.calibration_value);
+        printf("\nADC CH%"PRIu32": adc = %"PRIu32", comp = %"PRIu32", cal = %"PRIu32"\n", p_cb->data.sample.channel, p_cb->raw.conversion_value, p_cb->raw.compensation_value, p_cb->raw.calibration_value);
     }
 }
 
@@ -150,18 +150,20 @@ static void Sadc_Task(void *parameters_ptr)
             switch (read_ch)
             {
             case SADC_CH_AIN7:
-                printf("AIO7 ADC = %dmv\n", sadc_convert_value);
+                sadc_convert_thers_value = sadc_voltage_result(sadc_convert_value);
+                printf("AIO7 ADC = %"PRIu32"mv\n", sadc_convert_thers_value);
                 read_ch = SADC_CH_VBAT;
                 break;
 
             case SADC_CH_VBAT:
-                printf("VBAT ADC = %dmv\n", sadc_convert_value);
-                //read_ch = SADC_CH_AIN6;
-                read_ch = SADC_CH_AIN7;
+                sadc_convert_thers_value = sadc_voltage_result(sadc_convert_value);
+                printf("VBAT ADC = %"PRIu32"mv\n", sadc_convert_thers_value);
+                read_ch = SADC_CH_AIN6;
                 break;
 
             case SADC_CH_AIN6:
-                printf("AIO6 ADC = %dmv\n", sadc_convert_value);
+                sadc_convert_thers_value = sadc_voltage_result(sadc_convert_value);
+                printf("AIO6 ADC = %"PRIu32"mv\n", sadc_convert_thers_value);
                 read_ch = SADC_CH_AIN7;
                 break;
 
@@ -169,7 +171,7 @@ static void Sadc_Task(void *parameters_ptr)
                 break;
             }
 
-            Delay_ms(300);
+            Delay_ms(1000);
 
             sadc_convert_status = SADC_CONVERT_IDLE;
         }

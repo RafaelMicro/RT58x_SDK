@@ -44,8 +44,10 @@ typedef struct
 //                Public Function Declaration
 //=============================================================================
 void thread_queue_init(thread_queue_t *queue, int size, uint32_t dataSize);
-int thread_enqueue(thread_queue_t *queue, void *data) ;
-int thread_dequeue(thread_queue_t *queue, void *data);
+int thread_enqueue_fn(thread_queue_t *queue, void *data, const char *pc_func_ptr, uint32_t u32_line);
+#define thread_enqueue(queue, data) thread_enqueue_fn(queue, data, __FUNCTION__, __LINE__)
+int thread_dequeue_fn(thread_queue_t *queue, void *data, const char *pc_func_ptr, uint32_t u32_line);
+#define thread_dequeue(queue, data) thread_dequeue_fn(queue, data, __FUNCTION__, __LINE__)
 #ifdef __cplusplus
 };
 #endif

@@ -57,3 +57,4 @@ ASM_SOURCES += ../../../../Library/RT58x/Device/GCC/gcc_startup_cm3_mcu.S
 OBJ_SOURCES += ../../../../Middleware/Prebuild/lib_rf_mcu.a
 
 # macro defines
+DEFINES += SADC_POLLING_READ=1

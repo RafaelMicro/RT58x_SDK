@@ -12,21 +12,9 @@
 //=============================================================================
 //                Include
 //=============================================================================
-/* Utility Library APIs */
-#include "util_printf.h"
-#include "util_log.h"
-
-/* BSP APIs */
-#include "bsp.h"
-#include "bsp_led.h"
-#include "bsp_button.h"
-
-// #include "mfs.h"
-
-#include "app_uart_handler.h"
+#include "main.h"
 #include "ota_download_cmd_handler.h"
 #include "ota_handler.h"
-#include "mem_mgmt.h"
 //=============================================================================
 //                Private Function Declaration
 //=============================================================================
@@ -160,45 +148,9 @@ void ota_download_cmd_send(uint32_t cmd_id, uint16_t addr, uint8_t addr_mode, ui
         ((ota_download_cmd_end *)(&ota_download_cmd_pkt[idx]))->cs = _gateway_checksum_calc((uint8_t *) & (((ota_download_cmd_hdr *)(ota_download_cmd_pkt))->len),
                 ((ota_download_cmd_hdr *)(ota_download_cmd_pkt))->len + 1);
 
-#if 0
-        {
-            uint8_t i = 0;
-
-            info(">>Send cmd: total lenght: %d \n", (sizeof(ota_download_cmd_hdr) + (((ota_download_cmd_hdr *)(ota_download_cmd_pkt))->len) + sizeof(ota_download_cmd_end)));
-
-            info("| ");
-
-            /* show Header(4) */
-            for (i = 0; i < (sizeof(ota_download_cmd_hdr) - 1); i++)
-            {
-                info("%02X ", ota_download_cmd_pkt[i]);
-            }
-
-            info("| ");
-
-            /* show Length(1) */
-            info("%02X ", ota_download_cmd_pkt[(sizeof(ota_download_cmd_hdr) - 1)]);
-
-            info("| ");
-
-            /* show Data(N) */
-            for (i = sizeof(ota_download_cmd_hdr); i < (sizeof(ota_download_cmd_hdr) + (((ota_download_cmd_hdr *)(ota_download_cmd_pkt))->len)); i++)
-            {
-                info("%02X ", ota_download_cmd_pkt[i]);
-            }
-            info("| ");
-
-            /* show CRC(1) */
-            info("%02X ", (((ota_download_cmd_end *)(&ota_download_cmd_pkt[((sizeof(ota_download_cmd_hdr) + (((ota_download_cmd_hdr *)(ota_download_cmd_pkt))->len)))]))->cs));
-
-            info("|\n");
-            /* GP add, debug */
-
-        }
-#endif
         msg(UTIL_LOG_DEBUG, "------------------------      GW >>>> ------------------------\n");
         util_log_mem(UTIL_LOG_DEBUG, "  ", ota_download_cmd_pkt, pkt_len, 0);
-        app_uart_handler_send(ota_download_cmd_pkt, pkt_len);
+        app_uart_data_send(1, ota_download_cmd_pkt, pkt_len);
         if (ota_download_cmd_pkt)
         {
             mem_free(ota_download_cmd_pkt);
@@ -228,7 +180,7 @@ static void ota_download_handle(uint32_t cmd_id, uint8_t *pBuf)
     static uint8_t *p_tmp_buf;
     static uint32_t recv_cnt = 0;
     static uint32_t flash_addr = FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB, tmp_len = 0;
-    uint32_t crc32, poffset;
+    uint32_t crc32 = 0, poffset;
     ota_img_info_t *upg_data;
 
     // erase
@@ -239,6 +191,7 @@ static void ota_download_handle(uint32_t cmd_id, uint8_t *pBuf)
             // Page erase (4096 bytes)
             while (flash_check_busy());
             flash_erase(FLASH_ERASE_SECTOR, FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB + (0x1000 * i));
+            flush_cache();
         }
         ota_download_cmd_send(0xF0008000, 0, 0, 0, (uint8_t *)&status, 4);
     }
@@ -255,15 +208,20 @@ static void ota_download_handle(uint32_t cmd_id, uint8_t *pBuf)
                 info("Manufacturer Code: 0x%X\n", gt_img_info.manufacturer_code);
                 info("File Version: 0x%X\n", gt_img_info.file_version);
                 info("File Size: 0x%X\n", gt_img_info.image_size);
+                flash_addr = FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB;
             }
 
-            if (!gp_ota_imgae_cache)
+            if (NULL == gp_ota_imgae_cache)
             {
                 gp_ota_imgae_cache = mem_malloc(0x1000);
             }
-
             if (gp_ota_imgae_cache)
             {
+                if (upg_data->cur_pkt == 0)
+                {
+                    recv_cnt = 0;
+                    memset(&gp_ota_imgae_cache[recv_cnt], 0x0, 0x1000);
+                }
                 if (upg_data->pkt_len + recv_cnt >= 0x1000)
                 {
                     memcpy(&gp_ota_imgae_cache[recv_cnt], upg_data->pkt, 0x1000 - recv_cnt);
@@ -272,6 +230,7 @@ static void ota_download_handle(uint32_t cmd_id, uint8_t *pBuf)
                     if (p_tmp_buf)
                     {
 
+                        memset(p_tmp_buf, 0x0, tmp_len);
                         memcpy(p_tmp_buf, &upg_data->pkt[0x1000 - recv_cnt], tmp_len);
 
                         // page program (256 bytes)
@@ -285,10 +244,7 @@ static void ota_download_handle(uint32_t cmd_id, uint8_t *pBuf)
                         memcpy(&gp_ota_imgae_cache[recv_cnt], p_tmp_buf, tmp_len);
                         recv_cnt += tmp_len;
 
-                        if (p_tmp_buf)
-                        {
-                            mem_free(p_tmp_buf);
-                        }
+                        mem_free(p_tmp_buf);
                     }
                     else
                     {
@@ -310,56 +266,48 @@ static void ota_download_handle(uint32_t cmd_id, uint8_t *pBuf)
                         flash_write_page((uint32_t) & ((uint8_t *)gp_ota_imgae_cache)[i * 0x100], flash_addr);
                         flash_addr += 0x100;
                     }
-                    flush_cache();
-                    crc32 = crc32checksum(FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB, gt_img_info.image_size);
-                    // info("crc32 %x \n", crc32);
-                    //if (((FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB + gt_img_info.image_size) % 0x1000) > 0)
-                    {
-                        poffset = (FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB + gt_img_info.image_size) - ((FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB + gt_img_info.image_size) % 0x1000);
-                    }
 
-                    for (int i = 0; i < 0x10; i++)
-                    {
-                        while (flash_check_busy());
-                        flash_read_page((uint32_t)&gp_ota_imgae_cache[i * 0x100], poffset + (i * 0x100));
-                    }
-
-                    memcpy(&gp_ota_imgae_cache[((FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB + gt_img_info.image_size) % 0x1000)], &crc32, 4);
-
-                    while (flash_check_busy());
-                    flash_erase(FLASH_ERASE_SECTOR, poffset);
-
-                    for (int i = 0; i < 0x10; i++)
-                    {
-                        while (flash_check_busy());
-                        flash_write_page((uint32_t)&gp_ota_imgae_cache[i * 0x100], poffset + (i * 0x100));
-                    }
-                    /*ota use*/
                     static uint8_t read_buf[0x100];
                     while (flash_check_busy());
                     flash_read_page((uint32_t)(read_buf), FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB);
                     while (flash_check_busy());
-                    ota_set_image_size(SWAP_UINT32(*(uint32_t *)(read_buf + 24)) + 0x20);
-                    ota_set_image_version(SWAP_UINT32(*(uint32_t *)read_buf));
-                    ota_set_image_crc(SWAP_UINT32(*(uint32_t *)(read_buf + 16)));
-                    ota_bootinfo_reset();
-
-                    // zigbee_ota_insert_file(FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB, gt_img_info.image_size + 4, gt_img_info.file_version);
+                    uint32_t img_size = SWAP_UINT32(*(uint32_t *)(read_buf + 24)) + 0x20;
+                    uint32_t img_ver = SWAP_UINT32(*(uint32_t *)read_buf);
+                    uint32_t img_crc = SWAP_UINT32(*(uint32_t *)(read_buf + 16));
+                    if (img_size == gt_img_info.image_size)
+                    {
+                        crc32 = crc32checksum((FOTA_UPDATE_BUFFER_FW_ADDRESS_1MB + 0x20), (img_size - 0x20));
+                    }
+                    else
+                    {
+                        info("size fail 0x%08x 0x%08x \r\n", img_size, gt_img_info.image_size);
+                    }
+                    if (crc32 == SWAP_UINT32(*(uint32_t *)(read_buf + 16)))
+                    {
+                        /*ota use*/
+                        ota_set_image_size(img_size);
+                        ota_set_image_version(img_ver);
+                        ota_set_image_crc(img_crc);
+                        info("ota setting succuss \r\n");
+                        ota_bootinfo_reset();
+                    }
+                    else
+                    {
+                        info("crc fail 0x%08x 0x%08x \r\n", crc32, img_crc);
+                    }
 
                     if (gp_ota_imgae_cache)
                     {
-                        if (gp_ota_imgae_cache)
-                        {
-                            mem_free(gp_ota_imgae_cache);
-                        }
-                        gp_ota_imgae_cache = NULL;
+                        mem_free(gp_ota_imgae_cache);
                     }
+                    gp_ota_imgae_cache = NULL;
                 }
                 status = upg_data->cur_pkt;
             }
             else
             {
                 status = 0xFFFFFFFF;
+                info("cache alloc fail \r\n");
             }
         } while (0);
         ota_download_cmd_send(0xF0008000, 0, 0, 0, (uint8_t *)&status, 4);
@@ -369,18 +317,22 @@ static void ota_download_handle(uint32_t cmd_id, uint8_t *pBuf)
 void ota_download_cmd_proc(uint8_t *pBuf, uint32_t len)
 {
     uint32_t cmd_index;
-    uint32_t cmdID = ((ota_download_cmd_pd *)(&pBuf[5]))->command_id;
-    uint8_t timeoutNum = 0;
-
-    msg(UTIL_LOG_DEBUG, "------------------------ >>>> GW      ------------------------\n");
-    util_log_mem(UTIL_LOG_DEBUG, "  ", pBuf, len, 0);
-
-    cmd_index = cmdID;
-    ota_download_cmd_pd *pt_pd = (ota_download_cmd_pd *)&pBuf[5];
-
-    if (cmd_index >= 0xF0000000 & cmd_index < 0xF0000002)
+    uint32_t cmdID;
+    if (len >= 5)
     {
-        ota_download_handle(cmd_index, pt_pd->parameter);
+        cmdID = ((ota_download_cmd_pd *)(&pBuf[5]))->command_id;
+        uint8_t timeoutNum = 0;
+
+        msg(UTIL_LOG_DEBUG, "------------------------ >>>> GW      ------------------------\n");
+        util_log_mem(UTIL_LOG_DEBUG, "  ", pBuf, len, 0);
+
+        cmd_index = cmdID;
+        ota_download_cmd_pd *pt_pd = (ota_download_cmd_pd *)&pBuf[5];
+
+        if (cmd_index >= 0xF0000000 & cmd_index < 0xF0000002)
+        {
+            ota_download_handle(cmd_index, pt_pd->parameter);
+        }
     }
 }
 
@@ -448,37 +400,6 @@ ota_download_cmd_parser(uint8_t *pBuf,
 
         end = (ota_download_cmd_end *)&pBuf[idx + sizeof(ota_download_cmd_hdr) + hdr->len];
         cs = _gateway_checksum_calc(&pBuf[idx + 4], (hdr->len + 1));
-
-#if 0
-        //  else if (cs == end->cs)   /* show receved command data */
-        if (1)
-        {
-            totalLen = (sizeof(ota_download_cmd_hdr) + hdr->len + sizeof(ota_download_cmd_end));
-            info("\n<<Recv cmd: total lenght: %d, Checksum: Calc(0x%x),Correct(0x%x) \n", totalLen, cs, end->cs);
-
-            info("| ");
-
-            /* show Header(4) */
-            for (i = 0; i < (sizeof(ota_download_cmd_hdr) - 1); i++)
-            {
-                info("%02X ", pBuf[idx + i]);
-            }
-            info("| ");
-            /* show Length(1) */
-            info("%02X ", pBuf[idx + (sizeof(ota_download_cmd_hdr) - 1)]);
-            info("| ");
-
-            /* show Data(N) */
-            for (i = sizeof(ota_download_cmd_hdr); i < (sizeof(ota_download_cmd_hdr) + hdr->len); i++)
-            {
-                info("%02X ", pBuf[idx + i]);
-            }
-            info("| ");
-            /* show Length(1) */
-            info("%02X ", end->cs);
-            info("|\n");
-        }
-#endif
 
         if (cs != end->cs)
         {

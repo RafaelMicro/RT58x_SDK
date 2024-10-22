@@ -201,6 +201,8 @@ typedef enum
     GW_CMD_APP_SRV_SET_USER_TYPE = 0x14,
     GW_CMD_APP_SRV_GET_USER_TYPE,
 } e_door_lock;
+
+#define GW_CMD_APP_SRV_CUSTOM_BASE 0xFC000000
 //=============================================================================
 //                Private ENUM
 //=============================================================================
@@ -1420,6 +1422,47 @@ static void _cmd_dev_door_lock_handle(uint32_t cmd_id, uint8_t *pkt)
     } while (0);
 }
 
+static void _cmd_dev_custom_handle(uint32_t cmd_id, uint8_t *pkt)
+{
+    gateway_cmd_pd *pt_pd = (gateway_cmd_pd *)&pkt[5];
+
+    zigbee_zcl_data_req_t *pt_data_req;
+    uint8_t address_mode;
+    uint8_t dst_ep = pt_pd->parameter[0];
+    uint16_t cluster_id = pt_pd->parameter[1] | (pt_pd->parameter[2] << 8);
+    uint16_t manuf_code = pt_pd->parameter[3] | (pt_pd->parameter[4] << 8);
+    uint8_t custom_command_id = pt_pd->parameter[5];
+    uint8_t payload_len = pt_pd->parameter[6];
+    uint8_t *payload;
+    if (payload_len > 0)
+    {
+        payload = &pt_pd->parameter[7];
+    }
+    // log_info("%s\r\n", __FUNCTION__);
+
+    address_mode = (pt_pd->address_mode == 0)
+                   ? ZB_APS_ADDR_MODE_16_ENDP_PRESENT
+                   : ZB_APS_ADDR_MODE_16_GROUP_ENDP_NOT_PRESENT;
+
+    do
+    {
+        ZIGBEE_ZCL_DATA_REQ(
+            pt_data_req, pt_pd->address, address_mode, dst_ep,
+            ZIGBEE_DEFAULT_ENDPOINT, cluster_id, custom_command_id, TRUE,
+            1, ZCL_FRAME_CLIENT_SERVER_DIR, manuf_code, payload_len)
+
+        if (pt_data_req)
+        {
+            if (payload_len > 0)
+            {
+                memcpy(pt_data_req->cmdFormat, payload, payload_len);
+            }
+            zigbee_zcl_request(pt_data_req, pt_data_req->cmdFormatLen);
+            sys_free(pt_data_req);
+        }
+    } while (0);
+}
+
 void gw_cmd_app_service_handle(uint32_t cmd_id, uint8_t *pkt)
 {
     if ( (cmd_id >= GW_CMD_APP_SRV_DEV_BASE) &&
@@ -1469,6 +1512,9 @@ void gw_cmd_app_service_handle(uint32_t cmd_id, uint8_t *pkt)
     {
         _cmd_dev_door_lock_handle(cmd_id - GW_CMD_APP_SRV_DOOR_LOCK_BASE, pkt);
     }
-
-
+    else if ( (cmd_id >= GW_CMD_APP_SRV_CUSTOM_BASE) &&
+              (cmd_id < GW_CMD_APP_SRV_CUSTOM_BASE + GW_CMD_APP_CMD_OFFSET))
+    {
+        _cmd_dev_custom_handle(cmd_id - GW_CMD_APP_SRV_CUSTOM_BASE, pkt);
+    }
 }

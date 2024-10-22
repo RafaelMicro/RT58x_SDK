@@ -32,6 +32,8 @@ typedef struct
     hosal_uart_callback_t txdma_cb;
     void                  *txdma_cb_arg;
 
+    hosal_uart_callback_t break_cb;
+    void                  *break_cb_arg;
 } uart_handle_t;
 
 
@@ -179,6 +181,15 @@ int hosal_uart_send(hosal_uart_dev_t *uart_dev, const void *data, uint32_t size)
     return i;
 }
 
+void hosal_uart_send_complete(hosal_uart_dev_t *uart_dev)
+{
+    hosal_uart_config_t *cfg = &uart_dev->config;
+    UART_T *uart;
+    uart = g_uart_handle[cfg->uart_id].uart;
+
+    while ((UART_ReadLineStatus(uart) & UART_LSR_TEMT) == 0) {}
+}
+
 int hosal_uart_receive(hosal_uart_dev_t *uart_dev, void *data, uint32_t expect_size)
 {
     uint32_t counter = 0;
@@ -258,7 +269,7 @@ int hosal_uart_ioctl(hosal_uart_dev_t *uart_dev, int ctl, void *p_arg)
         break;
     case HOSAL_UART_MODE_SET:
         NVIC_ClearPendingIRQ(g_uart_handle[uart_dev->config.uart_id].irq_num);
-        uart->IER = 0;
+        uart->IER |= UART_IER_RLSI;
         uart_dev->config.mode = (hosal_uart_mode_t)p_arg;
 
         if (uart_dev->config.mode == HOSAL_UART_MODE_POLL)
@@ -277,7 +288,7 @@ int hosal_uart_ioctl(hosal_uart_dev_t *uart_dev, int ctl, void *p_arg)
         }
         else if (uart_dev->config.mode == HOSAL_UART_MODE_INT)
         {
-            uart->IER = 3;
+            uart->IER |= 3;
             NVIC_EnableIRQ(g_uart_handle[uart_dev->config.uart_id].irq_num);
         }
 
@@ -361,29 +372,48 @@ int hosal_uart_callback_set(hosal_uart_dev_t *uart_dev,
         g_uart_handle[cfg->uart_id].rxdma_cb_arg = arg;
 
     }
+    else if (callback_type == HOSAL_UART_BREAK_CALLBACK)
+    {
+        uart_dev->break_cb = pfn_callback;
+        uart_dev->p_break_arg = arg;
+        g_uart_handle[cfg->uart_id].break_cb = pfn_callback;
+        g_uart_handle[cfg->uart_id].break_cb_arg = arg;
+    }
     return 0;
 }
 
 static void __uart_generic_notify_handler(uint8_t id)
 {
     UART_T *uart = g_uart_handle[id].uart;
-    uint32_t  iir;
+    uint32_t  iir, lsr;
 
     iir   = uart->IIR & IIR_INTID_MSK;
     if ((iir & IIR_INTSTATUS) == 0)
     {
-        if (uart->LSR & UART_LSR_DR)
+        lsr   = uart->LSR;
+        if (lsr & UART_LSR_DR)
         {
             if (g_uart_handle[id].rx_cb != NULL)
             {
                 g_uart_handle[id].rx_cb(g_uart_handle[id].rx_cb_arg);
             }
         }
-        if (uart->LSR & UART_LSR_THRE)
+        if (lsr & UART_LSR_THRE)
         {
             if (g_uart_handle[id].tx_cb != NULL)
             {
                 g_uart_handle[id].tx_cb(g_uart_handle[id].tx_cb_arg);
+            }
+        }
+
+        if (iir == IIR_INTID_RLS)
+        {
+            if (lsr & UART_LSR_BI)
+            {
+                if (g_uart_handle[id].break_cb != NULL)
+                {
+                    g_uart_handle[id].break_cb(g_uart_handle[id].break_cb_arg);
+                }
             }
         }
     }

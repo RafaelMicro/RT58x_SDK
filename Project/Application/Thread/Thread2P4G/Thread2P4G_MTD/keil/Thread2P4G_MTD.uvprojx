@@ -337,7 +337,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls> -fno-exceptions -fdata-sections -ffunction-sections</MiscControls>
-              <Define>NDEBUG,OPENTHREAD_MTD, OPENTHREAD_PROJECT_CORE_CONFIG_FILE='\"openthread-core-RT58x-config.h\"' ,OPENTHREAD_CONFIG_FILE='\"openthread-core-RT58x-config.h\"', OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE='\"openthread-core-RT58x-config-check.h\"', MBEDTLS_CONFIG_FILE='\"openthread-mbedtls-config.h\"',PACKAGE_NAME='\"Rafael\"',PACKAGE_VERSION='\"1.8.3\"'</Define>
+              <Define>NDEBUG,OPENTHREAD_MTD, OPENTHREAD_PROJECT_CORE_CONFIG_FILE='\"openthread-core-RT58x-config.h\"' ,OPENTHREAD_CONFIG_FILE='\"openthread-core-RT58x-config.h\"', OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE='\"openthread-core-RT58x-config-check.h\"', MBEDTLS_CONFIG_FILE='\"openthread-mbedtls-config.h\"',PACKAGE_NAME='\"Rafael\"',PACKAGE_VERSION='\"1.9.3\"'</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\..\..\..\Middleware\Thread\Config\NoOs\2p4g;..\..\..\..\..\..\Middleware\Thread\Source\Include;..\..\..\..\..\..\Middleware\Third_Party\openthread\examples\platforms;..\..\..\..\..\..\Middleware\Third_Party\openthread\examples\platforms\utils;..\..\..\..\..\..\Middleware\Third_Party\openthread\include;..\..\..\..\..\..\Middleware\Third_Party\openthread\include\openthread;..\..\..\..\..\..\Middleware\Third_Party\openthread\src;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\api;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\backbone_router;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\border_router;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\coap;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\config;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\crypto;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\diags;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\mac;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\net;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\radio;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread;..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\include;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\include\mbedtls;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\include\psa;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\tcplp;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\tcplp\lib;..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\tcplp\bsdtcp;..\..\..\..\..\..\Middleware\MemoryMgmt\Include;..\..\..\..\..\..\Middleware\Portable\bsp_for_ref_design\bsp_for_thread\Include;..\..\..\..\..\..\Middleware\Portable\Utility\include;..\..\..\..\..\..\Middleware\Portable\Uart\Include;..\..\..\..\..\..\Middleware\RFB\include;..\..\..\..\..\..\Middleware\RUCI\include;..\..\..\..\..\..\Library\RT58x\Include;..\..\..\..\..\..\Library\RT58x\Crypto\include;..\..\..\..\..\..\Library\RT58x\Peripheral\Include;..\..\..\..\..\..\Library\RT58x\PHY\include;..\..\..\..\..\..\Library\RT58x\PHY\rt569mp\include;..\Include</IncludePath>
             </VariousControls>
@@ -4899,9 +4899,19 @@
           <GroupName>Application</GroupName>
           <Files>
             <File>
-              <FileName>app.c</FileName>
+              <FileName>app_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\app.c</FilePath>
+              <FilePath>..\app_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_udp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\app_udp.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
@@ -4909,19 +4919,14 @@
               <FilePath>..\main.c</FilePath>
             </File>
             <File>
-              <FileName>cli_uart.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\cli_uart.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_handler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\app_uart_handler.c</FilePath>
-            </File>
-            <File>
               <FileName>ota_download_cmd_handler.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ota_download_cmd_handler.c</FilePath>
+            </File>
+            <File>
+              <FileName>cli_uart.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\cli_uart.cpp</FilePath>
             </File>
           </Files>
         </Group>

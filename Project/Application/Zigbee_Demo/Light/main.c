@@ -133,7 +133,7 @@ void set_duty_cycle(pwm_seq_para_head_t *pwm_para_config, uint8_t current_lv)
 
     Pwm_Start(pwm_para_config);
 }
-int32_t main(void)
+int main(void)
 {
     check_reset();
     /*we should set pinmux here or in SystemInit */

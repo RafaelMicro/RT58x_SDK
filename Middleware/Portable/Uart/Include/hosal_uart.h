@@ -117,6 +117,7 @@ typedef enum
 #define HOSAL_UART_RX_CALLBACK       2   /**< @brief UART rx complete callback */
 #define HOSAL_UART_TX_DMA_CALLBACK   3   /**< @brief UART tx DMA trans complete callback */
 #define HOSAL_UART_RX_DMA_CALLBACK   4   /**< @brief UART rx DMA trans complete callback */
+#define HOSAL_UART_BREAK_CALLBACK    5    /**< @brief UART break callback */
 
 #define UART_EVENT_TX_DONE             (1UL << 0)  ///< Send completed; however UART may still transmit data
 #define UART_EVENT_RX_DONE             (1UL << 1)  ///< Receive completed
@@ -183,6 +184,8 @@ typedef struct
     void                    *p_txdma_arg;
     hosal_uart_callback_t  rxdma_cb;
     void                    *p_rxdma_arg;
+    hosal_uart_callback_t  break_cb;
+    void                    *p_break_arg;
     void                    *priv;
 } hosal_uart_dev_t;
 

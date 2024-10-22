@@ -79,6 +79,10 @@ static int __uartstdio_rx_callback(void *p_arg)
     return 0;
 }
 
+static int __uartstdio_break_callback(void *p_arg)
+{
+    return 0;
+}
 
 int uart_stdio_write(char *p_data, int length)
 {
@@ -134,6 +138,9 @@ int uart_stdio_init(void *cb)
 
     /* Configure UART Rx interrupt callback function */
     hosal_uart_callback_set(&uartstdio, HOSAL_UART_RX_CALLBACK, __uartstdio_rx_callback, &uartstdio);
+
+    /* Configure UART break interrupt callback function */
+    hosal_uart_callback_set(&uartstdio, HOSAL_UART_BREAK_CALLBACK, __uartstdio_break_callback, &uartstdio);
 
     /* Configure UART to interrupt mode */
     hosal_uart_ioctl(&uartstdio, HOSAL_UART_MODE_SET, (void *)HOSAL_UART_MODE_INT_RX);
@@ -267,14 +274,14 @@ _exp_dump_init(void)
 void my_fault_handler_c(uint32_t *sp, uint32_t lr_value)
 {
     _exp_dump_init();
-    _exp_log_out("\r\n[HardFaultHandler]\r\n");
-    _exp_log_out("R0= %x, R1= %x R2= %x R3= %x\r\n",
-                 sp[0], sp[1], sp[2], sp[3]);
+    printf("\r\n[HardFaultHandler]\r\n");
+    printf("R0= %x, R1= %x R2= %x R3= %x\r\n",
+           sp[0], sp[1], sp[2], sp[3]);
 
-    _exp_log_out("R12= %x, LR= %x, PC= %x, PSR= %x\r\n",
-                 sp[4], sp[5], sp[6], sp[7]);
+    printf("R12= %x, LR= %x, PC= %x, PSR= %x\r\n",
+           sp[4], sp[5], sp[6], sp[7]);
 
-    _exp_log_out("LR Value= %x\r\n", lr_value);
+    printf("LR Value= %x\r\n", lr_value);
 
     while (1)
         ;

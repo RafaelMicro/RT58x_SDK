@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.BMP"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Rafael RT58x  SDK
-   &#160;<span id="projectnumber">v1.9.2</span>
+   &#160;<span id="projectnumber">v1.9.3</span>
    </div>
   </td>
  </tr>
@@ -288,6 +288,21 @@ Functions</h2></td></tr>
 <tr class="memitem:gacfa23ff49449acd70f0906ba838357e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sadc__group.html#gacfa23ff49449acd70f0906ba838357e3">Sadc_Compensation_Deinit</a> (void)</td></tr>
 <tr class="memdesc:gacfa23ff49449acd70f0906ba838357e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">SADC Compensation De-initialization to disable SW timer for periodic compensation.  <a href="group__sadc__group.html#gacfa23ff49449acd70f0906ba838357e3">More...</a><br /></td></tr>
 <tr class="separator:gacfa23ff49449acd70f0906ba838357e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2ff47b695cce329f15ac53aba86b40d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sadc__group.html#ga2ff47b695cce329f15ac53aba86b40d5">Sadc_Config_Enable_Vbat</a> (<a class="el" href="group__sadc__group.html#ga705007a30122305ef8f33df458736347">sadc_config_resolution_t</a> res, <a class="el" href="group__sadc__group.html#ga1afc83b4ceedd13a5483e005812b75da">sadc_config_oversample_t</a> os, <a class="el" href="group__sadc__group.html#ga9d406431a28d5c054230b91730343ead">sadc_isr_handler_t</a> sadc_int_callback)</td></tr>
+<tr class="memdesc:ga2ff47b695cce329f15ac53aba86b40d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">SADC Config Enable Read Vat.  <a href="group__sadc__group.html#ga2ff47b695cce329f15ac53aba86b40d5">More...</a><br /></td></tr>
+<tr class="separator:ga2ff47b695cce329f15ac53aba86b40d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1c24c8cc1ba9999674e1c920dff5f674"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sadc__group.html#ga1c24c8cc1ba9999674e1c920dff5f674">Sadc_Channel_Read_Vbat</a> (<a class="el" href="group__sadc__group.html#ga6963ff027e98e0632ea90db317b0d8d1">sadc_input_ch_t</a> ch)</td></tr>
+<tr class="memdesc:ga1c24c8cc1ba9999674e1c920dff5f674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sadc_Channel_Read_Vbat.  <a href="group__sadc__group.html#ga1c24c8cc1ba9999674e1c920dff5f674">More...</a><br /></td></tr>
+<tr class="separator:ga1c24c8cc1ba9999674e1c920dff5f674"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadbf97365040421f85774e54655f449f8"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sadc__group.html#gadbf97365040421f85774e54655f449f8">Sadc_Init_vBAT</a> (<a class="el" href="structsadc__config__t.html">sadc_config_t</a> *p_config, <a class="el" href="group__sadc__group.html#ga9d406431a28d5c054230b91730343ead">sadc_isr_handler_t</a> sadc_int_callback)</td></tr>
+<tr class="memdesc:gadbf97365040421f85774e54655f449f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sadc_Init_vBAT.  <a href="group__sadc__group.html#gadbf97365040421f85774e54655f449f8">More...</a><br /></td></tr>
+<tr class="separator:gadbf97365040421f85774e54655f449f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6459bec8d7f33a621b91f609967542b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sadc__group.html#ga6459bec8d7f33a621b91f609967542b1">Sadc_Compensation_vbat_Init</a> (uint32_t xPeriodicTimeInSec)</td></tr>
+<tr class="memdesc:ga6459bec8d7f33a621b91f609967542b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sadc_Compensation_vbat_Init.  <a href="group__sadc__group.html#ga6459bec8d7f33a621b91f609967542b1">More...</a><br /></td></tr>
+<tr class="separator:ga6459bec8d7f33a621b91f609967542b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c98b7d719a24c85f4fedca312af4b15"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sadc__group.html#ga4c98b7d719a24c85f4fedca312af4b15">sadc_voltage_result</a> (sadc_value_t sadc_value)</td></tr>
+<tr class="memdesc:ga4c98b7d719a24c85f4fedca312af4b15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sadc_Compensation_vbat_Init.  <a href="group__sadc__group.html#ga4c98b7d719a24c85f4fedca312af4b15">More...</a><br /></td></tr>
+<tr class="separator:ga4c98b7d719a24c85f4fedca312af4b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>SAR ADC driver file. </p>

@@ -414,6 +414,11 @@ typedef enum RAF_CMD
     RAF_CMD_DEVICE_RESET_REQUEST                        = 0x00000040,
     RAF_CMD_GATEWAY_EXT_ADDRESS_REQUEST                 = 0x00000041,
     RAF_CMD_GATEWAY_PERMIT_JOIN_STATUS_REQUEST          = 0x00000042,
+    RAF_CMD_GATEWAY_PANID_CHANNEL_REQUEST               = 0x00000043,
+    RAF_CMD_GATEWAY_INSTALL_CODE_SET_REQUEST            = 0x00000044,
+    RAF_CMD_GATEWAY_INSTALL_CODE_REMOVE_REQUEST         = 0x00000045,
+    RAF_CMD_GATEWAY_INSTALL_CODE_REMOVE_ALL_REQUEST     = 0x00000046,
+
     RAF_CMD_FINISH,
 } raf_cmd_t;
 
@@ -923,6 +928,12 @@ typedef struct RAF_CMD_CONFIRM_PARAMETER
     uint32_t    cmd_value[];
 } raf_cmd_cfm_t;
 
+typedef struct install_code_add
+{
+    uint8_t  ic_type;
+    uint8_t  ieeeAddr[8];
+    uint8_t  ic[19];
+} install_code_add_t;
 //=============================================================================
 //                Public Function Declaration
 //=============================================================================

@@ -53,7 +53,7 @@ static TimerHandle_t tmr_off_effect;
 static int get_scene_count(void)
 {
     uint8_t cur_idx, scene_cnt;
-
+    scene_cnt = 0;
     for (cur_idx = 0; cur_idx < SCENE_TABLE_SIZE; cur_idx++)
     {
         if (scene_table_db.scene_table[cur_idx].occupied)

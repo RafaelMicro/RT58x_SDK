@@ -56,7 +56,7 @@ static void init_default_pin_mux(void)
 
     return;
 }
-int32_t main(void)
+int main(void)
 {
     check_reset();
     /*we should set pinmux here or in SystemInit */
