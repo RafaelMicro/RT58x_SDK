@@ -10,7 +10,7 @@ void bootloader_ver_get(volatile const version_entry_t *pt_ver_info)
     volatile const       version_entry_t bootloader_version_info =
     {
         .version_tag = "bootloader_ver",
-        .version_info = "192",
+        .version_info = "193",
     };
     pt_ver_info = &bootloader_version_info;
 }
