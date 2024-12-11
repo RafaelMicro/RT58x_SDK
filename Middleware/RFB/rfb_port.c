@@ -209,11 +209,19 @@ RFB_EVENT_STATUS rfb_port_subg_init(rfb_interrupt_event_t *_rfb_interrupt_event,
     /*Set the initial modem type*/
     if (keying_mode == RFB_KEYING_FSK)
     {
+        if (band_type == BAND_SUBG_470M)
+        {
+            band_type -= 2;  //470MHz band is actually the same as 433MHz band
+        }
         event_status = rfb_port_modem_set(RFB_MODEM_FSK, band_type);
         g_rfb.modem_type = RFB_MODEM_FSK;
     }
     else if (keying_mode == RFB_KEYING_OQPSK)
     {
+        if (band_type == BAND_OQPSK_SUBG_470M)
+        {
+            band_type -= 2;  //470MHz band is actually the same as 433MHz band
+        }
         event_status = rfb_port_modem_set(RFB_MODEM_OQPSK, band_type);
         g_rfb.modem_type = RFB_MODEM_OQPSK;
     }
@@ -893,6 +901,10 @@ RFB_EVENT_STATUS rfb_port_tx_power_set(uint8_t band_type, uint8_t power_index)
 
     /* RUCI band type: [0: 2.4GHz, 1: SubG 915MHz, 2: SubG 868MHz, 3: SubG 433MHz, 4: SubG 315MHz] */
     band_type_ruci = (band_type < BAND_SUBG_868M) ? (band_type ^ 1) : band_type;
+    if (band_type == BAND_SUBG_470M)
+    {
+        band_type -= 2;  //470MHz band is actually the same as 433MHz band
+    }
 
     event_status = rfb_comm_tx_power_set(band_type_ruci, power_index);
 
@@ -911,6 +923,10 @@ RFB_EVENT_STATUS rfb_port_tx_power_set_oqpsk(uint8_t band_type, uint8_t power_in
 
     /* RUCI band type: [0: 2.4GHz, 1: SubG 915MHz, 2: SubG 868MHz, 3: SubG 433MHz, 4: SubG 315MHz] */
     band_type_ruci = (band_type < BAND_SUBG_868M) ? (band_type ^ 1) : band_type;
+    if (band_type == BAND_SUBG_470M)
+    {
+        band_type -= 2;  //470MHz band is actually the same as 433MHz band
+    }
 
     event_status = rfb_comm_tx_power_set_oqpsk(band_type_ruci, power_index);
 
@@ -925,6 +941,11 @@ RFB_EVENT_STATUS rfb_port_tx_power_set_oqpsk(uint8_t band_type, uint8_t power_in
 #if RFB_FIX_TX_POWER_SUPPORT
 RFB_EVENT_STATUS rfb_port_fix_15dbm_tx_power_set(bool enable, uint8_t band_type)
 {
+    if (band_type == BAND_SUBG_470M)
+    {
+        band_type -= 2;  //470MHz band is actually the same as 433MHz band
+    }
+
     if (band_type != BAND_SUBG_433M) // only support SUBG 433M now
     {
         printf("[W] rfb_port_fix_15dbm_tx_power_set fail, unsupported band type: %d\n", band_type);

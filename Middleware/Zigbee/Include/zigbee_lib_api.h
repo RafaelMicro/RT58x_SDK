@@ -143,9 +143,11 @@ void zigbee_aps_bind_set(uint8_t srcEP, uint8_t *srcIeee, uint8_t dstEP, uint8_t
  * @param  file_addr        OTA file location address
  * @param  file_size        size of OTA file
  * @param  file_version     Version of OTA file
+ * @param  image_type       image_type of OTA file
+ * @param  manufacturer_code     manufacturer_code of OTA file
  *
  */
-void zigbee_ota_insert_file(uint32_t file_addr, uint32_t file_size, uint32_t file_version);
+void zigbee_ota_insert_file(uint32_t file_addr, uint32_t file_size, uint32_t file_version, uint16_t image_type, uint16_t manufacturer_code);
 
 /**
  * @brief send the simple descript request

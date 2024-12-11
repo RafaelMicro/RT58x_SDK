@@ -73,8 +73,7 @@ C_SOURCES += ../../../../../Middleware/Third_Party/FreeRTOS/Source/portable/MemM
 C_SOURCES += ../../../../../Middleware/Third_Party/FreeRTOS/Source/queue.c
 C_SOURCES += ../../../../../Middleware/Third_Party/FreeRTOS/Source/tasks.c
 C_SOURCES += ../../../../../Middleware/Third_Party/FreeRTOS/Source/timers.c
-C_SOURCES += ../RFB_SubG/mac_frame_gen.c
-C_SOURCES += ../RFB_SubG/rfb_sample.c
+C_SOURCES += ../mac_frame_gen.c
 C_SOURCES += ../main.c
 
 # cpp source files

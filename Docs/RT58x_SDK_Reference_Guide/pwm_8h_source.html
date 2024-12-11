@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.BMP"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Rafael RT58x  SDK
-   &#160;<span id="projectnumber">v1.9.3</span>
+   &#160;<span id="projectnumber">v1.9.4</span>
    </div>
   </td>
  </tr>
@@ -229,12 +229,14 @@ $(function() {
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;uint32_t <a class="code" href="group__pmw__group.html#ga0f1266c909f4cecb2f5b918646d7a108">Pwm_Start</a>(<a class="code" href="structpwm__seq__para__head__t.html">pwm_seq_para_head_t</a> *pwm_para_config);</div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; </div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;}</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160; </div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* End of _PWM_H_ */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; <span class="comment">/* End of Peripheral Group */</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;uint32_t <a class="code" href="group__pmw__group.html#gac844f4b003ce7e35ca2ce6338c7cfbb4">Pwm_Stop</a>(<a class="code" href="structpwm__seq__para__head__t.html">pwm_seq_para_head_t</a> *pwm_para_config);</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160; </div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;}</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; </div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* End of _PWM_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; <span class="comment">/* End of Peripheral Group */</span></div>
 <div class="ttc" id="agroup__pmw__group_html_ga0f1266c909f4cecb2f5b918646d7a108"><div class="ttname"><a href="group__pmw__group.html#ga0f1266c909f4cecb2f5b918646d7a108">Pwm_Start</a></div><div class="ttdeci">uint32_t Pwm_Start(pwm_seq_para_head_t *pwm_para_config)</div><div class="ttdoc">Function to enable pwm irq,clock,rdam.</div><div class="ttdef"><b>Definition:</b> pwm.c:131</div></div>
 <div class="ttc" id="agroup__pmw__group_html_ga518d35d796a531b87de0fc042c142ead"><div class="ttname"><a href="group__pmw__group.html#ga518d35d796a531b87de0fc042c142ead">pwm_counter_mode_t</a></div><div class="ttdeci">pwm_counter_mode_t</div><div class="ttdoc">PWM counter mode table. UP: Up mode / UD: Up-Down mode.</div><div class="ttdef"><b>Definition:</b> pwm.h:112</div></div>
 <div class="ttc" id="agroup__pmw__group_html_ga51ddd5cc5875c77073d7c01971ae7920"><div class="ttname"><a href="group__pmw__group.html#ga51ddd5cc5875c77073d7c01971ae7920">pwm_seq_order_t</a></div><div class="ttdeci">pwm_seq_order_t</div><div class="ttdoc">PWM Sequence order table. Order_0: S0 / Order_1: S1 / Order_2: S0S1 / Order_3: S1S0.</div><div class="ttdef"><b>Definition:</b> pwm.h:66</div></div>
@@ -242,6 +244,7 @@ $(function() {
 <div class="ttc" id="agroup__pmw__group_html_gaa07dfec16bd76056216d48bf2bb3876a"><div class="ttname"><a href="group__pmw__group.html#gaa07dfec16bd76056216d48bf2bb3876a">pwm_id_t</a></div><div class="ttdeci">pwm_id_t</div><div class="ttdoc">PWM ID mapping.</div><div class="ttdef"><b>Definition:</b> pwm.h:38</div></div>
 <div class="ttc" id="agroup__pmw__group_html_gaab5d38aafae046532ab3e35ec6c1dbab"><div class="ttname"><a href="group__pmw__group.html#gaab5d38aafae046532ab3e35ec6c1dbab">pwm_trigger_src_t</a></div><div class="ttdeci">pwm_trigger_src_t</div><div class="ttdoc">PWM trigger source table.</div><div class="ttdef"><b>Definition:</b> pwm.h:91</div></div>
 <div class="ttc" id="agroup__pmw__group_html_gac5b798c4c875fb1c99d395382a6b40b0"><div class="ttname"><a href="group__pmw__group.html#gac5b798c4c875fb1c99d395382a6b40b0">pwm_dma_auto_t</a></div><div class="ttdeci">pwm_dma_auto_t</div><div class="ttdoc">PWM DMA auto table.</div><div class="ttdef"><b>Definition:</b> pwm.h:120</div></div>
+<div class="ttc" id="agroup__pmw__group_html_gac844f4b003ce7e35ca2ce6338c7cfbb4"><div class="ttname"><a href="group__pmw__group.html#gac844f4b003ce7e35ca2ce6338c7cfbb4">Pwm_Stop</a></div><div class="ttdeci">uint32_t Pwm_Stop(pwm_seq_para_head_t *pwm_para_config)</div><div class="ttdoc">Function to stop pwm function.</div><div class="ttdef"><b>Definition:</b> pwm.c:188</div></div>
 <div class="ttc" id="agroup__pmw__group_html_gacf4ee1354a930090d9ee797f93129ba1"><div class="ttname"><a href="group__pmw__group.html#gacf4ee1354a930090d9ee797f93129ba1">pwm_dma_smp_fmt_t</a></div><div class="ttdeci">pwm_dma_smp_fmt_t</div><div class="ttdoc">PWM DMA sample format table.</div><div class="ttdef"><b>Definition:</b> pwm.h:103</div></div>
 <div class="ttc" id="agroup__pmw__group_html_gada8b630a28c9dc52083363f53c767e1b"><div class="ttname"><a href="group__pmw__group.html#gada8b630a28c9dc52083363f53c767e1b">pwm_seq_num_t</a></div><div class="ttdeci">pwm_seq_num_t</div><div class="ttdoc">PWM sequence selection table.</div><div class="ttdef"><b>Definition:</b> pwm.h:75</div></div>
 <div class="ttc" id="agroup__pmw__group_html_gaefdb306768fa6196e113e72e5368c817"><div class="ttname"><a href="group__pmw__group.html#gaefdb306768fa6196e113e72e5368c817">Pwm_Init</a></div><div class="ttdeci">uint32_t Pwm_Init(pwm_seq_para_head_t *pwm_para_config)</div><div class="ttdoc">Function to config pwm params.</div><div class="ttdef"><b>Definition:</b> pwm.c:33</div></div>

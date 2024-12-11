@@ -121,7 +121,7 @@ void Comp_Int_Callback_Handler(void)
         printf("output low. \n");
         gpio_pin_clear(GPIO1);
     }
-
+    COMP_INT_CLEAR();
     gpio_pin_set(GPIO0);
 }
 

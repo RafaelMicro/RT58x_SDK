@@ -315,7 +315,7 @@ static void zigbee_gw_ota_cmd_handle(uint32_t cmd_id, uint8_t *pBuf)
                     while (flash_check_busy());
                     flash_write_page((uint32_t)&gp_ota_imgae_cache[i * 0x100], poffset + (i * 0x100));
                 }
-                zigbee_ota_insert_file(0x0007C000, gt_img_info.image_size + 4, gt_img_info.file_version);
+                zigbee_ota_insert_file(0x0007C000, gt_img_info.image_size + 4, gt_img_info.file_version, gt_img_info.image_type, gt_img_info.manufacturer_code);
 
                 if (gp_ota_imgae_cache)
                 {

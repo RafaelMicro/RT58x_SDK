@@ -79,7 +79,8 @@ typedef enum
     BAND_2P4G        = 1,
     BAND_SUBG_868M   = 2,
     BAND_SUBG_433M   = 3,
-    BAND_SUBG_315M   = 4
+    BAND_SUBG_315M   = 4,
+    BAND_SUBG_470M   = 5    //defined for customers, same as BAND_SUBG_433M
 } band_type_t;
 
 typedef enum
@@ -87,7 +88,8 @@ typedef enum
     BAND_OQPSK_SUBG_915M   = 0,
     BAND_OQPSK_SUBG_868M   = 1,
     BAND_OQPSK_SUBG_433M   = 2,
-    BAND_OQPSK_SUBG_315M   = 3
+    BAND_OQPSK_SUBG_315M   = 3,
+    BAND_OQPSK_SUBG_470M   = 4    //defined for customers, same as BAND_OQPSK_SUBG_433M
 } oqpsk_band_type_t;
 
 typedef enum

@@ -156,6 +156,7 @@ extern "C"
 #include "zb_zcl_illuminance_measurement.h"
 #include "zb_zcl_rel_humidity_measurement.h"
 #include "zb_zcl_door_lock.h"
+#include "zb_zcl_time.h"
 #endif
 /** @addtogroup ZigBee_Stack
  *  @{
@@ -418,7 +419,7 @@ typedef enum RAF_CMD
     RAF_CMD_GATEWAY_INSTALL_CODE_SET_REQUEST            = 0x00000044,
     RAF_CMD_GATEWAY_INSTALL_CODE_REMOVE_REQUEST         = 0x00000045,
     RAF_CMD_GATEWAY_INSTALL_CODE_REMOVE_ALL_REQUEST     = 0x00000046,
-
+    RAF_CMD_GATEWAY_STANDARD_TIME_SET                   = 0x00000047,
     RAF_CMD_FINISH,
 } raf_cmd_t;
 

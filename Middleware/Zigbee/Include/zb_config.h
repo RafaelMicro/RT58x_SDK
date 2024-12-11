@@ -34,6 +34,7 @@ constants etc.
 */
 #define ZB_BUF_Q_SIZE 8U
 #endif /*ZB_BUF_Q_SIZE*/
+#define ZB_TIMER_32
 
 /**
    Size, in bytes, of the packet buffer

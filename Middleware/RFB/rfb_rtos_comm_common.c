@@ -776,10 +776,13 @@ RFB_EVENT_STATUS rfb_comm_tx_power_set_oqpsk(uint8_t band_type, uint8_t power_in
 
     RUCI_ENDIAN_CONVERT((uint8_t *)&sTxPwrSetCmd_t, RUCI_SET_TX_POWER_OQPSK);
 
-    enter_critical_section();
-    rfb_send_cmd((uint8_t *)&sTxPwrSetCmd_t, RUCI_LEN_SET_TX_POWER_OQPSK);
+    //enter_critical_section();
+    if (rfb_send_cmd((uint8_t *)&sTxPwrSetCmd_t, RUCI_LEN_SET_TX_POWER_OQPSK) == false)
+    {
+        return RFB_CNF_EVENT_TX_BUSY;
+    }
     event_status = rfb_event_read(&event_len, (uint8_t *)&sCmnCnfEvent);
-    leave_critical_section();
+    //leave_critical_section();
 
     RUCI_ENDIAN_CONVERT((uint8_t *)&sCmnCnfEvent, RUCI_CMN_CNF_EVENT);
     if (event_status != RF_MCU_RX_CMDQ_GET_SUCCESS)
@@ -845,10 +848,13 @@ RFB_EVENT_STATUS rfb_comm_pta_control_set(uint8_t enable, uint8_t inverse)
     SET_RUCI_PARA_SET_PTA_DEFAULT(&sSetPtaDefault, enable, inverse);
     RUCI_ENDIAN_CONVERT((uint8_t *)&sSetPtaDefault, RUCI_SET_PTA_DEFAULT);
 
-    enter_critical_section();
-    rfb_send_cmd((uint8_t *)&sSetPtaDefault, RUCI_LEN_SET_PTA_DEFAULT);
+    //enter_critical_section();
+    if (rfb_send_cmd((uint8_t *)&sSetPtaDefault, RUCI_LEN_SET_PTA_DEFAULT) == false)
+    {
+        return RFB_CNF_EVENT_TX_BUSY;
+    }
     event_status = rfb_event_read(&event_len, (uint8_t *)&sCmnCnfEvent);
-    leave_critical_section();
+    //leave_critical_section();
 
     RUCI_ENDIAN_CONVERT((uint8_t *)&sCmnCnfEvent, RUCI_CMN_CNF_EVENT);
     if (event_status != RF_MCU_RX_CMDQ_GET_SUCCESS)

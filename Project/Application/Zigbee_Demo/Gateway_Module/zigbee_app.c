@@ -37,6 +37,7 @@
 #include "mfs.h"
 
 #include "uart_handler.h"
+#include "timers.h"
 //=============================================================================
 //                Private Definitions of const value
 //=============================================================================
@@ -66,6 +67,7 @@ typedef struct
 static sys_queue_t app_msg_q;
 static zigbee_cfg_t gt_app_cfg;
 static uint32_t app_event_state;
+static TimerHandle_t zb_time_timer;
 
 #if (MODULE_ENABLE(USE_FILE_SYSTEM))
 static const char *db_file = "DB";
@@ -140,6 +142,14 @@ void app_db_erase(void)
 }
 #endif
 
+static void time_timer_handler(TimerHandle_t timer)
+{
+    uint32_t cur_time = get_gw_time();
+    if (cur_time != ZB_ZCL_TIME_TIME_DEFAULT_VALUE)
+    {
+        set_gw_time(cur_time + 1);
+    }
+}
 static void app_main_loop(uint32_t event)
 {
     switch (event)
@@ -164,6 +174,8 @@ static void app_main_task(void *arg)
     app_queue_t t_app_q;
     app_event_state = APP_INIT_EVT;
 
+    zb_time_timer = xTimerCreate("Time", pdMS_TO_TICKS(1000), pdTRUE, ( void * ) 0, time_timer_handler);
+    xTimerStart(zb_time_timer, 0);
     for (;;)
     {
         app_main_loop(app_event_state);

@@ -42,6 +42,7 @@
 //=============================================================================
 uint8_t long_addr[8];
 uint8_t reset_to_default;
+uint16_t raf_image_type = 321;
 //=============================================================================
 //                Functions
 //=============================================================================
@@ -364,7 +365,7 @@ void zigbee_finding_binding_req(uint8_t ep, uint8_t role)
     } while (0);
 }
 
-void zigbee_ota_insert_file(uint32_t file_addr, uint32_t file_size, uint32_t file_version)
+void zigbee_ota_insert_file(uint32_t file_addr, uint32_t file_size, uint32_t file_version, uint16_t image_type, uint16_t manufacturer_code)
 {
     sys_tlv_t *pt_tlv;
     zigbee_ota_file_insert_req_t *pt_req;
@@ -379,8 +380,8 @@ void zigbee_ota_insert_file(uint32_t file_addr, uint32_t file_size, uint32_t fil
         pt_req = (zigbee_ota_file_insert_req_t *)pt_tlv->value;
 
         pt_req->file_version = file_version;
-        pt_req->manufacturer_code = 123;
-        pt_req->image_type = 321;
+        pt_req->manufacturer_code = manufacturer_code;
+        pt_req->image_type = image_type;
         pt_req->p_img_data = (uint8_t *)file_addr;
         pt_req->image_size = file_size;
 

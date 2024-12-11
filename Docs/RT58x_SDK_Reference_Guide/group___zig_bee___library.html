@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.BMP"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Rafael RT58x  SDK
-   &#160;<span id="projectnumber">v1.9.3</span>
+   &#160;<span id="projectnumber">v1.9.4</span>
    </div>
   </td>
  </tr>
@@ -104,9 +104,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memitem:gad07cd31445bd6551fae7711c6c18583d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___zig_bee___library.html#gad07cd31445bd6551fae7711c6c18583d">zigbee_aps_bind_set</a> (uint8_t srcEP, uint8_t *srcIeee, uint8_t dstEP, uint8_t *dstAddr, uint16_t clusterID)</td></tr>
 <tr class="memdesc:gad07cd31445bd6551fae7711c6c18583d"><td class="mdescLeft">&#160;</td><td class="mdescRight">set internal binding table  <a href="group___zig_bee___library.html#gad07cd31445bd6551fae7711c6c18583d">More...</a><br /></td></tr>
 <tr class="separator:gad07cd31445bd6551fae7711c6c18583d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4a6b815e5c10a73ab57237e8af8c18a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___zig_bee___library.html#ga4a6b815e5c10a73ab57237e8af8c18a7">zigbee_ota_insert_file</a> (uint32_t file_addr, uint32_t file_size, uint32_t file_version)</td></tr>
-<tr class="memdesc:ga4a6b815e5c10a73ab57237e8af8c18a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">insert the OTA file on the OTA server side  <a href="group___zig_bee___library.html#ga4a6b815e5c10a73ab57237e8af8c18a7">More...</a><br /></td></tr>
-<tr class="separator:ga4a6b815e5c10a73ab57237e8af8c18a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7adc4b90fe2d6460e7f57d9a843fc911"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___zig_bee___library.html#ga7adc4b90fe2d6460e7f57d9a843fc911">zigbee_ota_insert_file</a> (uint32_t file_addr, uint32_t file_size, uint32_t file_version, uint16_t image_type, uint16_t manufacturer_code)</td></tr>
+<tr class="memdesc:ga7adc4b90fe2d6460e7f57d9a843fc911"><td class="mdescLeft">&#160;</td><td class="mdescRight">insert the OTA file on the OTA server side  <a href="group___zig_bee___library.html#ga7adc4b90fe2d6460e7f57d9a843fc911">More...</a><br /></td></tr>
+<tr class="separator:ga7adc4b90fe2d6460e7f57d9a843fc911"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3ca23be23d458382608423e2b9075749"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___zig_bee___library.html#ga3ca23be23d458382608423e2b9075749">zigbee_simple_desc_req</a> (uint16_t addr, uint8_t endpoint)</td></tr>
 <tr class="memdesc:ga3ca23be23d458382608423e2b9075749"><td class="mdescLeft">&#160;</td><td class="mdescRight">send the simple descript request  <a href="group___zig_bee___library.html#ga3ca23be23d458382608423e2b9075749">More...</a><br /></td></tr>
 <tr class="separator:ga3ca23be23d458382608423e2b9075749"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -528,8 +528,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
-<a id="ga4a6b815e5c10a73ab57237e8af8c18a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4a6b815e5c10a73ab57237e8af8c18a7">&#9670;&nbsp;</a></span>zigbee_ota_insert_file()</h2>
+<a id="ga7adc4b90fe2d6460e7f57d9a843fc911"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7adc4b90fe2d6460e7f57d9a843fc911">&#9670;&nbsp;</a></span>zigbee_ota_insert_file()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -550,7 +550,19 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>file_version</em>&#160;</td>
+          <td class="paramname"><em>file_version</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>image_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>manufacturer_code</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -566,6 +578,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
     <tr><td class="paramname">file_addr</td><td>OTA file location address </td></tr>
     <tr><td class="paramname">file_size</td><td>size of OTA file </td></tr>
     <tr><td class="paramname">file_version</td><td>Version of OTA file </td></tr>
+    <tr><td class="paramname">image_type</td><td>image_type of OTA file </td></tr>
+    <tr><td class="paramname">manufacturer_code</td><td>manufacturer_code of OTA file </td></tr>
   </table>
   </dd>
 </dl>

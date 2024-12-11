@@ -59,6 +59,7 @@ _cli_cmd_xmodem(int argc, char **argv, cb_shell_out_t log_out, void *pExtra)
     return 0;
 }
 
+#if 0
 static uint32_t crc32checksum(uint32_t flash_addr, uint32_t data_len)
 {
     uint16_t k;
@@ -76,7 +77,6 @@ static uint32_t crc32checksum(uint32_t flash_addr, uint32_t data_len)
     }
     return ~chkSum;
 }
-
 static int
 _cli_cmd_ota(int argc, char **argv, cb_shell_out_t log_out, void *pExtra)
 {
@@ -140,6 +140,7 @@ _cli_cmd_ota(int argc, char **argv, cb_shell_out_t log_out, void *pExtra)
     } while (0);
     return 0;
 }
+#endif
 
 static int
 _cli_cmd_zcl_on_off(int argc, char **argv, cb_shell_out_t log_out, void *pExtra)
@@ -1215,6 +1216,7 @@ const sh_cmd_t  g_cli_cmd_xmode __cli_cmd_pool =
     "    e.g. xmodem r",
 };
 
+#if 0
 const sh_cmd_t  g_cli_cmd_ota __cli_cmd_pool =
 {
     .pCmd_name      = "ota",
@@ -1223,6 +1225,7 @@ const sh_cmd_t  g_cli_cmd_ota __cli_cmd_pool =
     "  usage: ota\n"
     "    e.g. ota r",
 };
+#endif
 
 const sh_cmd_t  g_cli_cmd_act_ep_req __cli_cmd_pool =
 {

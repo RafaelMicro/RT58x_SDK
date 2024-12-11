@@ -81,7 +81,8 @@ void zigbee_gateway_cmd_send(uint32_t cmd_id, uint16_t addr, uint8_t addr_mode, 
 void zigbee_zcl_msg_read_rsp_cb_reg(void *cb);
 void zigbee_zcl_msg_write_rsp_cb_reg(void *cb);
 void zigbee_zcl_msg_cfg_report_rsp_cb_reg(void *cb);
-
+void set_gw_time(uint32_t time);
+uint32_t get_gw_time(void);
 uart_handler_data_sts_t xmodem_parser(uint8_t *pBuf, uint16_t plen, uint16_t *datalen, uint16_t *offset);
 void xmodem_recv(sys_tlv_t *pt_tlv);
 
