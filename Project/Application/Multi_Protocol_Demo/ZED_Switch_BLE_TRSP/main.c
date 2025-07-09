@@ -59,6 +59,16 @@ static void init_default_pin_mux(void)
 int main(void)
 {
     /*we should set pinmux here or in SystemInit */
+    uint32_t status;
+
+    /* Setting the System clock */
+    status = Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+    if (status != STATUS_SUCCESS)
+    {
+        /* System clock cannot be switched correctly. */
+        while (1);
+    }
+
     init_default_pin_mux();
 
     Lpm_Set_Low_Power_Level(LOW_POWER_LEVEL_SLEEP0);

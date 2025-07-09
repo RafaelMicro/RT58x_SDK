@@ -68,7 +68,7 @@ comp_config_t p_comp_config;
 uint32_t enter_sleep_mode = FALSE;
 
 /*this is pin mux setting*/
-void init_default_pin_mux(void)
+void Init_Default_Pin_Mux(void)
 {
     pin_set_mode(16, MODE_UART);     /*GPIO16 as UART0 TX*/
     pin_set_mode(17, MODE_UART);     /*GPIO17 as UART0 RX*/
@@ -221,7 +221,9 @@ void Gpio_Init(void)
 int main(void)
 {
 
-    init_default_pin_mux();//open uart
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+
+    Init_Default_Pin_Mux();//open uart
 
     /*init debug uart port for printf*/
     console_drv_init(PRINTF_BAUDRATE);

@@ -190,6 +190,8 @@ uint32_t Comp_Config(comp_config_t *p_config)
 int main(void)
 {
     /*we should set pinmux here or in SystemInit */
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+
     Init_Default_Pin_Mux();
 
     /*init debug uart port for printf*/

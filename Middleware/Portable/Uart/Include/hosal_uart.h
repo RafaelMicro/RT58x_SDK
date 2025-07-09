@@ -232,6 +232,7 @@ int hosal_uart_callback_set (hosal_uart_dev_t *uart_dev,
                              void *arg);
 
 int hosal_uart_finalize(hosal_uart_dev_t *uart_dev);
+bool hosal_uart_send_complete(hosal_uart_dev_t *uart_dev);
 #ifdef __cplusplus
 }
 #endif

@@ -41,7 +41,7 @@ void SetClockFreq(void);
 static volatile uint32_t     g_dma_finish_state = 0;
 
 /*this is pin mux setting*/
-void init_default_pin_mux(void)
+void Init_Default_Pin_Mux(void)
 {
     pin_set_mode(16, MODE_UART);     /*GPIO16 as UART0 TX*/
     pin_set_mode(17, MODE_UART);     /*GPIO17 as UART0 RX*/
@@ -101,7 +101,9 @@ int main(void)
 
 
     /*we should set pinmux here or in SystemInit */
-    init_default_pin_mux();
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+
+    Init_Default_Pin_Mux();
 
     /*init debug uart port for printf*/
     console_drv_init(PRINTF_BAUDRATE);

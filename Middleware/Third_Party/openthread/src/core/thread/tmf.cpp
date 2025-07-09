@@ -33,8 +33,7 @@
 
 #include "thread/tmf.hpp"
 
-#include "common/locator_getters.hpp"
-#include "net/ip6_types.hpp"
+#include "instance/instance.hpp"
 
 namespace ot {
 namespace Tmf {
@@ -42,18 +41,18 @@ namespace Tmf {
 //----------------------------------------------------------------------------------------------------------------------
 // MessageInfo
 
-void MessageInfo::SetSockAddrToRloc(void) { SetSockAddr(Get<Mle::MleRouter>().GetMeshLocal16()); }
+void MessageInfo::SetSockAddrToRloc(void) { SetSockAddr(Get<Mle::MleRouter>().GetMeshLocalRloc()); }
 
-Error MessageInfo::SetSockAddrToRlocPeerAddrToLeaderAloc(void)
+void MessageInfo::SetSockAddrToRlocPeerAddrToLeaderAloc(void)
 {
     SetSockAddrToRloc();
-    return Get<Mle::MleRouter>().GetLeaderAloc(GetPeerAddr());
+    Get<Mle::MleRouter>().GetLeaderAloc(GetPeerAddr());
 }
 
-Error MessageInfo::SetSockAddrToRlocPeerAddrToLeaderRloc(void)
+void MessageInfo::SetSockAddrToRlocPeerAddrToLeaderRloc(void)
 {
     SetSockAddrToRloc();
-    return Get<Mle::MleRouter>().GetLeaderAddress(GetPeerAddr());
+    Get<Mle::MleRouter>().GetLeaderRloc(GetPeerAddr());
 }
 
 void MessageInfo::SetSockAddrToRlocPeerAddrToRealmLocalAllRoutersMulticast(void)
@@ -65,8 +64,7 @@ void MessageInfo::SetSockAddrToRlocPeerAddrToRealmLocalAllRoutersMulticast(void)
 void MessageInfo::SetSockAddrToRlocPeerAddrTo(uint16_t aRloc16)
 {
     SetSockAddrToRloc();
-    SetPeerAddr(Get<Mle::MleRouter>().GetMeshLocal16());
-    GetPeerAddr().GetIid().SetLocator(aRloc16);
+    GetPeerAddr().SetToRoutingLocator(Get<Mle::Mle>().GetMeshLocalPrefix(), aRloc16);
 }
 
 void MessageInfo::SetSockAddrToRlocPeerAddrTo(const Ip6::Address &aPeerAddress)
@@ -85,7 +83,7 @@ Agent::Agent(Instance &aInstance)
     SetResourceHandler(&HandleResource);
 }
 
-Error Agent::Start(void) { return Coap::Start(kUdpPort, Ip6::kNetifThread); }
+Error Agent::Start(void) { return Coap::Start(kUdpPort, Ip6::kNetifThreadInternal); }
 
 template <> void Agent::HandleTmf<kUriRelayRx>(Message &aMessage, const Ip6::MessageInfo &aMessageInfo)
 {
@@ -132,6 +130,7 @@ bool Agent::HandleResource(const char *aUriPath, Message &aMessage, const Ip6::M
         Case(kUriAddressSolicit, Mle::MleRouter);
         Case(kUriAddressRelease, Mle::MleRouter);
         Case(kUriActiveSet, MeshCoP::ActiveDatasetManager);
+        Case(kUriActiveReplace, MeshCoP::ActiveDatasetManager);
         Case(kUriPendingSet, MeshCoP::PendingDatasetManager);
         Case(kUriLeaderPetition, MeshCoP::Leader);
         Case(kUriLeaderKeepAlive, MeshCoP::Leader);
@@ -208,9 +207,9 @@ bool Agent::IsTmfMessage(const Ip6::Address &aSourceAddress, const Ip6::Address 
 
     VerifyOrExit(aDestPort == kUdpPort);
 
-    if (aSourceAddress.IsLinkLocal())
+    if (aSourceAddress.IsLinkLocalUnicast())
     {
-        isTmf = aDestAddress.IsLinkLocal() || aDestAddress.IsLinkLocalMulticast();
+        isTmf = aDestAddress.IsLinkLocalUnicastOrMulticast();
         ExitNow();
     }
 
@@ -271,10 +270,11 @@ Message::Priority Agent::DscpToPriority(uint8_t aDscp)
     return priority;
 }
 
-#if OPENTHREAD_CONFIG_DTLS_ENABLE
+#if OPENTHREAD_CONFIG_SECURE_TRANSPORT_ENABLE
 
 SecureAgent::SecureAgent(Instance &aInstance)
-    : Coap::CoapSecure(aInstance)
+    : Coap::CoapSecureBase(aInstance, mDtls)
+    , mDtls(aInstance, kNoLinkSecurity)
 {
     SetResourceHandler(&HandleResource);
 }
@@ -311,11 +311,8 @@ bool SecureAgent::HandleResource(const char *aUriPath, Message &aMessage, const 
         Case(kUriCommissionerKeepAlive, MeshCoP::BorderAgent);
         Case(kUriRelayTx, MeshCoP::BorderAgent);
         Case(kUriCommissionerGet, MeshCoP::BorderAgent);
-        Case(kUriCommissionerSet, MeshCoP::BorderAgent);
         Case(kUriActiveGet, MeshCoP::BorderAgent);
-        Case(kUriActiveSet, MeshCoP::BorderAgent);
         Case(kUriPendingGet, MeshCoP::BorderAgent);
-        Case(kUriPendingSet, MeshCoP::BorderAgent);
         Case(kUriProxyTx, MeshCoP::BorderAgent);
 #endif
 
@@ -329,7 +326,7 @@ bool SecureAgent::HandleResource(const char *aUriPath, Message &aMessage, const 
     return didHandle;
 }
 
-#endif // OPENTHREAD_CONFIG_DTLS_ENABLE
+#endif // OPENTHREAD_CONFIG_SECURE_TRANSPORT_ENABLE
 
 } // namespace Tmf
 } // namespace ot

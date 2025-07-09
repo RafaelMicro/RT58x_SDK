@@ -108,6 +108,8 @@ typedef enum
     GW_CMD_APP_SRV_DEV_READ_ATTRIBUTES = 0,
     GW_CMD_APP_SRV_DEV_WRITE_ATTRIBUTES,
     GW_CMD_APP_SRV_DEV_CONFIGURE_REPORT,
+    GW_CMD_APP_SRV_DEV_READ_CUSTOM_ATTRIBUTES,
+    GW_CMD_APP_SRV_DEV_WRITE_CUSTOM_ATTRIBUTES,
 } e_dev_attribute;
 
 #define GW_CMD_APP_SRV_IDENTIFY_BASE                0x40000
@@ -531,6 +533,7 @@ static void _cmd_dev_general_command_handle(uint32_t cmd_id, uint8_t *pkt)
     uint8_t attr_data_len = 0;
     uint8_t *p_attr_data = NULL;
     uint16_t cluster_id = 0x0000;
+    uint16_t manu_code = 0;
 
     switch (cmd_id)
     {
@@ -583,6 +586,41 @@ static void _cmd_dev_general_command_handle(uint32_t cmd_id, uint8_t *pkt)
         p_attr_data[0] = 0x00;
         memcpy(p_attr_data + 1, pt_pd->parameter + 3, attr_data_len - 1);
         break;
+    case GW_CMD_APP_SRV_DEV_READ_CUSTOM_ATTRIBUTES:
+        cmd_id = ZB_ZCL_CMD_READ_ATTRIB;
+        attr_data_len = 2;
+        p_attr_data = sys_malloc(attr_data_len);
+
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+
+        cluster_id = (((((uint16_t)pt_pd->parameter[2]) << 8U) & 0xFF00U) | (((uint16_t)pt_pd->parameter[1]) & 0xFFU));
+
+        p_attr_data[0] = pt_pd->parameter[3];
+        p_attr_data[1] = pt_pd->parameter[4];
+        manu_code = (((((uint16_t)pt_pd->parameter[6]) << 8U) & 0xFF00U) | (((uint16_t)pt_pd->parameter[5]) & 0xFFU));
+
+        break;
+
+    case GW_CMD_APP_SRV_DEV_WRITE_CUSTOM_ATTRIBUTES:
+        cmd_id = ZB_ZCL_CMD_WRITE_ATTRIB;
+
+        attr_data_len = pkt[4] - 10;
+
+        p_attr_data = sys_malloc(attr_data_len);
+
+        if (p_attr_data == NULL)
+        {
+            break;
+        }
+        cluster_id = (((((uint16_t)pt_pd->parameter[2]) << 8U) & 0xFF00U) | (((uint16_t)pt_pd->parameter[1]) & 0xFFU));
+        manu_code = (((((uint16_t)pt_pd->parameter[6]) << 8U) & 0xFF00U) | (((uint16_t)pt_pd->parameter[5]) & 0xFFU));
+
+        memcpy(p_attr_data, pt_pd->parameter + 3, attr_data_len);
+
+        break;
     default:
         break;
     }
@@ -599,7 +637,7 @@ static void _cmd_dev_general_command_handle(uint32_t cmd_id, uint8_t *pkt)
                             cluster_id,
                             cmd_id,
                             FALSE, TRUE,
-                            ZCL_FRAME_CLIENT_SERVER_DIR, 0, attr_data_len)
+                            ZCL_FRAME_CLIENT_SERVER_DIR, manu_code, attr_data_len)
 
 
         if (pt_data_req)

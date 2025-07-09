@@ -220,6 +220,16 @@ void app_bsp_isr_callback(bsp_event_t event)
 
 int32_t main(void)
 {
+    uint32_t status;
+
+    /* Setting the System clock */
+    status = Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+    if (status != STATUS_SUCCESS)
+    {
+        /* System clock cannot be switched correctly. */
+        while (1);
+    }
+
     init_default_pin_mux();
     Delay_Init();
 

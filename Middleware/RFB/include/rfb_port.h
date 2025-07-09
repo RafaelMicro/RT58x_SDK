@@ -89,11 +89,11 @@ uint8_t rfb_port_csl_accuracy_get(void);
 uint8_t rfb_port_csl_uncertainty_get(void);
 RFB_EVENT_STATUS rfb_port_csl_sample_time_update(uint32_t csl_sample_time);
 uint32_t rfb_port_rtc_time_read(void);
-uint8_t rfb_port_ack_packet_read(uint8_t *rx_data_address, uint8_t *rx_time_address, bool is2bytephr);
+uint8_t rfb_port_ack_packet_read(uint8_t *rx_data_address, uint8_t *rx_time_address, bool is2bytephr, uint8_t *rx_rssi);
 uint32_t rfb_port_rx_rtc_time_get(uint8_t rx_cnt);
 uint8_t rfb_port_current_channel_get(uint8_t rx_cnt);
 uint32_t rfb_port_frame_counter_get(void);
 RFB_EVENT_STATUS rfb_port_wake_on_radio_set(uint32_t rf_frequency, uint16_t rx_on_time, uint32_t sleep_time);
-RFB_EVENT_STATUS rfb_port_receive_at(uint8_t rf_channel, uint32_t rx_start_time, uint32_t rx_on_time);
+RFB_EVENT_STATUS rfb_port_receive_at(uint32_t rf_frequency, uint32_t rx_start_time, uint32_t rx_on_time);
 #endif
 

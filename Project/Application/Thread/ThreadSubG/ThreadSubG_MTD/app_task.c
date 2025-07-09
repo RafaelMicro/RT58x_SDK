@@ -2,10 +2,58 @@
 #include "bsp.h"
 #include "rfb.h"
 #include "ota_handler.h"
+#include "sw_timer.h"
+#include "bin_version.h"
 
 static otInstance *g_app_instance = NULL;
 extern void otAppCliInit(otInstance *aInstance);
-extern otError ota_init(otInstance *aInstance);
+static sw_timer_t *app_led_ack_timer = NULL;
+
+static char tmp_ip_string[OT_IP6_ADDRESS_STRING_SIZE];
+
+static uint8_t ip_null[OT_IP6_ADDRESS_SIZE] = {0x0, 0x0, 0x0, 0x0, \
+                                               0x0, 0x0, 0x0, 0x0, \
+                                               0x0, 0x0, 0x0, 0x0, \
+                                               0x0, 0x0, 0x0, 0x0
+                                              }; //check use
+extern otIp6Address app_udp_last_src_ip;
+
+
+void app_set_led0_on(void)
+{
+    gpio_pin_write(20, 0);
+    gpio_pin_write(15, 1);
+}
+
+void app_set_led0_off(void)
+{
+    gpio_pin_write(20, 1);
+    gpio_pin_write(15, 0);
+}
+
+void app_set_led0_toggle(void)
+{
+    gpio_pin_toggle(20);
+    gpio_pin_toggle(15);
+}
+
+void app_set_led1_on(void)
+{
+    gpio_pin_write(21, 0);
+    gpio_pin_write(14, 1);
+}
+
+void app_set_led1_off(void)
+{
+    gpio_pin_write(21, 1);
+    gpio_pin_write(14, 0);
+}
+
+void app_set_led1_toggle(void)
+{
+    gpio_pin_toggle(21);
+    gpio_pin_toggle(14);
+}
 
 otInstance *otGetInstance(void)
 {
@@ -191,8 +239,8 @@ static void app_task_network_configuration_setting()
                                             0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
                                           };
 #else
-    uint8_t nwkkey[OT_NETWORK_KEY_SIZE] = {0xfe, 0x83, 0x44, 0x8a, 0x67, 0x29, 0xfe, 0xab,
-                                           0xab, 0xfe, 0x29, 0x67, 0x8a, 0x44, 0x83, 0xfe
+    uint8_t nwkkey[OT_NETWORK_KEY_SIZE] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef,
+                                           0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
                                           };
 #endif
 
@@ -261,9 +309,10 @@ static void app_task_network_configuration_setting()
     }
 }
 
-void _Network_Interface_State_Change(uint32_t aFlags, void *aContext)
+void ot_state_change_interface(uint32_t aFlags, void *aContext)
 {
     uint8_t show_ip = 0;
+
     if ((aFlags & OT_CHANGED_THREAD_ROLE) != 0)
     {
         otDeviceRole changeRole = otThreadGetDeviceRole(g_app_instance);
@@ -316,105 +365,274 @@ void _Network_Interface_State_Change(uint32_t aFlags, void *aContext)
     }
 }
 
-static otError Processota(void *aContext, uint8_t aArgsLength, char *aArgs[])
+static otError ProcessLedAck(void *aContext, uint8_t aArgsLength, char *aArgs[])
 {
-    OT_UNUSED_VARIABLE(aContext);
     otError error = OT_ERROR_NONE;
-
-    if (0 == aArgsLength)
+    //Do nothing, just get peer device status response
+    if (aArgsLength > 0)
     {
-        info("ota state : %s \n", OtaStateToString(ota_get_state()));
-        info("ota image version : 0x%08x\n", ota_get_image_version());
-        info("ota image size : 0x%08x \n", ota_get_image_size());
-        info("ota image crc : 0x%08x \n", ota_get_image_crc());
-    }
-    else if (!strcmp(aArgs[0], "start"))
-    {
-        if (aArgsLength > 2)
+        if (memcmp(&ip_null, &app_udp_last_src_ip.mFields.m8, OT_IP6_ADDRESS_SIZE) != 0)
         {
-            do
-            {
-                uint64_t segments_size = 0;
-                uint64_t intervel = 0;
-                error = otParseAsUint64(aArgs[1], &segments_size);
-                if (error != OT_ERROR_NONE)
-                {
-                    break;
-                }
-                error = otParseAsUint64(aArgs[2], &intervel);
-                if (error != OT_ERROR_NONE)
-                {
-                    break;
-                }
-                info("segments_size %u ,intervel %u \n", (uint16_t)segments_size, (uint16_t)intervel);
-                ota_start((uint16_t)segments_size, (uint16_t)intervel);
-            } while (0);
+            otIp6AddressToString(&app_udp_last_src_ip, tmp_ip_string, sizeof(tmp_ip_string));
+            info("[led ack] << %s: %s \r\n", tmp_ip_string, aArgs[0]);
+            memset(&app_udp_last_src_ip.mFields.m8, 0x0, OT_IP6_ADDRESS_SIZE);
         }
         else
         {
-            error = OT_ERROR_INVALID_COMMAND;
+            info("is not form app udp \r\n");
+            return OT_ERROR_FAILED;
         }
     }
-    else if (!strcmp(aArgs[0], "send"))
-    {
-        if (aArgsLength > 1)
-        {
-            ota_send(aArgs[1]);
-        }
-    }
-    else if (!strcmp(aArgs[0], "stop"))
-    {
-        ota_stop();
-    }
-    else if (!strcmp(aArgs[0], "debug"))
-    {
-        if (aArgsLength > 1)
-        {
-            uint64_t level = 0;
-            error = otParseAsUint64(aArgs[1], &level);
-            ota_debug_level((unsigned int)level);
-        }
-    }
-    else
-    {
-        error = OT_ERROR_INVALID_COMMAND;
-    }
-
-exit:
     return error;
 }
 
-static otError Processmemory(void *aContext, uint8_t aArgsLength, char *aArgs[])
+static void app_udp_led_ack_timer_handler(void *p_param)
 {
-    OT_UNUSED_VARIABLE(aContext);
-    otError error = OT_ERROR_NONE;
+    char led_on_ok[20] = {"ledack On:+OK"};
+    char led_off_ok[20] = {"ledack Off:+OK"};
+    char led_toggle_ok[20] = {"ledack Toggle:+OK"};
+    app_led_ack_timer_para *para = (app_led_ack_timer_para *) p_param;
 
-    if (0 == aArgsLength)
+    if (para)
     {
-        mem_mgmt_show_info();
+        char *ack_str = NULL;
+        otIp6AddressToString(&para->src_ip, tmp_ip_string, sizeof(tmp_ip_string));
+        switch (para->led_status)
+        {
+        case 0:
+            info("[led ack] >> %s: Led Off! \r\n", tmp_ip_string);
+            ack_str = led_off_ok;
+            break;
+        case 1:
+            info("[led ack] >> %s: Led On!\r\n", tmp_ip_string);
+            ack_str = led_on_ok;
+            break;
+        case 2:
+            info("[led ack] >> %s: Led Toggle! \r\n", tmp_ip_string);
+            ack_str = led_toggle_ok;
+            break;
+        }
+
+        if (app_udp_send(para->src_ip, (uint8_t *)ack_str, strlen(ack_str)) != OT_ERROR_NONE)
+        {
+            info("led %d ack send fail \r\n", para->led_status);
+        }
+        mem_free(para);
+    }
+    //clear timer point
+    sw_timer_delete(app_led_ack_timer);
+    app_led_ack_timer = NULL;
+}
+
+static otError ProcessLed(void *aContext, uint8_t aArgsLength, char *aArgs[])
+{
+    otError error = OT_ERROR_FAILED;
+    char led_on_ok[20] = {"ledack On:+OK"};
+    char led_off_ok[20] = {"ledack Off:+OK"};
+    char led_toggle_ok[20] = {"ledack Toggle:+OK"};
+    uint8_t data_lens, led_status = 0xff;
+    // e.g: set led_ack_delay_ms = 1200 ms
+    uint64_t led_ack_delay_ms = 100;
+    if (aArgsLength > 0)
+    {
+        if (memcmp(&ip_null, &app_udp_last_src_ip.mFields.m8, OT_IP6_ADDRESS_SIZE) != 0)
+        {
+            otIp6AddressToString(&app_udp_last_src_ip, tmp_ip_string, sizeof(tmp_ip_string));
+        }
+        else
+        {
+            info("is not form app udp \r\n");
+            return error;
+        }
+        if (strcmp(aArgs[0], "on") == 0)
+        {
+            led_status = 1;
+            info("[led] << %s: Led On! \r\n", tmp_ip_string);
+            app_set_led0_on();
+            error = OT_ERROR_NONE;
+        }
+        else if (strcmp(aArgs[0], "off") == 0)
+        {
+            led_status = 0;
+            info("[led] << %s: Led Off! \r\n", tmp_ip_string);
+            app_set_led0_off();
+            error = OT_ERROR_NONE;
+
+        }
+        else if (strcmp(aArgs[0], "toggle") == 0)
+        {
+            led_status = 2;
+            info("[led] << %s: Led Toggle! \r\n", tmp_ip_string);
+            app_set_led0_toggle();
+            error = OT_ERROR_NONE;
+        }
+        if (aArgsLength > 1)
+        {
+            if (aArgsLength > 2)
+            {
+                if (otParseAsUint64(aArgs[2], &led_ack_delay_ms) != OT_ERROR_NONE)
+                {
+                    info("delay ms parameters error! \r\n");
+                    error = OT_ERROR_FAILED;
+                    return error;
+                }
+                // delay number range limitation  100ms ~ 5000ms
+                if (led_ack_delay_ms > 5000)
+                {
+                    led_ack_delay_ms = 5000;
+                }
+                else if (led_ack_delay_ms < 100)
+                {
+                    led_ack_delay_ms = 100;
+                }
+                app_led_ack_timer_para *para = NULL;
+                para = mem_malloc(sizeof(app_led_ack_timer_para));
+                if (para)
+                {
+                    para->led_status = led_status;
+                    para->src_ip = app_udp_last_src_ip;
+                    if (NULL == app_led_ack_timer)
+                    {
+                        app_led_ack_timer = sw_timer_create("app_udp_led_ack_timer",
+                                                            led_ack_delay_ms,
+                                                            false,
+                                                            SW_TIMER_EXECUTE_ONCE_FOR_EACH_TIMEOUT,
+                                                            (void *)para,
+                                                            app_udp_led_ack_timer_handler);
+                        sw_timer_start(app_led_ack_timer);
+                    }
+                    else
+                    {
+                        mem_free(para);
+                    }
+                }
+                else
+                {
+                    error = OT_ERROR_FAILED;
+                    return error;
+                }
+                error = OT_ERROR_NONE;
+            }
+            else
+            {
+                if (strcmp(aArgs[1], "ack") == 0)
+                {
+                    char *ack_str = NULL;
+                    switch (led_status)
+                    {
+                    case 0:
+                        info("[led ack] >> %s: Led Off! \r\n", tmp_ip_string);
+                        ack_str = led_off_ok;
+                        break;
+                    case 1:
+                        info("[led ack] >> %s: Led On!\r\n", tmp_ip_string);
+                        ack_str = led_on_ok;
+                        break;
+                    case 2:
+                        info("[led ack] >> %s: Led Toggle! \r\n", tmp_ip_string);
+                        ack_str = led_toggle_ok;
+                        break;
+                    }
+
+                    if (app_udp_send(app_udp_last_src_ip, (uint8_t *)ack_str, strlen(ack_str)) != OT_ERROR_NONE)
+                    {
+                        info("led %d ack send fail \r\n", led_status);
+                        error = OT_ERROR_FAILED;
+                        return error;
+                    }
+                    error = OT_ERROR_NONE;
+                }
+            }
+        }
+        memset(&app_udp_last_src_ip.mFields.m8, 0x0, OT_IP6_ADDRESS_SIZE);
     }
 
-exit:
+    return error;
+}
+
+
+static otError ProcessMcu(void *aContext, uint8_t aArgsLength, char *aArgs[])
+{
+    otError error = OT_ERROR_FAILED;
+    char buff[50] = {};
+    if (aArgsLength > 0)
+    {
+        if (memcmp(&ip_null, &app_udp_last_src_ip.mFields.m8, OT_IP6_ADDRESS_SIZE) != 0)
+        {
+            otIp6AddressToString(&app_udp_last_src_ip, tmp_ip_string, sizeof(tmp_ip_string));
+        }
+        else
+        {
+            info("is not form app udp \r\n");
+            return error;
+        }
+        if (strcmp(aArgs[0], "read") == 0)
+        {
+            if (strcmp(aArgs[1], "runtime") == 0)
+            {
+                sprintf(buff, "mcu runtime %08dsec.:+OK", (uint32_t)otPlatTimeGet());
+                info("[mcu time] >> %s: %08d sec \r\n", tmp_ip_string, (uint32_t)otPlatTimeGet());
+                if (app_udp_send(app_udp_last_src_ip, (uint8_t *)buff, strlen(buff)) != OT_ERROR_NONE)
+                {
+                    info("udp send fail! \r\n");
+                    return error;
+                }
+                error = OT_ERROR_NONE;
+            }
+            if (strcmp(aArgs[1], "version") == 0)
+            {
+                sprintf(buff, "mcu version 0x%08x:+OK", GET_BIN_VERSION(systeminfo.sysinfo));
+                info("[mcu version] >> %s: Thread-SubG-%08x \r\n", tmp_ip_string, GET_BIN_VERSION(systeminfo.sysinfo));
+                if (app_udp_send(app_udp_last_src_ip, (uint8_t *)buff, strlen(buff)) != OT_ERROR_NONE)
+                {
+                    info("udp send fail! \r\n");
+                    return error;
+                }
+                error = OT_ERROR_NONE;
+            }
+        }
+        else if (strcmp(aArgs[0], "runtime") == 0)
+        {
+            info("[mcu time] << %s: %s \r\n", tmp_ip_string, aArgs[1]);
+            error = OT_ERROR_NONE;
+        }
+        else if (strcmp(aArgs[0], "version") == 0)
+        {
+            info("[mcu version] << %s: Thread-SubG-%s \r\n", tmp_ip_string, aArgs[1]);
+            error = OT_ERROR_NONE;
+        }
+        memset(&app_udp_last_src_ip.mFields.m8, 0x0, OT_IP6_ADDRESS_SIZE);
+    }
     return error;
 }
 
 static const otCliCommand kCommands[] =
 {
-    {"ota", Processota},
-    {"mem", Processmemory},
+    {"led", ProcessLed},   //single endpoint P2P control
+    {"mcu", ProcessMcu},   // single endpoint information reading
+    //Ack process, null function
+    {"ledack", ProcessLedAck},//
 };
 
 void app_sleep_init()
 {
     otError error;
-
-    otLinkModeConfig config;
-
+#if 0 //cls
+    error = otLinkSetCslChannel(otGetInstance(), DEF_CHANNEL);
+    error = otLinkSetCslPeriod(otGetInstance(), 1000000);
+    error = otLinkSetCslTimeout(otGetInstance(), 20);
+    info("CSL channel         : %u \r\n", otLinkGetCslChannel(otGetInstance()));
+    info("CSL period          : %uus \r\n", otLinkGetCslPeriod(otGetInstance()));
+    info("CSL timeout         : %us \r\n", otLinkGetCslTimeout(otGetInstance()));
+#else
     error = otLinkSetPollPeriod(otGetInstance(), 1000);
     if (error != OT_ERROR_NONE)
     {
         err("otLinkSetPollPeriod failed with %d %s\r\n", error, otThreadErrorToString(error));
     }
+#endif
+    otLinkModeConfig config;
+
     config.mRxOnWhenIdle = false;
     config.mNetworkData = false;
     config.mDeviceType = false;
@@ -423,13 +641,46 @@ void app_sleep_init()
 
     if (error != OT_ERROR_NONE)
     {
-        err("otThreadSetLinkMode failed with %d %s\r\n", error, otThreadErrorToString(error));
+        err("otThreadSetLinkMode failed with \r\n");
     }
 
     /* low power mode init */
     Lpm_Set_Low_Power_Level(LOW_POWER_LEVEL_SLEEP0);
     Lpm_Enable_Low_Power_Wakeup(LOW_POWER_WAKEUP_32K_TIMER);
     Lpm_Enable_Low_Power_Wakeup(LOW_POWER_WAKEUP_UART0_RX);
+}
+
+void ota_state_change_cb(uint8_t state)
+{
+    switch (state)
+    {
+    case OTA_IDLE:
+        info("change to ota idle state \r\n");
+        break;
+    case OTA_DATA_SENDING:
+        info("change to ota sending state \r\n");
+        break;
+    case OTA_DATA_RECEIVING:
+        info("change to ota receiving state \r\n");
+        break;
+    case OTA_UNICASE_RECEIVING:
+        info("change to ota unicase receiving state \r\n");
+        break;
+    case OTA_REQUEST_SENDING:
+        info("change to ota request sending state \r\n");
+        break;
+    case OTA_WAKEUP_RECEIVING:
+        info("change to ota wakeup state \r\n");
+        break;
+    case OTA_DONE:
+        info("change to ota done state \r\n");
+        break;
+    case OTA_REBOOT:
+        info("change to ota reboot state \r\n");
+        break;
+    default:
+        break;
+    }
 }
 
 void app_task_init()
@@ -474,7 +725,7 @@ void app_task_init()
             break;
         }
 
-        if (ota_init(g_app_instance) != OT_ERROR_NONE)
+        if (ota_init(g_app_instance, ota_state_change_cb) != OT_ERROR_NONE)
         {
             info("ota init fail \r\n");
             break;
@@ -485,19 +736,16 @@ void app_task_init()
             info("otIp6SetEnabled fail \r\n");
             break;
         }
-
-        if (otThreadSetEnabled(g_app_instance, true) != OT_ERROR_NONE)
-        {
-            info("otThreadSetEnabled fail \r\n");
-            break;
-        }
-
-        if (otSetStateChangedCallback(g_app_instance, _Network_Interface_State_Change, 0) != OT_ERROR_NONE)
+#if !CFG_USE_CENTRAK_CONFIG
+        if (otSetStateChangedCallback(otGetInstance(), ot_state_change_interface, 0) != OT_ERROR_NONE)
         {
             info("otSetStateChangedCallback fail \r\n");
-            break;
         }
-
+        if (otThreadSetEnabled(otGetInstance(), true) != OT_ERROR_NONE)
+        {
+            info("otThreadSetEnabled fail \r\n");
+        }
+#endif
         if (otCliSetUserCommands(kCommands, OT_ARRAY_LENGTH(kCommands), g_app_instance) != OT_ERROR_NONE)
         {
             info("otCliSetUserCommands fail \r\n");
@@ -533,12 +781,15 @@ void app_task_init()
          extaddr->m8[0], extaddr->m8[1], extaddr->m8[2], extaddr->m8[3], \
          extaddr->m8[4], extaddr->m8[5], extaddr->m8[6], extaddr->m8[7]);
     info("=================================\r\n");
+
+    app_udp_comm_init(g_app_instance);
 }
 
 void app_task_process_action()
 {
     otTaskletsProcess(g_app_instance);
     otSysProcessDrivers(g_app_instance);
+    app_udp_message_queue_process(); //udp parser main loop
 }
 
 void app_task_exit(void)

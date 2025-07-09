@@ -578,6 +578,7 @@ int main(void)
     /* initil Button & led*/
     bsp_init((BSP_INIT_BUTTONS |
               BSP_INIT_LEDS), button_cb);
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
 
     bsp_led_Off(BSP_LED_0);
     bsp_led_Off(BSP_LED_1);

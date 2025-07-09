@@ -206,6 +206,8 @@ int main(void)
     uint32_t buf_index;
     uint32_t wdma_value;
 
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+
     Init_Default_Pin_Mux();
     /*init debug uart port for printf
      *Please use macro define  UART_BAUDRATE_XXXXXX

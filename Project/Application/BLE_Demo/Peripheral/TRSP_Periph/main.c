@@ -78,6 +78,16 @@ static void pin_mux_init(void)
  *************************************************************************************************/
 int main(void)
 {
+    uint32_t status;
+
+    /* Setting the System clock */
+    status = Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+    if (status != STATUS_SUCCESS)
+    {
+        /* System clock cannot be switched correctly. */
+        while (1);
+    }
+
     /* pinmux init */
     pin_mux_init();
 

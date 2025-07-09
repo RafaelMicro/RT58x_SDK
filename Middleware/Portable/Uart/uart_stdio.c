@@ -84,6 +84,11 @@ static int __uartstdio_break_callback(void *p_arg)
     return 0;
 }
 
+bool uart_stdio_send_complete()
+{
+    return hosal_uart_send_complete(&uartstdio);
+}
+
 int uart_stdio_write(char *p_data, int length)
 {
     return hosal_uart_send(&uartstdio, p_data, length);
@@ -264,8 +269,8 @@ _exp_dump_init(void)
     UART_T *pCSR = table[CONFIG_UART_STDIO_PORT];
 
     pCSR->LCR |= (0x1 << 7);
-    pCSR->DLL = UART_BAUDRATE_Baud2000000 & 0xFF;
-    pCSR->DLM = UART_BAUDRATE_Baud2000000 >> 8;
+    pCSR->DLL = UART_BAUDRATE_Baud115200 & 0xFF;
+    pCSR->DLM = UART_BAUDRATE_Baud115200 >> 8;
     pCSR->LCR &= ~(0x1 << 7);
     pCSR->LCR = 0x3;
     return 0;
@@ -274,14 +279,14 @@ _exp_dump_init(void)
 void my_fault_handler_c(uint32_t *sp, uint32_t lr_value)
 {
     _exp_dump_init();
-    printf("\r\n[HardFaultHandler]\r\n");
-    printf("R0= %x, R1= %x R2= %x R3= %x\r\n",
-           sp[0], sp[1], sp[2], sp[3]);
+    _exp_log_out("\r\n[HardFaultHandler]\r\n");
+    _exp_log_out("R0= %x, R1= %x R2= %x R3= %x\r\n",
+                 sp[0], sp[1], sp[2], sp[3]);
 
-    printf("R12= %x, LR= %x, PC= %x, PSR= %x\r\n",
-           sp[4], sp[5], sp[6], sp[7]);
+    _exp_log_out("R12= %x, LR= %x, PC= %x, PSR= %x\r\n",
+                 sp[4], sp[5], sp[6], sp[7]);
 
-    printf("LR Value= %x\r\n", lr_value);
+    _exp_log_out("LR Value= %x\r\n", lr_value);
 
     while (1)
         ;

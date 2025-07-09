@@ -62,7 +62,6 @@ class Settings;
  * Defines the base class used by `Settings` and `Settings::ChildInfoIterator`.
  *
  * Provides structure definitions for different settings keys.
- *
  */
 class SettingsBase : public InstanceLocator
 {
@@ -100,12 +99,10 @@ public:
      *
      * 4. New Key IDs may be defined in the future with the understanding
      *    that such key values are not backward compatible.
-     *
      */
 
     /**
      * Defines the keys of settings.
-     *
      */
     enum Key : uint16_t
     {
@@ -131,7 +128,6 @@ public:
 
     /**
      * Represents the device's own network information for settings storage.
-     *
      */
     OT_TOOL_PACKED_BEGIN
     class NetworkInfo : private Clearable<NetworkInfo>
@@ -144,7 +140,6 @@ public:
 
         /**
          * Initializes the `NetworkInfo` object.
-         *
          */
         void Init(void)
         {
@@ -156,7 +151,6 @@ public:
          * Returns the Thread role.
          *
          * @returns The Thread role.
-         *
          */
         uint8_t GetRole(void) const { return mRole; }
 
@@ -164,7 +158,6 @@ public:
          * Sets the Thread role.
          *
          * @param[in] aRole  The Thread Role.
-         *
          */
         void SetRole(uint8_t aRole) { mRole = aRole; }
 
@@ -172,7 +165,6 @@ public:
          * Returns the Thread device mode.
          *
          * @returns the Thread device mode.
-         *
          */
         uint8_t GetDeviceMode(void) const { return mDeviceMode; }
 
@@ -180,7 +172,6 @@ public:
          * Sets the Thread device mode.
          *
          * @param[in] aDeviceMode  The Thread device mode.
-         *
          */
         void SetDeviceMode(uint8_t aDeviceMode) { mDeviceMode = aDeviceMode; }
 
@@ -188,96 +179,85 @@ public:
          * Returns the RLOC16.
          *
          * @returns The RLOC16.
-         *
          */
-        uint16_t GetRloc16(void) const { return Encoding::LittleEndian::HostSwap16(mRloc16); }
+        uint16_t GetRloc16(void) const { return LittleEndian::HostSwap16(mRloc16); }
 
         /**
          * Sets the RLOC16.
          *
          * @param[in] aRloc16  The RLOC16.
-         *
          */
-        void SetRloc16(uint16_t aRloc16) { mRloc16 = Encoding::LittleEndian::HostSwap16(aRloc16); }
+        void SetRloc16(uint16_t aRloc16) { mRloc16 = LittleEndian::HostSwap16(aRloc16); }
 
         /**
          * Returns the key sequence.
          *
          * @returns The key sequence.
-         *
          */
-        uint32_t GetKeySequence(void) const { return Encoding::LittleEndian::HostSwap32(mKeySequence); }
+        uint32_t GetKeySequence(void) const { return LittleEndian::HostSwap32(mKeySequence); }
 
         /**
          * Sets the key sequence.
          *
          * @param[in] aKeySequence  The key sequence.
-         *
          */
-        void SetKeySequence(uint32_t aKeySequence) { mKeySequence = Encoding::LittleEndian::HostSwap32(aKeySequence); }
+        void SetKeySequence(uint32_t aKeySequence) { mKeySequence = LittleEndian::HostSwap32(aKeySequence); }
 
         /**
          * Returns the MLE frame counter.
          *
          * @returns The MLE frame counter.
-         *
          */
-        uint32_t GetMleFrameCounter(void) const { return Encoding::LittleEndian::HostSwap32(mMleFrameCounter); }
+        uint32_t GetMleFrameCounter(void) const { return LittleEndian::HostSwap32(mMleFrameCounter); }
 
         /**
          * Sets the MLE frame counter.
          *
          * @param[in] aMleFrameCounter  The MLE frame counter.
-         *
          */
         void SetMleFrameCounter(uint32_t aMleFrameCounter)
         {
-            mMleFrameCounter = Encoding::LittleEndian::HostSwap32(aMleFrameCounter);
+            mMleFrameCounter = LittleEndian::HostSwap32(aMleFrameCounter);
         }
 
         /**
          * Returns the MAC frame counter.
          *
          * @returns The MAC frame counter.
-         *
          */
-        uint32_t GetMacFrameCounter(void) const { return Encoding::LittleEndian::HostSwap32(mMacFrameCounter); }
+        uint32_t GetMacFrameCounter(void) const { return LittleEndian::HostSwap32(mMacFrameCounter); }
 
         /**
          * Sets the MAC frame counter.
          *
          * @param[in] aMacFrameCounter  The MAC frame counter.
-         *
          */
         void SetMacFrameCounter(uint32_t aMacFrameCounter)
         {
-            mMacFrameCounter = Encoding::LittleEndian::HostSwap32(aMacFrameCounter);
+            mMacFrameCounter = LittleEndian::HostSwap32(aMacFrameCounter);
         }
 
         /**
          * Returns the previous partition ID.
          *
          * @returns The previous partition ID.
-         *
          */
-        uint32_t GetPreviousPartitionId(void) const { return Encoding::LittleEndian::HostSwap32(mPreviousPartitionId); }
+        uint32_t GetPreviousPartitionId(void) const { return LittleEndian::HostSwap32(mPreviousPartitionId); }
 
         /**
          * Sets the previous partition id.
          *
          * @param[in] aPreviousPartitionId  The previous partition ID.
-         *
          */
         void SetPreviousPartitionId(uint32_t aPreviousPartitionId)
         {
-            mPreviousPartitionId = Encoding::LittleEndian::HostSwap32(aPreviousPartitionId);
+            mPreviousPartitionId = LittleEndian::HostSwap32(aPreviousPartitionId);
         }
 
         /**
          * Returns the extended address.
          *
          * @returns The extended address.
-         *
          */
         const Mac::ExtAddress &GetExtAddress(void) const { return mExtAddress; }
 
@@ -285,7 +265,6 @@ public:
          * Sets the extended address.
          *
          * @param[in] aExtAddress  The extended address.
-         *
          */
         void SetExtAddress(const Mac::ExtAddress &aExtAddress) { mExtAddress = aExtAddress; }
 
@@ -293,7 +272,6 @@ public:
          * Returns the Mesh Local Interface Identifier.
          *
          * @returns The Mesh Local Interface Identifier.
-         *
          */
         const Ip6::InterfaceIdentifier &GetMeshLocalIid(void) const { return mMlIid; }
 
@@ -301,7 +279,6 @@ public:
          * Sets the Mesh Local Interface Identifier.
          *
          * @param[in] aMeshLocalIid  The Mesh Local Interface Identifier.
-         *
          */
         void SetMeshLocalIid(const Ip6::InterfaceIdentifier &aMeshLocalIid) { mMlIid = aMeshLocalIid; }
 
@@ -309,17 +286,15 @@ public:
          * Returns the Thread version.
          *
          * @returns The Thread version.
-         *
          */
-        uint16_t GetVersion(void) const { return Encoding::LittleEndian::HostSwap16(mVersion); }
+        uint16_t GetVersion(void) const { return LittleEndian::HostSwap16(mVersion); }
 
         /**
          * Sets the Thread version.
          *
          * @param[in] aVersion  The Thread version.
-         *
          */
-        void SetVersion(uint16_t aVersion) { mVersion = Encoding::LittleEndian::HostSwap16(aVersion); }
+        void SetVersion(uint16_t aVersion) { mVersion = LittleEndian::HostSwap16(aVersion); }
 
     private:
         void Log(Action aAction) const;
@@ -338,7 +313,6 @@ public:
 
     /**
      * Represents the parent information for settings storage.
-     *
      */
     OT_TOOL_PACKED_BEGIN
     class ParentInfo : private Clearable<ParentInfo>
@@ -351,7 +325,6 @@ public:
 
         /**
          * Initializes the `ParentInfo` object.
-         *
          */
         void Init(void)
         {
@@ -363,7 +336,6 @@ public:
          * Returns the extended address.
          *
          * @returns The extended address.
-         *
          */
         const Mac::ExtAddress &GetExtAddress(void) const { return mExtAddress; }
 
@@ -371,7 +343,6 @@ public:
          * Sets the extended address.
          *
          * @param[in] aExtAddress  The extended address.
-         *
          */
         void SetExtAddress(const Mac::ExtAddress &aExtAddress) { mExtAddress = aExtAddress; }
 
@@ -379,17 +350,15 @@ public:
          * Returns the Thread version.
          *
          * @returns The Thread version.
-         *
          */
-        uint16_t GetVersion(void) const { return Encoding::LittleEndian::HostSwap16(mVersion); }
+        uint16_t GetVersion(void) const { return LittleEndian::HostSwap16(mVersion); }
 
         /**
          * Sets the Thread version.
          *
          * @param[in] aVersion  The Thread version.
-         *
          */
-        void SetVersion(uint16_t aVersion) { mVersion = Encoding::LittleEndian::HostSwap16(aVersion); }
+        void SetVersion(uint16_t aVersion) { mVersion = LittleEndian::HostSwap16(aVersion); }
 
     private:
         void Log(Action aAction) const;
@@ -401,7 +370,6 @@ public:
 #if OPENTHREAD_FTD
     /**
      * Represents the child information for settings storage.
-     *
      */
     OT_TOOL_PACKED_BEGIN
     class ChildInfo
@@ -413,11 +381,10 @@ public:
 
         /**
          * Clears the struct object (setting all the fields to zero).
-         *
          */
         void Init(void)
         {
-            memset(this, 0, sizeof(*this));
+            ClearAllBytes(*this);
             SetVersion(kThreadVersion1p1);
         }
 
@@ -425,7 +392,6 @@ public:
          * Returns the extended address.
          *
          * @returns The extended address.
-         *
          */
         const Mac::ExtAddress &GetExtAddress(void) const { return mExtAddress; }
 
@@ -433,7 +399,6 @@ public:
          * Sets the extended address.
          *
          * @param[in] aExtAddress  The extended address.
-         *
          */
         void SetExtAddress(const Mac::ExtAddress &aExtAddress) { mExtAddress = aExtAddress; }
 
@@ -441,39 +406,34 @@ public:
          * Returns the child timeout.
          *
          * @returns The child timeout.
-         *
          */
-        uint32_t GetTimeout(void) const { return Encoding::LittleEndian::HostSwap32(mTimeout); }
+        uint32_t GetTimeout(void) const { return LittleEndian::HostSwap32(mTimeout); }
 
         /**
          * Sets the child timeout.
          *
          * @param[in] aTimeout  The child timeout.
-         *
          */
-        void SetTimeout(uint32_t aTimeout) { mTimeout = Encoding::LittleEndian::HostSwap32(aTimeout); }
+        void SetTimeout(uint32_t aTimeout) { mTimeout = LittleEndian::HostSwap32(aTimeout); }
 
         /**
          * Returns the RLOC16.
          *
          * @returns The RLOC16.
-         *
          */
-        uint16_t GetRloc16(void) const { return Encoding::LittleEndian::HostSwap16(mRloc16); }
+        uint16_t GetRloc16(void) const { return LittleEndian::HostSwap16(mRloc16); }
 
         /**
          * Sets the RLOC16.
          *
          * @param[in] aRloc16  The RLOC16.
-         *
          */
-        void SetRloc16(uint16_t aRloc16) { mRloc16 = Encoding::LittleEndian::HostSwap16(aRloc16); }
+        void SetRloc16(uint16_t aRloc16) { mRloc16 = LittleEndian::HostSwap16(aRloc16); }
 
         /**
          * Returns the Thread device mode.
          *
          * @returns The Thread device mode.
-         *
          */
         uint8_t GetMode(void) const { return mMode; }
 
@@ -481,7 +441,6 @@ public:
          * Sets the Thread device mode.
          *
          * @param[in] aMode  The Thread device mode.
-         *
          */
         void SetMode(uint8_t aMode) { mMode = aMode; }
 
@@ -489,17 +448,15 @@ public:
          * Returns the Thread version.
          *
          * @returns The Thread version.
-         *
          */
-        uint16_t GetVersion(void) const { return Encoding::LittleEndian::HostSwap16(mVersion); }
+        uint16_t GetVersion(void) const { return LittleEndian::HostSwap16(mVersion); }
 
         /**
          * Sets the Thread version.
          *
          * @param[in] aVersion  The Thread version.
-         *
          */
-        void SetVersion(uint16_t aVersion) { mVersion = Encoding::LittleEndian::HostSwap16(aVersion); }
+        void SetVersion(uint16_t aVersion) { mVersion = LittleEndian::HostSwap16(aVersion); }
 
     private:
         void Log(Action aAction) const;
@@ -515,7 +472,6 @@ public:
 #if OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE
     /**
      * Defines constants and types for SLAAC IID Secret key settings.
-     *
      */
     class SlaacIidSecretKey
     {
@@ -532,7 +488,6 @@ public:
 #if OPENTHREAD_CONFIG_DUA_ENABLE
     /**
      * Represents the duplicate address detection information for settings storage.
-     *
      */
     OT_TOOL_PACKED_BEGIN
     class DadInfo : private Clearable<DadInfo>
@@ -545,7 +500,6 @@ public:
 
         /**
          * Initializes the `DadInfo` object.
-         *
          */
         void Init(void) { Clear(); }
 
@@ -553,7 +507,6 @@ public:
          * Returns the Dad Counter.
          *
          * @returns The Dad Counter value.
-         *
          */
         uint8_t GetDadCounter(void) const { return mDadCounter; }
 
@@ -561,7 +514,6 @@ public:
          * Sets the Dad Counter.
          *
          * @param[in] aDadCounter The Dad Counter value.
-         *
          */
         void SetDadCounter(uint8_t aDadCounter) { mDadCounter = aDadCounter; }
 
@@ -575,7 +527,6 @@ public:
 #if OPENTHREAD_CONFIG_BORDER_ROUTING_ENABLE
     /**
      * Defines constants and types for BR ULA prefix settings.
-     *
      */
     class BrUlaPrefix
     {
@@ -590,7 +541,6 @@ public:
 
     /**
      * Represents a BR on-link prefix entry for settings storage.
-     *
      */
     OT_TOOL_PACKED_BEGIN
     class BrOnLinkPrefix : public Clearable<BrOnLinkPrefix>
@@ -602,7 +552,6 @@ public:
 
         /**
          * Initializes the `BrOnLinkPrefix` object.
-         *
          */
         void Init(void) { Clear(); }
 
@@ -610,7 +559,6 @@ public:
          * Gets the prefix.
          *
          * @returns The prefix.
-         *
          */
         const Ip6::Prefix &GetPrefix(void) const { return mPrefix; }
 
@@ -618,7 +566,6 @@ public:
          * Set the prefix.
          *
          * @param[in] aPrefix   The prefix.
-         *
          */
         void SetPrefix(const Ip6::Prefix &aPrefix) { mPrefix = aPrefix; }
 
@@ -626,7 +573,6 @@ public:
          * Gets the remaining prefix lifetime in seconds.
          *
          * @returns The prefix lifetime in seconds.
-         *
          */
         uint32_t GetLifetime(void) const { return mLifetime; }
 
@@ -634,7 +580,6 @@ public:
          * Sets the the prefix lifetime.
          *
          * @param[in] aLifetime  The prefix lifetime in seconds.
-         *
          */
         void SetLifetime(uint32_t aLifetime) { mLifetime = aLifetime; }
 
@@ -650,7 +595,6 @@ public:
 #if OPENTHREAD_CONFIG_SRP_CLIENT_ENABLE
     /**
      * Defines constants and types for SRP ECDSA key settings.
-     *
      */
     class SrpEcdsaKey
     {
@@ -666,7 +610,6 @@ public:
 #if OPENTHREAD_CONFIG_SRP_CLIENT_SAVE_SELECTED_SERVER_ENABLE
     /**
      * Represents the SRP client info (selected server address).
-     *
      */
     OT_TOOL_PACKED_BEGIN
     class SrpClientInfo : private Clearable<SrpClientInfo>
@@ -679,7 +622,6 @@ public:
 
         /**
          * Initializes the `SrpClientInfo` object.
-         *
          */
         void Init(void) { Clear(); }
 
@@ -687,7 +629,6 @@ public:
          * Returns the server IPv6 address.
          *
          * @returns The server IPv6 address.
-         *
          */
         const Ip6::Address &GetServerAddress(void) const { return mServerAddress; }
 
@@ -695,7 +636,6 @@ public:
          * Sets the server IPv6 address.
          *
          * @param[in] aAddress  The server IPv6 address.
-         *
          */
         void SetServerAddress(const Ip6::Address &aAddress) { mServerAddress = aAddress; }
 
@@ -703,17 +643,15 @@ public:
          * Returns the server port number.
          *
          * @returns The server port number.
-         *
          */
-        uint16_t GetServerPort(void) const { return Encoding::LittleEndian::HostSwap16(mServerPort); }
+        uint16_t GetServerPort(void) const { return LittleEndian::HostSwap16(mServerPort); }
 
         /**
          * Sets the server port number.
          *
          * @param[in] aPort  The server port number.
-         *
          */
-        void SetServerPort(uint16_t aPort) { mServerPort = Encoding::LittleEndian::HostSwap16(aPort); }
+        void SetServerPort(uint16_t aPort) { mServerPort = LittleEndian::HostSwap16(aPort); }
 
     private:
         void Log(Action aAction) const;
@@ -727,7 +665,6 @@ public:
 #if OPENTHREAD_CONFIG_SRP_SERVER_ENABLE && OPENTHREAD_CONFIG_SRP_SERVER_PORT_SWITCH_ENABLE
     /**
      * Represents the SRP server info.
-     *
      */
     OT_TOOL_PACKED_BEGIN
     class SrpServerInfo : private Clearable<SrpServerInfo>
@@ -740,7 +677,6 @@ public:
 
         /**
          * Initializes the `SrpServerInfo` object.
-         *
          */
         void Init(void) { Clear(); }
 
@@ -748,17 +684,15 @@ public:
          * Returns the server port number.
          *
          * @returns The server port number.
-         *
          */
-        uint16_t GetPort(void) const { return Encoding::LittleEndian::HostSwap16(mPort); }
+        uint16_t GetPort(void) const { return LittleEndian::HostSwap16(mPort); }
 
         /**
          * Sets the server port number.
          *
          * @param[in] aPort  The server port number.
-         *
          */
-        void SetPort(uint16_t aPort) { mPort = Encoding::LittleEndian::HostSwap16(aPort); }
+        void SetPort(uint16_t aPort) { mPort = LittleEndian::HostSwap16(aPort); }
 
     private:
         void Log(Action aAction) const;
@@ -767,12 +701,10 @@ public:
     } OT_TOOL_PACKED_END;
 #endif // OPENTHREAD_CONFIG_SRP_SERVER_ENABLE && OPENTHREAD_CONFIG_SRP_SERVER_PORT_SWITCH_ENABLE
 
-#if OPENTHREAD_CONFIG_BORDER_AGENT_ID_ENABLE
+#if OPENTHREAD_CONFIG_BORDER_AGENT_ENABLE && OPENTHREAD_CONFIG_BORDER_AGENT_ID_ENABLE
     /**
      * Represents the Border Agent ID.
-     *
      */
-    OT_TOOL_PACKED_BEGIN
     class BorderAgentId
     {
         friend class Settings;
@@ -780,40 +712,14 @@ public:
     public:
         static constexpr Key kKey = kKeyBorderAgentId; ///< The associated key.
 
-        /**
-         * Initializes the `BorderAgentId` object.
-         *
-         */
-        void Init(void) { mId = {}; }
-
-        /**
-         * Returns the Border Agent ID.
-         *
-         * @returns The Border Agent ID.
-         *
-         */
-        const MeshCoP::BorderAgent::Id &GetId(void) const { return mId; }
-
-        /**
-         * Returns the Border Agent ID.
-         *
-         * @returns The Border Agent ID.
-         *
-         */
-        MeshCoP::BorderAgent::Id &GetId(void) { return mId; }
-
-        /**
-         * Sets the Border Agent ID.
-         *
-         */
-        void SetId(const MeshCoP::BorderAgent::Id &aId) { mId = aId; }
+        typedef MeshCoP::BorderAgent::Id ValueType; ///< The associated value type.
 
     private:
-        void Log(Action aAction) const;
+        static void Log(Action aAction, const MeshCoP::BorderAgent::Id &aId);
 
-        MeshCoP::BorderAgent::Id mId;
-    } OT_TOOL_PACKED_END;
-#endif // OPENTHREAD_CONFIG_BORDER_AGENT_ID_ENABLE
+        BorderAgentId(void) = delete;
+    };
+#endif
 
 protected:
     explicit SettingsBase(Instance &aInstance)
@@ -835,7 +741,6 @@ protected:
 
 /**
  * Defines methods related to non-volatile storage of settings.
- *
  */
 class Settings : public SettingsBase, private NonCopyable
 {
@@ -846,7 +751,6 @@ public:
      * Initializes a `Settings` object.
      *
      * @param[in]  aInstance     A reference to the OpenThread instance.
-     *
      */
     explicit Settings(Instance &aInstance)
         : SettingsBase(aInstance)
@@ -857,7 +761,6 @@ public:
      * Initializes the platform settings (non-volatile) module.
      *
      * This should be called before any other method from this class.
-     *
      */
     void Init(void);
 
@@ -865,13 +768,11 @@ public:
      * De-initializes the platform settings (non-volatile) module.
      *
      * Should be called when OpenThread instance is no longer in use.
-     *
      */
     void Deinit(void);
 
     /**
      * Removes all settings from the non-volatile store.
-     *
      */
     void Wipe(void);
 
@@ -880,12 +781,8 @@ public:
      *
      * @param[in]   aType       The Dataset type (active or pending) to save.
      * @param[in]   aDataset    A reference to a `Dataset` object to be saved.
-     *
-     * @retval kErrorNone             Successfully saved the Dataset.
-     * @retval kErrorNotImplemented   The platform does not implement settings functionality.
-     *
      */
-    Error SaveOperationalDataset(MeshCoP::Dataset::Type aType, const MeshCoP::Dataset &aDataset);
+    void SaveOperationalDataset(MeshCoP::Dataset::Type aType, const MeshCoP::Dataset &aDataset);
 
     /**
      * Reads the Operational Dataset (active or pending).
@@ -895,8 +792,6 @@ public:
      *
      * @retval kErrorNone             Successfully read the Dataset.
      * @retval kErrorNotFound         No corresponding value in the setting store.
-     * @retval kErrorNotImplemented   The platform does not implement settings functionality.
-     *
      */
     Error ReadOperationalDataset(MeshCoP::Dataset::Type aType, MeshCoP::Dataset &aDataset) const;
 
@@ -904,12 +799,8 @@ public:
      * Deletes the Operational Dataset (active/pending) from settings.
      *
      * @param[in]   aType            The Dataset type (active or pending) to delete.
-     *
-     * @retval kErrorNone            Successfully deleted the Dataset.
-     * @retval kErrorNotImplemented  The platform does not implement settings functionality.
-     *
      */
-    Error DeleteOperationalDataset(MeshCoP::Dataset::Type aType);
+    void DeleteOperationalDataset(MeshCoP::Dataset::Type aType);
 
     /**
      * Reads a specified settings entry.
@@ -929,7 +820,6 @@ public:
      * @retval kErrorNone             Successfully read the entry.
      * @retval kErrorNotFound         No corresponding value in the setting store.
      * @retval kErrorNotImplemented   The platform does not implement settings functionality.
-     *
      */
     template <typename EntryType> Error Read(EntryType &aEntry) const
     {
@@ -956,7 +846,6 @@ public:
      * @retval kErrorNone             Successfully read the value.
      * @retval kErrorNotFound         No corresponding value in the setting store.
      * @retval kErrorNotImplemented   The platform does not implement settings functionality.
-     *
      */
     template <typename EntryType> Error Read(typename EntryType::ValueType &aValue) const
     {
@@ -979,7 +868,6 @@ public:
      *
      * @retval kErrorNone             Successfully saved Network Info in settings.
      * @retval kErrorNotImplemented   The platform does not implement settings functionality.
-     *
      */
     template <typename EntryType> Error Save(const EntryType &aEntry)
     {
@@ -1005,7 +893,6 @@ public:
      *
      * @retval kErrorNone             Successfully saved Network Info in settings.
      * @retval kErrorNotImplemented   The platform does not implement settings functionality.
-     *
      */
     template <typename EntryType> Error Save(const typename EntryType::ValueType &aValue)
     {
@@ -1025,7 +912,6 @@ public:
      *
      * @retval kErrorNone            Successfully deleted the value.
      * @retval kErrorNotImplemented  The platform does not implement settings functionality.
-     *
      */
     template <typename EntryType> Error Delete(void) { return DeleteEntry(EntryType::kKey); }
 
@@ -1039,7 +925,6 @@ public:
      *
      * @retval kErrorNone             Successfully saved the Child Info in settings.
      * @retval kErrorNotImplemented   The platform does not implement settings functionality.
-     *
      */
     Error AddChildInfo(const ChildInfo &aChildInfo);
 
@@ -1050,7 +935,6 @@ public:
      *
      * @retval kErrorNone            Successfully deleted the value.
      * @retval kErrorNotImplemented  The platform does not implement settings functionality.
-     *
      */
     Error DeleteAllChildInfo(void);
 
@@ -1063,13 +947,11 @@ public:
      *
      *
      * @returns A ChildInfoIteratorBuilder instance.
-     *
      */
     ChildInfoIteratorBuilder IterateChildInfo(void) { return ChildInfoIteratorBuilder(GetInstance()); }
 
     /**
      * Defines an iterator to access all Child Info entries in the settings.
-     *
      */
     class ChildInfoIterator : public SettingsBase, public Unequatable<ChildInfoIterator>
     {
@@ -1080,7 +962,6 @@ public:
          * Initializes a `ChildInfoInterator` object.
          *
          * @param[in]  aInstance  A reference to the OpenThread instance.
-         *
          */
         explicit ChildInfoIterator(Instance &aInstance);
 
@@ -1090,21 +971,18 @@ public:
          *
          * @retval TRUE   There are no more entries in the list (reached end of the list).
          * @retval FALSE  The current entry is valid.
-         *
          */
         bool IsDone(void) const { return mIsDone; }
 
         /**
          * Overloads operator `++` (pre-increment) to advance the iterator to move to the next Child Info
          * entry in the list (if any).
-         *
          */
         void operator++(void) { Advance(); }
 
         /**
          * Overloads operator `++` (post-increment) to advance the iterator to move to the next Child Info
          * entry in the list (if any).
-         *
          */
         void operator++(int) { Advance(); }
 
@@ -1115,7 +993,6 @@ public:
          * pointing to a valid entry.
          *
          * @returns A reference to `ChildInfo` structure corresponding to current iterator entry.
-         *
          */
         const ChildInfo &GetChildInfo(void) const { return mChildInfo; }
 
@@ -1125,7 +1002,6 @@ public:
          * @retval kErrorNone            The entry was deleted successfully.
          * @retval kErrorInvalidState    The entry is not valid (iterator has reached end of list).
          * @retval kErrorNotImplemented  The platform does not implement settings functionality.
-         *
          */
         Error Delete(void);
 
@@ -1138,7 +1014,6 @@ public:
          *
          *
          * @returns A reference to the `ChildInfo` entry currently pointed by the iterator.
-         *
          */
         const ChildInfo &operator*(void) const { return mChildInfo; }
 
@@ -1149,7 +1024,6 @@ public:
          *
          * @retval TRUE   If the two iterator objects are equal
          * @retval FALSE  If the two iterator objects are not equal.
-         *
          */
         bool operator==(const ChildInfoIterator &aOther) const
         {
@@ -1189,7 +1063,6 @@ public:
      *
      * @retval kErrorNone             Successfully added or updated the entry in settings.
      * @retval kErrorNotImplemented   The platform does not implement settings functionality.
-     *
      */
     Error AddOrUpdateBrOnLinkPrefix(const BrOnLinkPrefix &aBrOnLinkPrefix);
 
@@ -1200,7 +1073,6 @@ public:
      *
      * @retval kErrorNone            Successfully removed the matching entry in settings.
      * @retval kErrorNotImplemented  The platform does not implement settings functionality.
-     *
      */
     Error RemoveBrOnLinkPrefix(const Ip6::Prefix &aPrefix);
 
@@ -1209,7 +1081,6 @@ public:
      *
      * @retval kErrorNone            Successfully deleted the entries.
      * @retval kErrorNotImplemented  The platform does not implement settings functionality.
-     *
      */
     Error DeleteAllBrOnLinkPrefixes(void);
 
@@ -1222,7 +1093,6 @@ public:
      * @retval kErrorNone             Successfully read the value.
      * @retval kErrorNotFound         No corresponding value in the setting store.
      * @retval kErrorNotImplemented   The platform does not implement settings functionality.
-     *
      */
     Error ReadBrOnLinkPrefix(int aIndex, BrOnLinkPrefix &aBrOnLinkPrefix);
 

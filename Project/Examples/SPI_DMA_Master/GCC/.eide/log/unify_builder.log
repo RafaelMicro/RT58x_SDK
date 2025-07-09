@@ -1,0 +1,13 @@
+[2025-05-14 16:52:34]	compilation failed at : "d:\Git_Server\RT58x_Trunk - 複製\Library\RT58x\Peripheral\timer.c", exit code: 1
+  at unify_builder.Program.compileByMulThread (System.Int32 thrNum, unify_builder.CmdGenerator+CmdInfo[] cmds, System.Collections.Generic.List`1[T] doneList) [0x000e4] in <ebd0cb5fe6cf45b8b5052a372703e543>:0 
+  at unify_builder.Program.Main (System.String[] args) [0x0149e] in <ebd0cb5fe6cf45b8b5052a372703e543>:0 
+
+[2025-05-14 16:54:40]	link failed !, exit code: 1
+  at unify_builder.Program.Main (System.String[] args) [0x015b3] in <ebd0cb5fe6cf45b8b5052a372703e543>:0 
+
+[2025-05-14 16:55:11]	[done]
+	build successfully !
+
+[2025-05-14 16:58:46]	[done]
+	build successfully !
+

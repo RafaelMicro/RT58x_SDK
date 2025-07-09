@@ -430,7 +430,7 @@ int32_t main(void)
     bsp_init((BSP_INIT_BUTTONS |
               BSP_INIT_LEDS), bsp_btn_event_handle);
 
-
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
 
 
     while (1)

@@ -1,5 +1,3 @@
-
-
 #include "version_api.h"
 
 int xxx;
@@ -18,11 +16,12 @@ void lib_version_init(void)
 #ifdef BOOTLOADER
     bootloader_ver_get(pt_lib_ver);
 #else
-    ble_lib_ver_get(pt_lib_ver);
-    ble_mesh_lib_ver_get(pt_lib_ver);
-    zigbee_lib_ver_get(pt_lib_ver);
-    thread_lib_ver_get(pt_lib_ver);
-    matter_lib_ver_get(pt_lib_ver);
+    //ble_lib_ver_get(pt_lib_ver);
+    //ble_mesh_lib_ver_get(pt_lib_ver);
+    //zigbee_lib_ver_get(pt_lib_ver);
+    //thread_lib_ver_get(pt_lib_ver);
+    //matter_lib_ver_get(pt_lib_ver);
+    application_ver_get(pt_lib_ver);
 #endif
 
     tt_(a);

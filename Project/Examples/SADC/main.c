@@ -195,6 +195,8 @@ int main(void)
     Delay_Init();
 
     /*we should set pinmux here or in SystemInit */
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+
     Init_Default_Pin_Mux();
 
     /*init debug uart port for printf*/

@@ -438,7 +438,7 @@ RFB_WRITE_TXQ_STATUS rfb_comm_tx_data_send(uint16_t packet_length, uint8_t *tx_d
     RfMcu_HostWakeUpMcu();
     while (RfMcu_PowerStateCheck() != 0x03)
     {
-        printf("[TX] Pwr chk\n");
+        printf("[TX] Pwr chk - %x\n", RfMcu_PowerStateCheck());
     }
     SET_RUCI_PARA_SET_TX_CONTROL_FIELD(&sTxControlField, mac_control, mac_dsn);
     sTxControlField.length += packet_length;

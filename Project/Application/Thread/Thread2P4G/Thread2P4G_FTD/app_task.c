@@ -2,10 +2,10 @@
 #include "project_config.h"
 #include "ota_handler.h"
 #include "platform-rt58x.h"
+#include "bin_version.h"
 
 static otInstance *g_app_instance = NULL;
 extern void otAppCliInit(otInstance *aInstance);
-extern otError ota_init(otInstance *aInstance);
 
 otInstance *otGetInstance()
 {
@@ -279,30 +279,18 @@ void _Network_Interface_State_Change(uint32_t aFlags, void *aContext)
         case OT_DEVICE_ROLE_DETACHED:
             info("Change to detached \r\n");
         case OT_DEVICE_ROLE_DISABLED:
-            gpio_pin_write(20, 1);
-            gpio_pin_write(21, 1);
-            gpio_pin_write(22, 1);
             break;
         case OT_DEVICE_ROLE_LEADER:
             info("Change to leader \r\n");
-            gpio_pin_write(20, 0);
-            gpio_pin_write(21, 0);
-            gpio_pin_write(22, 0);
             show_ip = 1;
             break;
         case OT_DEVICE_ROLE_ROUTER:
             info("Change to router \r\n");
             show_ip = 1;
-            gpio_pin_write(20, 1);
-            gpio_pin_write(21, 0);
-            gpio_pin_write(22, 1);
             break;
         case OT_DEVICE_ROLE_CHILD:
             info("Change to child \r\n");
             show_ip = 1;
-            gpio_pin_write(20, 1);
-            gpio_pin_write(21, 1);
-            gpio_pin_write(22, 0);
             break;
         default:
             break;
@@ -334,6 +322,7 @@ static otError Processota(void *aContext, uint8_t aArgsLength, char *aArgs[])
         info("ota image version : 0x%08x\n", ota_get_image_version());
         info("ota image size : 0x%08x \n", ota_get_image_size());
         info("ota image crc : 0x%08x \n", ota_get_image_crc());
+        info("current bin version : 0x%08x \n", GET_BIN_VERSION(systeminfo.sysinfo));
     }
     else if (!strcmp(aArgs[0], "start"))
     {
@@ -381,6 +370,14 @@ static otError Processota(void *aContext, uint8_t aArgsLength, char *aArgs[])
             error = otParseAsUint64(aArgs[1], &level);
             ota_debug_level((unsigned int)level);
         }
+    }
+    else if (!strcmp(aArgs[0], "reset"))
+    {
+        ota_reset();
+    }
+    else if (!strcmp(aArgs[0], "wakeup"))
+    {
+        ota_send_wakeup();
     }
     else
     {
@@ -481,6 +478,39 @@ void app_sleep_init()
     Lpm_Enable_Low_Power_Wakeup((LOW_POWER_WAKEUP_32K_TIMER | LOW_POWER_WAKEUP_UART0_RX));
 }
 
+void ota_state_change_cb(uint8_t state)
+{
+    switch (state)
+    {
+    case OTA_IDLE:
+        info("change to ota idle state \r\n");
+        break;
+    case OTA_DATA_SENDING:
+        info("change to ota sending state \r\n");
+        break;
+    case OTA_DATA_RECEIVING:
+        info("change to ota receiving state \r\n");
+        break;
+    case OTA_UNICASE_RECEIVING:
+        info("change to ota unicase receiving state \r\n");
+        break;
+    case OTA_REQUEST_SENDING:
+        info("change to ota request sending state \r\n");
+        break;
+    case OTA_WAKEUP_RECEIVING:
+        info("change to ota wakeup state \r\n");
+        break;
+    case OTA_DONE:
+        info("change to ota done state \r\n");
+        break;
+    case OTA_REBOOT:
+        info("change to ota reboot state \r\n");
+        break;
+    default:
+        break;
+    }
+}
+
 void app_task_init()
 {
 #if OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_ENABLE
@@ -523,7 +553,7 @@ void app_task_init()
             break;
         }
 
-        if (ota_init(g_app_instance) != OT_ERROR_NONE)
+        if (ota_init(g_app_instance, ota_state_change_cb) != OT_ERROR_NONE)
         {
             info("ota init fail \r\n");
             break;

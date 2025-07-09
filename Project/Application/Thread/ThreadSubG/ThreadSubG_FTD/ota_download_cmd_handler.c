@@ -217,6 +217,7 @@ static void ota_download_handle(uint32_t cmd_id, uint8_t *pBuf)
             }
             if (gp_ota_imgae_cache)
             {
+                info("block %d / %d\r\n", upg_data->cur_pkt, (gt_img_info.total_pkt - 1));
                 if (upg_data->cur_pkt == 0)
                 {
                     recv_cnt = 0;
@@ -310,6 +311,9 @@ static void ota_download_handle(uint32_t cmd_id, uint8_t *pBuf)
                 info("cache alloc fail \r\n");
             }
         } while (0);
+
+        upg_data = (ota_img_info_t *)pBuf;
+        status = upg_data->cur_pkt;
         ota_download_cmd_send(0xF0008000, 0, 0, 0, (uint8_t *)&status, 4);
     }
 
@@ -358,70 +362,55 @@ ota_download_cmd_parser(uint8_t *pBuf,
 
     ota_download_cmd_hdr *hdr = NULL;
     ota_download_cmd_end *end = NULL;
-    do
+    /* find tag */
+    if (plen < 5)
     {
-        /* find tag */
-        if (plen < 4)
-        {
-            break;
-        }
+        return t_return;
+    }
 
-        for (i = 0; i < plen; i++)
+    for (i = 0; i <= (plen - 4); i++)
+    {
+        if ((pBuf[i] == 0xFF) && (pBuf[i + 1] == 0xFC) &&
+                (pBuf[i + 2] == 0xFC) && (pBuf[i + 3] == 0xFF))
         {
-            if ((pBuf[i] == 0xFF) && (pBuf[i + 1] == 0xFC) &&
-                    (pBuf[i + 2] == 0xFC) && (pBuf[i + 3] == 0xFF))
+            if (offset)
             {
-                if (offset)
-                {
-                    idx = i;
-                }
-                find = 1;
-                break;
+                idx = i;
             }
-        }
-
-        if (!find)
-        {
+            find = 1;
             break;
         }
+    }
+    if (!find)
+    {
+        msg(UTIL_LOG_DEBUG, "PARSER: Header not found\n");
+        return t_return;
+    }
 
-        //plen -= idx;
+    if ((plen - idx) < (sizeof(ota_download_cmd_hdr) + sizeof(ota_download_cmd_end)))
+    {
+        msg(UTIL_LOG_DEBUG, "PARSER: Not enough data, plen=%d, required=%d\n", plen, idx + sizeof(ota_download_cmd_hdr) + sizeof(ota_download_cmd_end));
+        return t_return;
+    }
 
-        if ((plen - idx) < (sizeof(ota_download_cmd_hdr) + sizeof(ota_download_cmd_end)))
-        {
-            break;
-        }
+    hdr = (ota_download_cmd_hdr *)(pBuf + idx);
+    if (plen < (idx + sizeof(ota_download_cmd_hdr) + hdr->len + sizeof(ota_download_cmd_end)))
+    {
+        msg(UTIL_LOG_DEBUG, "PARSER: Incomplete packet, plen=%d, expected=%d\n", plen, idx + totalLen);
+        return t_return;
+    }
 
-        hdr = (ota_download_cmd_hdr *)(pBuf + idx);
-        if (plen < (idx + sizeof(ota_download_cmd_hdr) + hdr->len +  sizeof(ota_download_cmd_end)))
-        {
-            break;
-        }
+    end = (ota_download_cmd_end *)&pBuf[idx + sizeof(ota_download_cmd_hdr) + hdr->len];
 
-        end = (ota_download_cmd_end *)&pBuf[idx + sizeof(ota_download_cmd_hdr) + hdr->len];
-        cs = _gateway_checksum_calc(&pBuf[idx + 4], (hdr->len + 1));
+    *datalen = sizeof(ota_download_cmd_hdr) + hdr->len + sizeof(ota_download_cmd_end);
+    *offset = idx;
 
-        if (cs != end->cs)
-        {
-            t_return = UART_DATA_CS_ERROR;
-            err(">> %s: checksum error:0x%x, correct:0x%x\n", __FUNCTION__, end->cs, cs);
-            break;
-        }
-        else if (cs == end->cs)   /* show receved command data */
-        {
+    cs = _gateway_checksum_calc(&pBuf[idx + 4], (hdr->len + 1));
+    if (cs != end->cs)
+    {
+        info("PARSER: Checksum error: expected 0x%x, got 0x%x\n", cs, end->cs);
+        return UART_DATA_CS_ERROR;
+    }
 
-            *datalen = sizeof(ota_download_cmd_hdr) + hdr->len + sizeof(ota_download_cmd_end);
-            *offset = idx;
-            t_return = UART_DATA_VALID_CRC_OK;
-            break;
-        }
-
-
-        *datalen = sizeof(ota_download_cmd_hdr) + hdr->len + sizeof(ota_download_cmd_end);
-        *offset = idx;
-        t_return = UART_DATA_VALID;
-
-    } while (0);
-
-    return t_return;
+    return UART_DATA_VALID;
 }

@@ -35,6 +35,7 @@
 #error "PSA Crypto is not yet supported for RT58x: OPENTHREAD_CONFIG_PLATFORM_KEY_REFERENCES_ENABLE"
 #endif
 
+
 #if OPENTHREAD_CONFIG_RADIO_2P4GHZ_OQPSK_SUPPORT
 #error "Platform doesn't support configuration option: OPENTHREAD_CONFIG_RADIO_2P4GHZ_OQPSK_SUPPORT"
 #endif

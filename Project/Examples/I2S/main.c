@@ -365,6 +365,8 @@ int main(void)
     uint32_t wdma_index = 0, cmpvalue = 0, count = 0;
     uint32_t buf_offset;
 
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+
     Init_Default_Pin_Mux();
     /*init debug uart port for printf*/
     console_drv_init(PRINTF_BAUDRATE);
