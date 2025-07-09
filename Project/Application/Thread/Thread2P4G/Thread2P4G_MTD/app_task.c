@@ -5,7 +5,6 @@
 
 static otInstance *g_app_instance = NULL;
 extern void otAppCliInit(otInstance *aInstance);
-extern otError ota_init(otInstance *aInstance);
 
 otInstance *otGetInstance(void)
 {
@@ -272,30 +271,18 @@ void _Network_Interface_State_Change(uint32_t aFlags, void *aContext)
         case OT_DEVICE_ROLE_DETACHED:
             otCliOutputFormat("Change to detached \r\n");
         case OT_DEVICE_ROLE_DISABLED:
-            gpio_pin_write(20, 1);
-            gpio_pin_write(21, 1);
-            gpio_pin_write(22, 1);
             break;
         case OT_DEVICE_ROLE_LEADER:
             otCliOutputFormat("Change to leader \r\n");
-            gpio_pin_write(20, 0);
-            gpio_pin_write(21, 0);
-            gpio_pin_write(22, 0);
             show_ip = 1;
             break;
         case OT_DEVICE_ROLE_ROUTER:
             otCliOutputFormat("Change to router \r\n");
             show_ip = 1;
-            gpio_pin_write(20, 1);
-            gpio_pin_write(21, 0);
-            gpio_pin_write(22, 1);
             break;
         case OT_DEVICE_ROLE_CHILD:
             otCliOutputFormat("Change to child \r\n");
             show_ip = 1;
-            gpio_pin_write(20, 1);
-            gpio_pin_write(21, 1);
-            gpio_pin_write(22, 0);
             break;
         default:
             break;
@@ -316,74 +303,6 @@ void _Network_Interface_State_Change(uint32_t aFlags, void *aContext)
     }
 }
 
-static otError Processota(void *aContext, uint8_t aArgsLength, char *aArgs[])
-{
-    OT_UNUSED_VARIABLE(aContext);
-    otError error = OT_ERROR_NONE;
-
-    if (0 == aArgsLength)
-    {
-        info("ota state : %s \n", OtaStateToString(ota_get_state()));
-        info("ota image version : 0x%08x\n", ota_get_image_version());
-        info("ota image size : 0x%08x \n", ota_get_image_size());
-        info("ota image crc : 0x%08x \n", ota_get_image_crc());
-    }
-    else if (!strcmp(aArgs[0], "start"))
-    {
-        if (aArgsLength > 2)
-        {
-            do
-            {
-                uint64_t segments_size = 0;
-                uint64_t intervel = 0;
-                error = otParseAsUint64(aArgs[1], &segments_size);
-                if (error != OT_ERROR_NONE)
-                {
-                    break;
-                }
-                error = otParseAsUint64(aArgs[2], &intervel);
-                if (error != OT_ERROR_NONE)
-                {
-                    break;
-                }
-                info("segments_size %u ,intervel %u \n", (uint16_t)segments_size, (uint16_t)intervel);
-                ota_start((uint16_t)segments_size, (uint16_t)intervel);
-            } while (0);
-        }
-        else
-        {
-            error = OT_ERROR_INVALID_COMMAND;
-        }
-    }
-    else if (!strcmp(aArgs[0], "send"))
-    {
-        if (aArgsLength > 1)
-        {
-            ota_send(aArgs[1]);
-        }
-    }
-    else if (!strcmp(aArgs[0], "stop"))
-    {
-        ota_stop();
-    }
-    else if (!strcmp(aArgs[0], "debug"))
-    {
-        if (aArgsLength > 1)
-        {
-            uint64_t level = 0;
-            error = otParseAsUint64(aArgs[1], &level);
-            ota_debug_level((unsigned int)level);
-        }
-    }
-    else
-    {
-        error = OT_ERROR_INVALID_COMMAND;
-    }
-
-exit:
-    return error;
-}
-
 static otError Processmemory(void *aContext, uint8_t aArgsLength, char *aArgs[])
 {
     OT_UNUSED_VARIABLE(aContext);
@@ -400,7 +319,6 @@ exit:
 
 static const otCliCommand kCommands[] =
 {
-    {"ota", Processota},
     {"mem", Processmemory},
 };
 
@@ -408,13 +326,21 @@ void app_sleep_init()
 {
     otError error;
 
-    otLinkModeConfig config;
-
+#if 0 //cls
+    error = otLinkSetCslChannel(otGetInstance(), DEF_CHANNEL);
+    error = otLinkSetCslPeriod(otGetInstance(), 1000000);
+    error = otLinkSetCslTimeout(otGetInstance(), 20);
+    info("CSL channel         : %u \r\n", otLinkGetCslChannel(otGetInstance()));
+    info("CSL period          : %uus \r\n", otLinkGetCslPeriod(otGetInstance()));
+    info("CSL timeout         : %us \r\n", otLinkGetCslTimeout(otGetInstance()));
+#else
     error = otLinkSetPollPeriod(otGetInstance(), 1000);
     if (error != OT_ERROR_NONE)
     {
         err("otLinkSetPollPeriod failed with %d %s\r\n", error, otThreadErrorToString(error));
     }
+#endif
+    otLinkModeConfig config;
     config.mRxOnWhenIdle = false;
     config.mNetworkData = false;
     config.mDeviceType = false;
@@ -429,6 +355,39 @@ void app_sleep_init()
     /* low power mode init */
     Lpm_Set_Low_Power_Level(LOW_POWER_LEVEL_SLEEP0);
     Lpm_Enable_Low_Power_Wakeup((LOW_POWER_WAKEUP_32K_TIMER | LOW_POWER_WAKEUP_UART0_RX));
+}
+
+void ota_state_change_cb(uint8_t state)
+{
+    switch (state)
+    {
+    case OTA_IDLE:
+        info("change to ota idle state \r\n");
+        break;
+    case OTA_DATA_SENDING:
+        info("change to ota sending state \r\n");
+        break;
+    case OTA_DATA_RECEIVING:
+        info("change to ota receiving state \r\n");
+        break;
+    case OTA_UNICASE_RECEIVING:
+        info("change to ota unicase receiving state \r\n");
+        break;
+    case OTA_REQUEST_SENDING:
+        info("change to ota request sending state \r\n");
+        break;
+    case OTA_WAKEUP_RECEIVING:
+        info("change to ota wakeup state \r\n");
+        break;
+    case OTA_DONE:
+        info("change to ota done state \r\n");
+        break;
+    case OTA_REBOOT:
+        info("change to ota reboot state \r\n");
+        break;
+    default:
+        break;
+    }
 }
 
 void app_task_init()
@@ -473,7 +432,7 @@ void app_task_init()
             break;
         }
 
-        if (ota_init(g_app_instance) != OT_ERROR_NONE)
+        if (ota_init(g_app_instance, ota_state_change_cb) != OT_ERROR_NONE)
         {
             info("ota init fail \r\n");
             break;

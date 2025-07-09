@@ -29,17 +29,24 @@
 /**
  * @file
  *   This file includes compile-time configurations for NAT64.
- *
  */
 
 #ifndef CONFIG_NAT64_H_
 #define CONFIG_NAT64_H_
 
 /**
+ * @addtogroup config-nat64
+ *
+ * @brief
+ *   This module includes configuration variables for NAT64.
+ *
+ * @{
+ */
+
+/**
  * @def OPENTHREAD_CONFIG_NAT64_TRANSLATOR_ENABLE
  *
  * Define to 1 to enable the internal NAT64 translator.
- *
  */
 #ifndef OPENTHREAD_CONFIG_NAT64_TRANSLATOR_ENABLE
 #define OPENTHREAD_CONFIG_NAT64_TRANSLATOR_ENABLE 0
@@ -49,7 +56,6 @@
  * @def OPENTHREAD_CONFIG_NAT64_MAX_MAPPINGS
  *
  * Specifies maximum number of active mappings for NAT64.
- *
  */
 #ifndef OPENTHREAD_CONFIG_NAT64_MAX_MAPPINGS
 #define OPENTHREAD_CONFIG_NAT64_MAX_MAPPINGS 254
@@ -59,7 +65,6 @@
  * @def OPENTHREAD_CONFIG_NAT64_IDLE_TIMEOUT_SECONDS
  *
  * Specifies timeout in seconds before removing an inactive address mapping.
- *
  */
 #ifndef OPENTHREAD_CONFIG_NAT64_IDLE_TIMEOUT_SECONDS
 #define OPENTHREAD_CONFIG_NAT64_IDLE_TIMEOUT_SECONDS 7200
@@ -69,10 +74,13 @@
  * @def OPENTHREAD_CONFIG_NAT64_BORDER_ROUTING_ENABLE
  *
  * Define to 1 to enable NAT64 support in Border Routing Manager.
- *
  */
 #ifndef OPENTHREAD_CONFIG_NAT64_BORDER_ROUTING_ENABLE
 #define OPENTHREAD_CONFIG_NAT64_BORDER_ROUTING_ENABLE 0
 #endif
+
+/**
+ * @}
+ */
 
 #endif

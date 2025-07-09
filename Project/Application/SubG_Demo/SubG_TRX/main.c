@@ -112,6 +112,7 @@ int32_t main(void)
     }
 #endif
 #endif
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
 
     /* Set RFB test case
     1. RFB_PCI_BURST_TX_TEST: Tester sends a certain number of packets

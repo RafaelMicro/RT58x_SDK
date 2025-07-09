@@ -63,7 +63,7 @@
  *
  */
 #ifndef OPENTHREAD_CONFIG_NET_DIAG_VENDOR_SW_VERSION
-#define OPENTHREAD_CONFIG_NET_DIAG_VENDOR_SW_VERSION "1.9.2"
+#define OPENTHREAD_CONFIG_NET_DIAG_VENDOR_SW_VERSION "1.9.4"
 #endif
 
 /*
@@ -74,7 +74,7 @@
  */
 
 #ifndef OPENTHREAD_CONFIG_PLATFORM_INFO
-#define OPENTHREAD_CONFIG_PLATFORM_INFO "RT582"
+#define OPENTHREAD_CONFIG_PLATFORM_INFO "RT581"
 #endif
 
 /**
@@ -94,7 +94,7 @@
  *
  */
 #ifndef OPENTHREAD_CONFIG_MLE_MAX_CHILDREN
-#define OPENTHREAD_CONFIG_MLE_MAX_CHILDREN 128
+#define OPENTHREAD_CONFIG_MLE_MAX_CHILDREN 64
 #endif
 
 #if OPENTHREAD_CONFIG_MLE_MAX_CHILDREN > 256
@@ -108,7 +108,7 @@
  *
  */
 #ifndef OPENTHREAD_CONFIG_TMF_ADDRESS_CACHE_ENTRIES
-#define OPENTHREAD_CONFIG_TMF_ADDRESS_CACHE_ENTRIES 100
+#define OPENTHREAD_CONFIG_TMF_ADDRESS_CACHE_ENTRIES 200
 #endif
 
 /**
@@ -118,7 +118,7 @@
  *
  */
 #ifndef OPENTHREAD_CONFIG_MLE_CHILD_TIMEOUT_DEFAULT
-#define OPENTHREAD_CONFIG_MLE_CHILD_TIMEOUT_DEFAULT 240 //2147483000(Deep sleep use)
+#define OPENTHREAD_CONFIG_MLE_CHILD_TIMEOUT_DEFAULT 600 //2147483000(Deep sleep use)
 #endif
 
 /**
@@ -190,11 +190,12 @@
 #define OPENTHREAD_CONFIG_UDP_FORWARD_ENABLE 0
 #define OPENTHREAD_CONFIG_BORDER_ROUTER_ENABLE 0
 #define OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE 1
-#define OPENTHREAD_CONFIG_DTLS_ENABLE 1
+#define OPENTHREAD_CONFIG_SECURE_TRANSPORT_ENABLE 1
 #define OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS_MANAGEMENT 1
 #define OPENTHREAD_CONFIG_PING_SENDER_ENABLE    1
 #define OPENTHREAD_CONFIG_TCP_ENABLE 0
 #define OPENTHREAD_CONFIG_TMF_NETDIAG_CLIENT_ENABLE 1
+#define OPENTHREAD_CONFIG_MPL_DYNAMIC_INTERVAL_ENABLE 1
 
 #define OPENTHREAD_CONFIG_ECDSA_ENABLE 1
 
@@ -203,8 +204,8 @@
 #define OPENTHREAD_CONFIG_MAC_DEFAULT_MAX_FRAME_RETRIES_INDIRECT 3
 #define OPENTHREAD_CONFIG_MAC_MAX_TX_ATTEMPTS_INDIRECT_POLLS 3
 
-#define OPENTHREAD_CONFIG_MAC_MAX_CSMA_BACKOFFS_DIRECT 5
-#define OPENTHREAD_CONFIG_MAC_MAX_CSMA_BACKOFFS_INDIRECT 5
+#define OPENTHREAD_CONFIG_MAC_MAX_CSMA_BACKOFFS_DIRECT 15
+#define OPENTHREAD_CONFIG_MAC_MAX_CSMA_BACKOFFS_INDIRECT 15
 
 #define OPENTHREAD_CONFIG_LOG_LEVEL OT_LOG_LEVEL_DEBG
 #define OPENTHREAD_CONFIG_LOG_LEVEL_INIT OT_LOG_LEVEL_NONE
@@ -248,6 +249,18 @@
 #define OPENTHREAD_CONFIG_DNS_CLIENT_ENABLE 1
 #define OPENTHREAD_CONFIG_THREAD_VERSION OT_THREAD_VERSION_1_3
 
+#define OPENTHREAD_CONFIG_MLE_SEND_UNICAST_ANNOUNCE_RESPONSE 0
+#define OPENTHREAD_CONFIG_ANNOUNCE_SENDER_ENABLE 0
+/**
+ * @def OPENTHREAD_CONFIG_MLE_LINK_REQUEST_MARGIN_MIN
+ *
+ * Specifies the minimum link margin in dBm required before attempting to establish a link with a neighboring router.
+ *
+ */
+#ifndef OPENTHREAD_CONFIG_MLE_LINK_REQUEST_MARGIN_MIN
+#define OPENTHREAD_CONFIG_MLE_LINK_REQUEST_MARGIN_MIN 15
+#endif
+
 /**
  * @def OPENTHREAD_CONFIG_MLE_CHILD_ROUTER_LINKS
  *
@@ -286,48 +299,50 @@
 
 #if OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE == 1
 
-/**
- * @def OPENTHREAD_CONFIG_MAC_CSL_REQUEST_AHEAD_US
- *
- * Define how many microseconds ahead should MAC deliver CSL frame to SubMac.
- *
- */
-#ifndef OPENTHREAD_CONFIG_MAC_CSL_REQUEST_AHEAD_US
-#define OPENTHREAD_CONFIG_MAC_CSL_REQUEST_AHEAD_US 0
-#endif
+///**
+// * @def OPENTHREAD_CONFIG_MAC_CSL_REQUEST_AHEAD_US
+// *
+// * Define how many microseconds ahead should MAC deliver CSL frame to SubMac.
+// *
+// */
+//#ifndef OPENTHREAD_CONFIG_MAC_CSL_REQUEST_AHEAD_US
+//#define OPENTHREAD_CONFIG_MAC_CSL_REQUEST_AHEAD_US 0
+//#endif
 
 /**
- * @def OPENTHREAD_CONFIG_CSL_RECEIVE_TIME_AHEAD
- *
- * Reception scheduling and ramp up time needed for the CSL receiver to be ready, in units of microseconds.
- *
- */
+* @def OPENTHREAD_CONFIG_CSL_RECEIVE_TIME_AHEAD
+*
+* Reception scheduling and ramp up time needed for the CSL receiver to be ready, in units of microseconds.
+*
+*/
 #ifndef OPENTHREAD_CONFIG_CSL_RECEIVE_TIME_AHEAD
-#define OPENTHREAD_CONFIG_CSL_RECEIVE_TIME_AHEAD 320
+#define OPENTHREAD_CONFIG_CSL_RECEIVE_TIME_AHEAD 2000
 #endif
 
 /**
- * @def OPENTHREAD_CONFIG_MIN_RECEIVE_ON_AHEAD
- *
- * The minimum time (in microseconds) before the MHR start that the radio should be in receive state and ready to
- * properly receive in order to properly receive any IEEE 802.15.4 frame. Defaults to the duration of SHR + PHR.
- *
- */
+* @def OPENTHREAD_CONFIG_MIN_RECEIVE_ON_AHEAD
+*
+* The minimum time (in microseconds) before the MHR start that the radio should be in receive state and ready to
+* properly receive in order to properly receive any IEEE 802.15.4 frame. Defaults to the duration of SHR + PHR.
+*
+* Preamble (last 40 us) + SFD ( 32 us) + PHR (32 us)
+*
+*/
 #ifndef OPENTHREAD_CONFIG_MIN_RECEIVE_ON_AHEAD
-#define OPENTHREAD_CONFIG_MIN_RECEIVE_ON_AHEAD (6 * 32)
+#define OPENTHREAD_CONFIG_MIN_RECEIVE_ON_AHEAD 104
 #endif
 
 /**
- * @def OPENTHREAD_CONFIG_MIN_RECEIVE_ON_AFTER
- *
- * The minimum time (in microseconds) after the MHR start that the radio should be in receive state in order
- * to properly receive any IEEE 802.15.4 frame. Defaults to the duration of a maximum size frame, plus AIFS,
- * plus the duration of maximum enh-ack frame. Platforms are encouraged to improve this value for energy
- * efficiency purposes.
- *
- */
+* @def OPENTHREAD_CONFIG_MIN_RECEIVE_ON_AFTER
+*
+* The minimum time (in microseconds) after the MHR start that the radio should be in receive state in order
+* to properly receive any IEEE 802.15.4 frame. Defaults to the duration of a maximum size frame, plus AIFS,
+* plus the duration of maximum enh-ack frame. Platforms are encouraged to improve this value for energy
+* efficiency purposes.
+*
+*/
 #ifndef OPENTHREAD_CONFIG_MIN_RECEIVE_ON_AFTER
-#define OPENTHREAD_CONFIG_MIN_RECEIVE_ON_AFTER ((127 + 6 + 39) * 32)
+#define OPENTHREAD_CONFIG_MIN_RECEIVE_ON_AFTER 0
 #endif
 
 /**

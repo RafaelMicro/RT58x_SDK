@@ -222,7 +222,7 @@ uint8_t pwm_dly_arr[5] = {PWM_PWM0_DLY_NUM, PWM_PWM1_DLY_NUM, PWM_PWM2_DLY_NUM, 
  * @brief Initinal GPIO Pin mux  for PWM
  */
 /*this is pin mux setting*/
-void init_default_pin_mux(void)
+void Init_Default_Pin_Mux(void)
 {
 #if (CHIP_VERSION == RT58X_MPA)
     pin_set_mode(PWM_PWM0_GPIO, MODE_PWM0);
@@ -522,7 +522,8 @@ int main(void)
     pwm_seq_para_head_t pwm_para_config[5];
     uint8_t loop;
 
-    init_default_pin_mux();
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+    Init_Default_Pin_Mux();
 
     /*init debug uart port for printf*/
     console_drv_init(PRINTF_BAUDRATE);

@@ -7,6 +7,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "uart_stdio.h"
+#include "bin_version.h"
 
 #define RAIDO_MAC_ADDR_FLASH_ID_MODE 0
 #define RAIDO_MAC_ADDR_MP_SECTOR_MODE 1
@@ -27,6 +28,10 @@ extern void rafael_radio_cca_threshold_set(uint8_t datarate);
 static void gpio6_handler();
 
 static void rtc_arm_isr(uint32_t rtc_status);
+
+//BIN_TYPE_ARR fixed len : 12, If all bytes are set to  0, the OTA update will always trigger a reboot.
+#define BIN_TYPE_ARR 't','o','g','g','l','e','f','t','d','b','i','n'
+const sys_information_t systeminfo = SYSTEMINFO_INIT(BIN_TYPE_ARR);
 
 /* pin mux setting init*/
 static void pin_mux_init(void)
@@ -54,15 +59,8 @@ static void bsp_btn_event_handle(bsp_event_t event)
         break;
     case BSP_EVENT_BUTTONS_1:
         //send sensor data
-        if (app_commission_data_check() == true)
-        {
-            thread_app_sensor_data_generate(APP_SENSOR_CONTROL_EVENT);
-        }
-        else
-        {
-            app_commission_erase();
-            NVIC_SystemReset();
-        }
+        app_commission_erase();
+        NVIC_SystemReset();
         break;
     default:
         break;
@@ -110,6 +108,17 @@ int main()
 
     info("Rafale Toggle SubG over Thread FTD and ble \r\n");
     info("=================================\r\n");
+    info("bin version         : ");
+    for (uint8_t i = 0; i < PREFIX_LEN; i++)
+    {
+        info("%c", systeminfo.prefix[i]);
+    }
+    info(" ");
+    for (uint8_t i = 0; i < FW_INFO_LEN; i++)
+    {
+        info("%02x", systeminfo.sysinfo[i]);
+    }
+    info("\r\n");
 
     bsp_init(BSP_INIT_BUTTONS, bsp_btn_event_handle);
 

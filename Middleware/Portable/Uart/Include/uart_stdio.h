@@ -21,7 +21,7 @@ int uart_stdio_init(void *cb);
 int uart_stdio_write(char *p_data, int length);
 int uart_stdio_write_ch(int ch);
 int uart_stdio_read(uint8_t *p_data, uint32_t length);
-
+bool uart_stdio_send_complete();
 
 /** @} */
 #ifdef __cplusplus

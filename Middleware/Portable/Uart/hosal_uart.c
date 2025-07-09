@@ -181,13 +181,18 @@ int hosal_uart_send(hosal_uart_dev_t *uart_dev, const void *data, uint32_t size)
     return i;
 }
 
-void hosal_uart_send_complete(hosal_uart_dev_t *uart_dev)
+bool hosal_uart_send_complete(hosal_uart_dev_t *uart_dev)
 {
     hosal_uart_config_t *cfg = &uart_dev->config;
     UART_T *uart;
     uart = g_uart_handle[cfg->uart_id].uart;
 
-    while ((UART_ReadLineStatus(uart) & UART_LSR_TEMT) == 0) {}
+    if ((UART_ReadLineStatus(uart) & UART_LSR_TEMT) != 0)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 int hosal_uart_receive(hosal_uart_dev_t *uart_dev, void *data, uint32_t expect_size)

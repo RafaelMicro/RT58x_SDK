@@ -9,29 +9,15 @@
 #include "timers.h"
 #include "thread_queue.h"
 #include "app_uart.h"
+#include "bin_version.h"
 
 #ifndef APP_TASK_STACK_SIZE
 #define APP_TASK_STACK_SIZE 4096
 #endif
 
-static uint8_t g_sensor_send_sn = 0;
 static TaskHandle_t sAppTask = NULL;
 static otInstance *g_app_instance = NULL;
-extern otError ota_init(otInstance *aInstance);
 extern void otAppCliInit(otInstance *aInstance);
-static thread_queue_t app_sensor_event_queue;
-
-static TimerHandle_t Thread_Time_Tick;
-static uint16_t sensor_send_tmr = 0;
-
-app_sensor_data_t *g_sendor_data = NULL;
-
-/*timeout */
-#define SENSOR_SEND_TIMEOUT 5
-
-#define SENSOR_SNED_TMR_START() (sensor_send_tmr = SENSOR_SEND_TIMEOUT)
-
-#define SENSOR_SNED_TMR_STOP() (sensor_send_tmr = 0)
 
 otInstance *otGetInstance(void)
 {
@@ -312,281 +298,6 @@ static void app_task_network_configuration_setting()
     }
 }
 
-uint16_t calculateCRC(uint8_t *data, uint32_t length)
-{
-    uint16_t crc = 0xFFFF;  // Initial CRC value
-    // Iterate over each byte in the data
-    for (uint32_t i = 0; i < length; i++)
-    {
-        crc ^= (uint16_t)data[i];  // XOR with current data byte
-        for (uint8_t j = 0; j < 8; j++)
-        {
-            if (crc & 0x0001)
-            {
-                crc = (crc >> 1) ^ 0xA001;  // XOR with CRC16 polynomial
-            }
-            else
-            {
-                crc >>= 1;
-            }
-        }
-    }
-    return crc;
-}
-
-static void thread_app_sensor_data_piece(uint8_t *payload, uint16_t *payloadlength, void *data)
-{
-    app_sensor_data_t *sensor_data = (app_sensor_data_t *)data;
-    uint8_t *tmp = payload;
-    mem_memcpy(tmp, &sensor_data->Preamble, 2);
-    tmp += 2;
-    *tmp++ = sensor_data->FrameLengths;
-    *tmp++ = sensor_data->FrameSN;
-    *tmp++ = sensor_data->FrameClass;
-    mem_memcpy(tmp, &sensor_data->NetWorkId, 8);
-    tmp += 8;
-    *tmp++ = sensor_data->PID;
-    *tmp++ = sensor_data->CID;
-    *tmp++ = sensor_data->CommandLengths;
-    if (sensor_data->CommandLengths > 0)
-    {
-        mem_memcpy(tmp, &sensor_data->CommandData, sensor_data->CommandLengths);
-        tmp += sensor_data->CommandLengths;
-    }
-    if (((tmp - payload) - 1) != sensor_data->FrameLengths)
-    {
-        info("piece lens fail (%u/%u)\r\n", (tmp - payload), sensor_data->FrameLengths);
-        return;
-    }
-    sensor_data->FrameCRC = calculateCRC(payload, (tmp - payload));
-    mem_memcpy(tmp, &sensor_data->FrameCRC, 2);
-    tmp += 2;
-    *payloadlength = (tmp - payload);
-}
-
-int thread_app_sensor_data_parse(uint8_t *payload, uint16_t payloadlength, void *data)
-{
-    app_sensor_data_t *sensor_data = (app_sensor_data_t *)data;
-    uint8_t *tmp = payload, *tmp_command = NULL;;
-    uint16_t crc = 0;
-    mem_memcpy(&sensor_data->Preamble, tmp, 2);
-    tmp += 2;
-    sensor_data->FrameLengths = *tmp++;
-    sensor_data->FrameSN = *tmp++;
-    sensor_data->FrameClass = *tmp++;
-    mem_memcpy(&sensor_data->NetWorkId, tmp, 8);
-    tmp += 8;
-    sensor_data->PID = *tmp++;
-    sensor_data->CID = *tmp++;
-    sensor_data->CommandLengths = *tmp++;
-    if (sensor_data->CommandLengths > 0)
-    {
-        memset(&sensor_data->CommandData, 0x00, SENSOR_COMMAND_LENS_MAX);
-        mem_memcpy(&sensor_data->CommandData, tmp, sensor_data->CommandLengths);
-        tmp += sensor_data->CommandLengths;
-    }
-    mem_memcpy(&sensor_data->FrameCRC, tmp, 2);
-    tmp += 2;
-    crc = calculateCRC(payload, (tmp - payload - 2));
-    if (sensor_data->FrameCRC != crc)
-    {
-        info("FrameCRC fail %04X %04X \r\n", sensor_data->FrameCRC, crc);
-        return 1;
-    }
-
-    if ((tmp - payload) != payloadlength)
-    {
-        info("parse fail (%u/%u)\r\n", (tmp - payload), payloadlength);
-        return 1;
-    }
-    return 0;
-}
-
-void thread_app_sensor_data_queue_push(uint8_t event, uint8_t *data, uint16_t data_lens)
-{
-    app_sensor_event_queue_t event_data;
-    enter_critical_section();
-    event_data.event = event;
-    mem_memcpy(&event_data.data, data, data_lens);
-    event_data.data_lens = data_lens;
-    if (thread_enqueue(&app_sensor_event_queue, &event_data))
-    {
-        info("thread_app enqueue fail \n");
-    }
-    leave_critical_section();
-    otSysEventSignalPending();
-}
-
-static void thread_app_sensor_data_send(uint8_t *data, uint16_t data_lens)
-{
-    otIp6Address LeaderIp = *otThreadGetRloc(otGetInstance());
-    LeaderIp.mFields.m8[14] = 0xfc;
-    LeaderIp.mFields.m8[15] = 0x00;
-
-    if (sensor_send_tmr == 0)
-    {
-        app_udp_send(LeaderIp, data, data_lens);
-        SENSOR_SNED_TMR_START();
-    }
-}
-
-void thread_app_sensor_data_generate(uint8_t event)
-{
-    app_sensor_data_t s_data;
-    uint8_t *payload = NULL;
-    uint16_t payloadlens = NULL;
-    uint32_t sensor_send_sn;
-    const otExtAddress *extAddress;
-    do
-    {
-        if (sensor_send_tmr != 0)
-        {
-            /*is sending*/
-            break;
-        }
-        s_data.Preamble = 0xFAFB;
-
-        sys_get_retention_reg(1, &sensor_send_sn);
-        s_data.FrameSN = (uint8_t)sensor_send_sn++;
-        sys_set_retention_reg(1, sensor_send_sn);
-
-        s_data.FrameClass = 0x1; //trigger from child
-
-        extAddress = otLinkGetExtendedAddress(otGetInstance());
-        mem_memcpy(s_data.NetWorkId, extAddress->m8, 8);
-
-#if APP_DOOR_SENSOR_USE
-        s_data.PID = 0x0; //sensor type
-#else
-        s_data.PID = 0x01; //sensor type
-#endif
-        s_data.CommandLengths = 0;
-        if (event == APP_SENSOR_CONTROL_EVENT)
-        {
-#if APP_DOOR_SENSOR_USE
-            gpio6_last_state = gpio_pin_get(6);
-            s_data.CID = gpio6_last_state;
-#else
-            s_data.CID = ((sensor_send_sn % 2) == 0) ? 0x0 : 0x1;
-#endif
-        }
-        else if (event == APP_SENSOR_GET_OTA_VERSION_EVENT)
-        {
-            s_data.CID = 0x2;
-        }
-        else if (event == APP_SENSOR_WAIT_OTA_EVENT)
-        {
-            s_data.CID = 0x3;
-        }
-        if (s_data.CommandLengths > 0 )
-        {
-            memset(s_data.CommandData, 0x00, SENSOR_COMMAND_LENS_MAX);
-            memset(s_data.CommandData, 0xff, s_data.CommandLengths);
-        }
-
-        s_data.FrameLengths = 15 + s_data.CommandLengths;
-
-        payload = mem_malloc(sizeof(app_sensor_data_t));
-        if (payload)
-        {
-            thread_app_sensor_data_piece(payload, &payloadlens, &s_data);
-            thread_app_sensor_data_queue_push(event, payload, payloadlens);
-        }
-    } while (0);
-
-    if (payload)
-    {
-        mem_free(payload);
-    }
-}
-
-int thread_app_sensor_data_received(uint8_t *data, uint16_t lens)
-{
-    app_sensor_data_t s_data;
-    uint16_t i = 0;
-    int ret = 1;
-    do
-    {
-        if (thread_app_sensor_data_parse(data, lens, &s_data))
-        {
-            info("isn't sensor data\r\n");
-            break;
-        }
-        SENSOR_SNED_TMR_STOP();
-        info("==========================================\r\n");
-        info("Preamble       : %04X \r\n", s_data.Preamble);
-        info("FrameLengths   : %u \r\n", s_data.FrameLengths);
-        info("FrameSN        : %u \r\n", s_data.FrameSN);
-        info("FrameClass     : %u \r\n", s_data.FrameClass);
-        info("NetWorkId      : ");
-        for (i = 0; i < 8; i++)
-        {
-            info("%02X", s_data.NetWorkId[i]);
-        }
-        info("\r\n");
-        info("PID            : %u \r\n", s_data.PID);
-        info("CID            : %u \r\n", s_data.CID);
-        info("CommandLengths : %u \r\n", s_data.CommandLengths);
-        info("CommandData    : ");
-        for (i = 0; i < s_data.CommandLengths; i++)
-        {
-            info("%02X", s_data.CommandData[i]);
-        }
-        info("\r\n");
-        info("FrameCRC: %04X \r\n", s_data.FrameCRC);
-        info("==========================================\r\n");
-        ret = 0;
-    } while (0);
-    return ret;
-}
-
-static void thread_app_sensor_data_timeout_handler()
-{
-    info("timeout not receive sensor data seq %u\n", g_sensor_send_sn);
-}
-
-static void thread_app_time_tick_handler()
-{
-    gpio_pin_get(21) == 0 ? gpio_pin_write(21, 1) : gpio_pin_write(21, 0);
-    if (0 < sensor_send_tmr && 0 == --sensor_send_tmr)
-    {
-        thread_app_sensor_data_timeout_handler();
-    }
-    xTimerStart(Thread_Time_Tick, 0);
-}
-
-void app_sensor_event_process()
-{
-    app_sensor_event_queue_t event_data;
-    memset(&event_data, 0x0, sizeof(app_sensor_event_queue_t));
-    /*process ota event*/
-    do
-    {
-        enter_critical_section();
-        if (thread_dequeue(&app_sensor_event_queue, &event_data))
-        {
-            leave_critical_section();
-            break;
-        }
-        leave_critical_section();
-
-        switch (event_data.event)
-        {
-        case APP_SENSOR_CONTROL_EVENT:
-        case APP_SENSOR_GET_OTA_VERSION_EVENT:
-        case APP_SENSOR_WAIT_OTA_EVENT:
-            thread_app_sensor_data_send(event_data.data, event_data.data_lens);
-            break;
-        case APP_SENSOR_DATA_RECEIVED:
-            thread_app_sensor_data_received(event_data.data, event_data.data_lens);
-            break;
-        default:
-            info("unknow event %u\n", event_data.event);
-            break;
-        }
-    } while (0);
-}
-
 void _Network_Interface_State_Change(uint32_t aFlags, void *aContext)
 {
     uint8_t show_ip = 0;
@@ -641,6 +352,7 @@ static otError Processota(void *aContext, uint8_t aArgsLength, char *aArgs[])
         info("ota image version : 0x%08x\n", ota_get_image_version());
         info("ota image size : 0x%08x \n", ota_get_image_size());
         info("ota image crc : 0x%08x \n", ota_get_image_crc());
+        info("current bin version : 0x%08x \n", GET_BIN_VERSION(systeminfo.sysinfo));
     }
     else if (!strcmp(aArgs[0], "start"))
     {
@@ -688,6 +400,14 @@ static otError Processota(void *aContext, uint8_t aArgsLength, char *aArgs[])
             error = otParseAsUint64(aArgs[1], &level);
             ota_debug_level((unsigned int)level);
         }
+    }
+    else if (!strcmp(aArgs[0], "reset"))
+    {
+        ota_reset();
+    }
+    else if (!strcmp(aArgs[0], "wakeup"))
+    {
+        ota_send_wakeup();
     }
     else
     {
@@ -740,6 +460,39 @@ void app_sleep_init()
     Lpm_Enable_Low_Power_Wakeup((LOW_POWER_WAKEUP_32K_TIMER | LOW_POWER_WAKEUP_UART0_RX));
 }
 
+void ota_state_change_cb(uint8_t state)
+{
+    switch (state)
+    {
+    case OTA_IDLE:
+        info("change to ota idle state \r\n");
+        break;
+    case OTA_DATA_SENDING:
+        info("change to ota sending state \r\n");
+        break;
+    case OTA_DATA_RECEIVING:
+        info("change to ota receiving state \r\n");
+        break;
+    case OTA_UNICASE_RECEIVING:
+        info("change to ota unicase receiving state \r\n");
+        break;
+    case OTA_REQUEST_SENDING:
+        info("change to ota request sending state \r\n");
+        break;
+    case OTA_WAKEUP_RECEIVING:
+        info("change to ota wakeup state \r\n");
+        break;
+    case OTA_DONE:
+        info("change to ota done state \r\n");
+        break;
+    case OTA_REBOOT:
+        info("change to ota reboot state \r\n");
+        break;
+    default:
+        break;
+    }
+}
+
 void _app_init(void)
 {
 #if OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_ENABLE
@@ -782,7 +535,7 @@ void _app_init(void)
             break;
         }
 
-        if (ota_init(g_app_instance) != OT_ERROR_NONE)
+        if (ota_init(g_app_instance, ota_state_change_cb) != OT_ERROR_NONE)
         {
             info("ota init fail \r\n");
             break;
@@ -811,10 +564,6 @@ void _app_init(void)
             info("otCliSetUserCommands fail \r\n");
             break;
         }
-
-        Thread_Time_Tick = xTimerCreate("Thread_Time_Tick_T", pdMS_TO_TICKS(1 * 1000), false, NULL, thread_app_time_tick_handler);
-        xTimerStart(Thread_Time_Tick, 0);
-
     } while (0);
 
     info("Thread version      : %s \r\n", otGetVersionString());
@@ -856,8 +605,6 @@ static void app_main_loop(void *aContext)
 
     _app_init();
 
-    thread_queue_init(&app_sensor_event_queue, 5, sizeof(app_sensor_event_queue_t));
-
     otSysProcessDrivers(otGetInstance());
     while (!otSysPseudoResetWasRequested())
     {
@@ -868,8 +615,6 @@ static void app_main_loop(void *aContext)
         }
         /*openthread use*/
         otSysProcessDrivers(otGetInstance());
-        /*app sensor data use*/
-        app_sensor_event_process();
     }
 
     otInstanceFinalize(otGetInstance());

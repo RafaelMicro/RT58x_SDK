@@ -54,7 +54,7 @@
 #define configUSE_TICKLESS_IDLE             1
 
 #if (configUSE_TICKLESS_IDLE == 1)
-#define configPRE_SLEEP_PROCESSING(x)   do{ RTOS_PreSleepProcessing(x);}while(0)
+#define configPRE_SLEEP_PROCESSING(x)   do{if (uart_stdio_send_complete(0)!=TRUE){__enable_irq();return;} RTOS_PreSleepProcessing(x);}while(0)
 #define configPOST_SLEEP_PROCESSING(x)  do{}while(0)
 #define FREERTOS_SLEEP_WAKEUP_TIMER_ID      4
 #endif

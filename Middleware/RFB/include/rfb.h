@@ -453,7 +453,7 @@ typedef struct rfb_zb_ctrl_s
     * @see
     * @image
     */
-    uint8_t (*ack_packet_read)(uint8_t *rx_data_address, uint8_t *rx_time_address, bool is2bytephr);
+    uint8_t (*ack_packet_read)(uint8_t *rx_data_address, uint8_t *rx_time_address, bool is2bytephr, uint8_t *rx_rssi);
     /**
     * @brief Read RFB RX RTC time
     *
@@ -869,7 +869,7 @@ typedef struct rfb_subg_ctrl_s
     * @see
     * @image
     */
-    uint8_t (*ack_packet_read)(uint8_t *rx_data_address, uint8_t *rx_time_address, bool is2bytephr);
+    uint8_t (*ack_packet_read)(uint8_t *rx_data_address, uint8_t *rx_time_address, bool is2bytephr, uint8_t *rx_rssi);
 
     /**
     * @brief Read RFB RX RTC time

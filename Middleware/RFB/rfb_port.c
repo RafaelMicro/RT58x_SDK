@@ -286,12 +286,12 @@ RFB_EVENT_STATUS rfb_port_wake_on_radio_set(uint32_t rf_frequency, uint16_t rx_o
     return event_status;
 }
 
-RFB_EVENT_STATUS rfb_port_receive_at(uint8_t rf_channel, uint32_t rx_start_time, uint32_t rx_on_time)
+RFB_EVENT_STATUS rfb_port_receive_at(uint32_t rf_frequency, uint32_t rx_start_time, uint32_t rx_on_time)
 {
-    uint32_t rf_frequency;
+    // uint32_t rf_frequency;
     RFB_EVENT_STATUS event_status = RFB_EVENT_SUCCESS;
 
-    rf_frequency = (rf_channel - 10) * 5 + 2400;
+    // rf_frequency = (rf_channel - 10) * 5 + 2400;
     event_status = rfb_comm_frequency_set(rf_frequency);
     if (event_status != RFB_EVENT_SUCCESS)
     {
@@ -899,12 +899,12 @@ RFB_EVENT_STATUS rfb_port_tx_power_set(uint8_t band_type, uint8_t power_index)
     RFB_EVENT_STATUS event_status = RFB_EVENT_SUCCESS;
     uint8_t band_type_ruci;
 
-    /* RUCI band type: [0: 2.4GHz, 1: SubG 915MHz, 2: SubG 868MHz, 3: SubG 433MHz, 4: SubG 315MHz] */
-    band_type_ruci = (band_type < BAND_SUBG_868M) ? (band_type ^ 1) : band_type;
     if (band_type == BAND_SUBG_470M)
     {
         band_type -= 2;  //470MHz band is actually the same as 433MHz band
     }
+    /* RUCI band type: [0: 2.4GHz, 1: SubG 915MHz, 2: SubG 868MHz, 3: SubG 433MHz, 4: SubG 315MHz] */
+    band_type_ruci = (band_type < BAND_SUBG_868M) ? (band_type ^ 1) : band_type;
 
     event_status = rfb_comm_tx_power_set(band_type_ruci, power_index);
 
@@ -921,12 +921,12 @@ RFB_EVENT_STATUS rfb_port_tx_power_set_oqpsk(uint8_t band_type, uint8_t power_in
     RFB_EVENT_STATUS event_status = RFB_EVENT_SUCCESS;
     uint8_t band_type_ruci;
 
-    /* RUCI band type: [0: 2.4GHz, 1: SubG 915MHz, 2: SubG 868MHz, 3: SubG 433MHz, 4: SubG 315MHz] */
-    band_type_ruci = (band_type < BAND_SUBG_868M) ? (band_type ^ 1) : band_type;
     if (band_type == BAND_SUBG_470M)
     {
         band_type -= 2;  //470MHz band is actually the same as 433MHz band
     }
+    /* RUCI band type: [0: 2.4GHz, 1: SubG 915MHz, 2: SubG 868MHz, 3: SubG 433MHz, 4: SubG 315MHz] */
+    band_type_ruci = (band_type < BAND_SUBG_868M) ? (band_type ^ 1) : band_type;
 
     event_status = rfb_comm_tx_power_set_oqpsk(band_type_ruci, power_index);
 
@@ -1164,7 +1164,7 @@ uint32_t rfb_port_rtc_time_read(void)
     return rtc_time;
 }
 
-uint8_t rfb_port_ack_packet_read(uint8_t *rx_data_address, uint8_t *rx_time_address, bool is2bytephr)
+uint8_t rfb_port_ack_packet_read(uint8_t *rx_data_address, uint8_t *rx_time_address, bool is2bytephr, uint8_t *rx_rssi)
 {
     uint32_t temp_data;
     uint16_t temp_addr;
@@ -1220,6 +1220,11 @@ uint8_t rfb_port_ack_packet_read(uint8_t *rx_data_address, uint8_t *rx_time_addr
     tmp_rtc_time = rx_time_address[1];
     rx_time_address[1] = rx_time_address[2];
     rx_time_address[2] = tmp_rtc_time;
+    /* Start from 0x4000 + (page*64), the 9th 4-byte*/
+    temp_addr = 0x4000 + (page * 64) + (12 * 4);
+    RfMcu_MemoryGet(temp_addr, (uint8_t *)&temp_data, 4);
+    *rx_rssi = temp_data & 0xff;
+
     return ret_len;
 }
 
@@ -1290,4 +1295,19 @@ uint32_t rfb_port_frame_counter_get(void)
     frame_counter = (((frame_counter & 0xFF000000) >> 24) | ((frame_counter & 0x00FF0000) >> 8) | ((frame_counter & 0x0000FF00) << 8) | ((frame_counter & 0x000000FF) << 24));
 
     return frame_counter;
+}
+
+void rfb_intercom_mode_set(uint8_t mode_enable)
+{
+    uint32_t temp_data;
+    uint8_t page;
+    uint16_t q_addr;
+
+    /* get address of 2nd page in local data q */
+    RfMcu_MemoryGet(0x04038, (uint8_t *)&temp_data, 4);
+    page = (uint8_t)((temp_data >> 8) & 0xff) + 1;
+
+    /* Start from 0x4000 + (page*64), write the 8th byte */
+    q_addr = 0x4000 + (page * 64) + (11 * 4);
+    RfMcu_MemorySet(q_addr, (uint8_t *)&mode_enable, 1);
 }

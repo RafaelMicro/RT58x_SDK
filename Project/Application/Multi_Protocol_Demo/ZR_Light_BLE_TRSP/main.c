@@ -140,6 +140,16 @@ void set_duty_cycle(pwm_seq_para_head_t *pwm_para_config, uint8_t current_lv)
 int32_t main(void)
 {
     /*we should set pinmux here or in SystemInit */
+    uint32_t status;
+
+    /* Setting the System clock */
+    status = Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+    if (status != STATUS_SUCCESS)
+    {
+        /* System clock cannot be switched correctly. */
+        while (1);
+    }
+
     init_default_pin_mux();
     //pwm_seq_para_head_t pwm_para_config[2];
 

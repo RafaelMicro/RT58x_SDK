@@ -29,7 +29,6 @@
 /**
  * @file
  *   This file implements the OpenThread platform abstraction for non-volatile storage of settings.
- *
  */
 
 #include "openthread-posix-config.h"
@@ -88,7 +87,7 @@ static void getSettingsFileName(otInstance *aInstance, char aFileName[kMaxFileNa
     uint64_t    nodeId;
 
     otPlatRadioGetIeeeEui64(aInstance, reinterpret_cast<uint8_t *>(&nodeId));
-    nodeId = ot::Encoding::BigEndian::HostSwap64(nodeId);
+    nodeId = ot::BigEndian::HostSwap64(nodeId);
     snprintf(aFileName, kMaxFileNameSize, OPENTHREAD_CONFIG_POSIX_SETTINGS_PATH "/%s_%" PRIx64 ".%s",
              offset == nullptr ? "0" : offset, nodeId, (aSwap ? "swap" : "data"));
 }
@@ -111,7 +110,6 @@ static int swapOpen(otInstance *aInstance)
  *
  * @param[in]   aFd     The file descriptor of the current swap file.
  * @param[in]   aLength Number of bytes to copy.
- *
  */
 static void swapWrite(otInstance *aInstance, int aFd, uint16_t aLength)
 {
@@ -232,6 +230,7 @@ void otPlatSettingsDeinit(otInstance *aInstance)
 
     VerifyOrExit(sSettingsFd != -1);
     VerifyOrDie(close(sSettingsFd) == 0, OT_EXIT_ERROR_ERRNO);
+    sSettingsFd = -1;
 
 exit:
     return;
@@ -436,7 +435,7 @@ otError PlatformSettingsDelete(otInstance *aInstance, uint16_t aKey, int aIndex,
 
     assert(swapFd != -1);
     assert(offset == 0);
-    VerifyOrExit(offset == 0 && size >= 0, error = OT_ERROR_PARSE);
+    VerifyOrExit(offset == 0 && size >= 0, error = OT_ERROR_FAILED);
 
     while (offset < size)
     {
@@ -445,10 +444,10 @@ otError PlatformSettingsDelete(otInstance *aInstance, uint16_t aKey, int aIndex,
         ssize_t  rval;
 
         rval = read(sSettingsFd, &key, sizeof(key));
-        VerifyOrExit(rval == sizeof(key), error = OT_ERROR_PARSE);
+        VerifyOrExit(rval == sizeof(key), error = OT_ERROR_FAILED);
 
         rval = read(sSettingsFd, &length, sizeof(length));
-        VerifyOrExit(rval == sizeof(length), error = OT_ERROR_PARSE);
+        VerifyOrExit(rval == sizeof(length), error = OT_ERROR_FAILED);
 
         offset += sizeof(key) + sizeof(length) + length;
 
@@ -456,14 +455,14 @@ otError PlatformSettingsDelete(otInstance *aInstance, uint16_t aKey, int aIndex,
         {
             if (aIndex == 0)
             {
-                VerifyOrExit(offset == lseek(sSettingsFd, length, SEEK_CUR), error = OT_ERROR_PARSE);
+                VerifyOrExit(offset == lseek(sSettingsFd, length, SEEK_CUR), error = OT_ERROR_FAILED);
                 swapWrite(aInstance, swapFd, static_cast<uint16_t>(size - offset));
                 error = OT_ERROR_NONE;
                 break;
             }
             else if (aIndex == -1)
             {
-                VerifyOrExit(offset == lseek(sSettingsFd, length, SEEK_CUR), error = OT_ERROR_PARSE);
+                VerifyOrExit(offset == lseek(sSettingsFd, length, SEEK_CUR), error = OT_ERROR_FAILED);
                 error = OT_ERROR_NONE;
                 continue;
             }
@@ -474,19 +473,15 @@ otError PlatformSettingsDelete(otInstance *aInstance, uint16_t aKey, int aIndex,
         }
 
         rval = write(swapFd, &key, sizeof(key));
-        assert(rval == sizeof(key));
-        VerifyOrDie(rval == sizeof(key), OT_EXIT_FAILURE);
+        VerifyOrExit(rval == sizeof(key), error = OT_ERROR_FAILED);
 
         rval = write(swapFd, &length, sizeof(length));
-        assert(rval == sizeof(length));
-        VerifyOrDie(rval == sizeof(length), OT_EXIT_FAILURE);
+        VerifyOrExit(rval == sizeof(length), error = OT_ERROR_FAILED);
 
         swapWrite(aInstance, swapFd, length);
     }
 
 exit:
-    VerifyOrDie(error != OT_ERROR_PARSE, OT_EXIT_FAILURE);
-
     if (aSwapFd != nullptr)
     {
         *aSwapFd = swapFd;
@@ -498,6 +493,11 @@ exit:
     else if (error == OT_ERROR_NOT_FOUND)
     {
         swapDiscard(aInstance, swapFd);
+    }
+    else if (error == OT_ERROR_FAILED)
+    {
+        swapDiscard(aInstance, swapFd);
+        DieNow(error);
     }
 
     return error;

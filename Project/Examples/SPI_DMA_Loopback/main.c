@@ -35,7 +35,7 @@ uint32_t console_drv_init(uart_baudrate_t baudrate);
 
 
 /*this is pin mux setting*/
-void init_default_pin_mux(void)
+void Init_Default_Pin_Mux(void)
 {
 
     /*uart0 pinmux, This is default setting,
@@ -108,7 +108,9 @@ int main(void)
     spi_block_request_t     master_xfer_request, slave_xfer_request;
 
     /*we should set pinmux here or in SystemInit */
-    init_default_pin_mux();
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+
+    Init_Default_Pin_Mux();
 
     /*init debug uart port for printf*/
     console_drv_init(PRINTF_BAUDRATE);

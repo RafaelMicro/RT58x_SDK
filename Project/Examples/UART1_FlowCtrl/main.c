@@ -40,7 +40,7 @@ void SetClockFreq(void);
  ************************************************************/
 
 /*this is pin mux setting*/
-void init_default_pin_mux(void)
+void Init_Default_Pin_Mux(void)
 {
 
 
@@ -165,7 +165,8 @@ int main(void)
 
 
     /*we should set pinmux here or in SystemInit */
-    init_default_pin_mux();
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+    Init_Default_Pin_Mux();
 
     /*init debug uart port for printf*/
 

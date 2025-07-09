@@ -7,6 +7,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "uart_stdio.h"
+#include "bin_version.h"
 
 #define RAIDO_MAC_ADDR_FLASH_ID_MODE 0
 #define RAIDO_MAC_ADDR_MP_SECTOR_MODE 1
@@ -27,6 +28,10 @@ extern void rafael_radio_cca_threshold_set(uint8_t datarate);
 static void gpio6_handler();
 
 static void rtc_arm_isr(uint32_t rtc_status);
+
+//BIN_TYPE_ARR fixed len : 12, If all bytes are set to  0, the OTA update will always trigger a reboot.
+#define BIN_TYPE_ARR 't','o','g','g','l','e','m','t','d','b','i','n'
+const sys_information_t systeminfo = SYSTEMINFO_INIT(BIN_TYPE_ARR);
 
 /* pin mux setting init*/
 static void pin_mux_init(void)
@@ -58,15 +63,6 @@ static void bsp_btn_event_handle(bsp_event_t event)
     case BSP_EVENT_BUTTONS_1:
         /*trigger button 1 will send sensor data*/
         g_button1_hold = true;
-        if (app_commission_data_check() == true)
-        {
-            /*send after confirming have connission content*/
-            thread_app_sensor_data_generate(APP_SENSOR_CONTROL_EVENT);
-        }
-        else
-        {
-            /*not commission*/
-        }
         break;
 #endif
     default:
@@ -212,7 +208,17 @@ int main()
 
     info("Rafale Toggle SubG over Thread FTD and ble \r\n");
     info("=================================\r\n");
-
+    info("bin version         : ");
+    for (uint8_t i = 0; i < PREFIX_LEN; i++)
+    {
+        info("%c", systeminfo.prefix[i]);
+    }
+    info(" ");
+    for (uint8_t i = 0; i < FW_INFO_LEN; i++)
+    {
+        info("%02x", systeminfo.sysinfo[i]);
+    }
+    info("\r\n");
     app_commission_t commission;
     rtc_time_t current_time, alarm_tm;
 
@@ -226,7 +232,6 @@ int main()
         app_commission_erase();
     }
 
-#if !APP_DOOR_SENSOR_USE
     /* when button1 is triggered in deep sleep */
     if (!bsp_button_state_get(BSP_BUTTON_1))
     {
@@ -235,14 +240,12 @@ int main()
         if (app_commission_data_check() == true)
         {
             /*send after confirming have connission content*/
-            g_sensor_event = APP_SENSOR_CONTROL_EVENT;
         }
         else
         {
             /*BNT 1 not commission*/
         }
     }
-#endif
 
     /* when RTC event is triggered in deep sleep */
     if (RTC->RTC_INT_STATUS & RTC_INT_EVENT_BIT)
@@ -251,7 +254,6 @@ int main()
         if (app_commission_data_check() == true)
         {
             /*send ota ask after confirming have connission content*/
-            g_sensor_event = APP_SENSOR_GET_OTA_VERSION_EVENT;
         }
         else
         {
@@ -285,11 +287,8 @@ int main()
         {
             /*open thread after confirming have connission content*/
             thread_app_task_start();
-            if (g_sensor_event != APP_SENSOR_CONTROL_EVENT)
-            {
-                /*set rtc intervel*/
-                app_rtc_alarm_set(current_time);
-            }
+            /*set rtc intervel*/
+            app_rtc_alarm_set(current_time);
         }
         else
         {

@@ -29,21 +29,13 @@
 /**
  * @file
  *   This file includes implementation for the NAT64 translator.
- *
  */
 
 #include "nat64_translator.hpp"
 
 #if OPENTHREAD_CONFIG_NAT64_TRANSLATOR_ENABLE
 
-#include <openthread/platform/toolchain.h>
-
-#include "common/code_utils.hpp"
-#include "common/locator_getters.hpp"
-#include "common/log.hpp"
-#include "net/checksum.hpp"
-#include "net/ip4_types.hpp"
-#include "net/ip6.hpp"
+#include "instance/instance.hpp"
 
 namespace ot {
 namespace Nat64 {
@@ -59,10 +51,14 @@ const char *StateToString(State aState)
         "Active",
     };
 
-    static_assert(0 == kStateDisabled, "kStateDisabled value is incorrect");
-    static_assert(1 == kStateNotRunning, "kStateNotRunning value is incorrect");
-    static_assert(2 == kStateIdle, "kStateIdle value is incorrect");
-    static_assert(3 == kStateActive, "kStateActive value is incorrect");
+    struct EnumCheck
+    {
+        InitEnumValidatorCounter();
+        ValidateNextEnum(kStateDisabled);
+        ValidateNextEnum(kStateNotRunning);
+        ValidateNextEnum(kStateIdle);
+        ValidateNextEnum(kStateActive);
+    };
 
     return kStateString[aState];
 }
@@ -99,7 +95,7 @@ Error Translator::SendMessage(Message &aMessage)
 
     VerifyOrExit(result == kForward);
 
-    error = Get<Ip6::Ip6>().SendRaw(aMessage, !OPENTHREAD_CONFIG_IP6_ALLOW_LOOP_BACK_HOST_DATAGRAMS);
+    error = Get<Ip6::Ip6>().SendRaw(OwnedPtr<Message>(&aMessage).PassOwnership());
     freed = true;
 
 exit:
@@ -367,7 +363,8 @@ Translator::AddressMapping *Translator::AllocateMapping(const Ip6::Address &aIp6
     VerifyOrExit(mapping != nullptr);
 
     mActiveAddressMappings.Push(*mapping);
-    mapping->mId  = ++mNextMappingId;
+    mapping->mId = ++mNextMappingId;
+    mapping->mCounters.Clear();
     mapping->mIp6 = aIp6Addr;
     // PopBack must return a valid address since it is not empty.
     mapping->mIp4 = *mIp4AddressPool.PopBack();
@@ -504,16 +501,28 @@ Error Translator::SetIp4Cidr(const Ip4::Cidr &aCidr)
         IgnoreError(mIp4AddressPool.PushBack(addr));
     }
 
-    LogInfo("IPv4 CIDR for NAT64: %s (actual address pool: %s - %s, %u addresses)", aCidr.ToString().AsCString(),
+    LogInfo("IPv4 CIDR for NAT64: %s (actual address pool: %s - %s, %lu addresses)", aCidr.ToString().AsCString(),
             mIp4AddressPool.Front()->ToString().AsCString(), mIp4AddressPool.Back()->ToString().AsCString(),
-            numberOfHosts);
+            ToUlong(numberOfHosts));
     mIp4Cidr = aCidr;
 
-    // Always notify the platform when the CIDR is changed.
-    UpdateState(true /* aAlwaysNotify */);
+    UpdateState();
+
+    // Notify the platform when the CIDR is changed.
+    Get<Notifier>().Signal(kEventNat64TranslatorStateChanged);
 
 exit:
     return err;
+}
+
+void Translator::ClearIp4Cidr(void)
+{
+    mIp4Cidr.Clear();
+    mAddressMappingPool.FreeAll();
+    mActiveAddressMappings.Clear();
+    mIp4AddressPool.Clear();
+
+    UpdateState();
 }
 
 void Translator::SetNat64Prefix(const Ip6::Prefix &aNat64Prefix)
@@ -634,7 +643,7 @@ void Translator::ProtocolCounters::Count4To6Packet(uint8_t aProtocol, uint64_t a
     mTotal.m4To6Bytes += aPacketSize;
 }
 
-void Translator::UpdateState(bool aAlwaysNotify)
+void Translator::UpdateState(void)
 {
     State newState;
 
@@ -654,14 +663,7 @@ void Translator::UpdateState(bool aAlwaysNotify)
         newState = kStateDisabled;
     }
 
-    if (aAlwaysNotify)
-    {
-        Get<Notifier>().Signal(kEventNat64TranslatorStateChanged);
-    }
-    else
-    {
-        SuccessOrExit(Get<Notifier>().Update(mState, newState, kEventNat64TranslatorStateChanged));
-    }
+    SuccessOrExit(Get<Notifier>().Update(mState, newState, kEventNat64TranslatorStateChanged));
     LogInfo("NAT64 translator is now %s", StateToString(mState));
 
 exit:

@@ -31,7 +31,7 @@ void SetClockFreq(void);
 /************************************************************/
 
 /*this is pin mux setting*/
-void init_default_pin_mux(void)
+void Init_Default_Pin_Mux(void)
 {
     /*uart0 pinmux*/
     pin_set_mode(16, MODE_UART);     /*GPIO16 as UART0 TX*/
@@ -236,7 +236,9 @@ int main(void)
     uint32_t              i;
 
     /*we should set pinmux here or in SystemInit */
-    init_default_pin_mux();
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+
+    Init_Default_Pin_Mux();
 
     sha256_vector_init();
 

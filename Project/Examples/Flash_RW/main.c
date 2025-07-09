@@ -29,7 +29,7 @@
 /************************************************************/
 uint32_t Flash_Address = 0;
 /*this is pin mux setting*/
-void init_default_pin_mux(void)
+void Init_Default_Pin_Mux(void)
 {
     uint32_t i;
 
@@ -84,7 +84,10 @@ int main(void)
     uint32_t i = 0;
     uint8_t     WbufAry[256], RbufAry[256];
 
-    init_default_pin_mux();
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+
+    Init_Default_Pin_Mux();
+
     /*init debug uart port for printf*/
     console_drv_init(PRINTF_BAUDRATE);
 

@@ -394,6 +394,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\api\backbone_router_ftd_api.cpp</FilePath>
             </File>
             <File>
+              <FileName>ble_secure_api.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\api\ble_secure_api.cpp</FilePath>
+            </File>
+            <File>
               <FileName>border_agent_api.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\api\border_agent_api.cpp</FilePath>
@@ -534,6 +539,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\api\logging_api.cpp</FilePath>
             </File>
             <File>
+              <FileName>mdns_api.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\api\mdns_api.cpp</FilePath>
+            </File>
+            <File>
               <FileName>mesh_diag_api.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\api\mesh_diag_api.cpp</FilePath>
@@ -653,6 +663,11 @@
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\api\udp_api.cpp</FilePath>
             </File>
+            <File>
+              <FileName>verhoeff_checksum_api.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\api\verhoeff_checksum_api.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -739,11 +754,6 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\binary_search.cpp</FilePath>
             </File>
             <File>
-              <FileName>crc16.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\crc16.cpp</FilePath>
-            </File>
-            <File>
               <FileName>data.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\data.cpp</FilePath>
@@ -752,62 +762,6 @@
               <FileName>error.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\error.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>extension_example.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\extension_example.cpp</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
             </File>
             <File>
               <FileName>frame_builder.cpp</FileName>
@@ -835,11 +789,6 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\heap_string.cpp</FilePath>
             </File>
             <File>
-              <FileName>instance.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\instance.cpp</FilePath>
-            </File>
-            <File>
               <FileName>log.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\log.cpp</FilePath>
@@ -853,6 +802,11 @@
               <FileName>notifier.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\notifier.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>offset_range.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\offset_range.cpp</FilePath>
             </File>
             <File>
               <FileName>preference.cpp</FileName>
@@ -903,6 +857,11 @@
               <FileName>uptime.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\uptime.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>crc16.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\common\crc16.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -962,6 +921,72 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>OT-Instance</GroupName>
+          <Files>
+            <File>
+              <FileName>extension_example.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\instance\extension_example.cpp</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>instance.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\instance\instance.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>OT-MAC</GroupName>
           <Files>
             <File>
@@ -1000,6 +1025,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\mac\mac_frame.cpp</FilePath>
             </File>
             <File>
+              <FileName>mac_header_ie.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\mac\mac_header_ie.cpp</FilePath>
+            </File>
+            <File>
               <FileName>mac_links.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\mac\mac_links.cpp</FilePath>
@@ -1018,6 +1048,21 @@
               <FileName>sub_mac_callbacks.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\mac\sub_mac_callbacks.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>sub_mac_csl_receiver.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\mac\sub_mac_csl_receiver.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>sub_mac_wed.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\mac\sub_mac_wed.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>wakeup_tx_scheduler.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\mac\wakeup_tx_scheduler.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -1045,11 +1090,6 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop\dataset.cpp</FilePath>
             </File>
             <File>
-              <FileName>dataset_local.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop\dataset_local.cpp</FilePath>
-            </File>
-            <File>
               <FileName>dataset_manager.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop\dataset_manager.cpp</FilePath>
@@ -1063,11 +1103,6 @@
               <FileName>dataset_updater.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop\dataset_updater.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dtls.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop\dtls.cpp</FilePath>
             </File>
             <File>
               <FileName>energy_scan_client.cpp</FileName>
@@ -1115,6 +1150,16 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop\panid_query_client.cpp</FilePath>
             </File>
             <File>
+              <FileName>secure_transport.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop\secure_transport.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>tcat_agent.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop\tcat_agent.cpp</FilePath>
+            </File>
+            <File>
               <FileName>timestamp.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\meshcop\timestamp.cpp</FilePath>
@@ -1160,6 +1205,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\net\dns_types.cpp</FilePath>
             </File>
             <File>
+              <FileName>dnssd.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\net\dnssd.cpp</FilePath>
+            </File>
+            <File>
               <FileName>dnssd_server.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\net\dnssd_server.cpp</FilePath>
@@ -1200,6 +1250,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\net\ip6_mpl.cpp</FilePath>
             </File>
             <File>
+              <FileName>mdns.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\net\mdns.cpp</FilePath>
+            </File>
+            <File>
               <FileName>nat64_translator.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\net\nat64_translator.cpp</FilePath>
@@ -1228,6 +1283,11 @@
               <FileName>socket.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\net\socket.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>srp_advertising_proxy.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\net\srp_advertising_proxy.cpp</FilePath>
             </File>
             <File>
               <FileName>srp_client.cpp</FileName>
@@ -1259,6 +1319,11 @@
         <Group>
           <GroupName>OT-Radio</GroupName>
           <Files>
+            <File>
+              <FileName>ble_secure.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\radio\ble_secure.cpp</FilePath>
+            </File>
             <File>
               <FileName>radio.cpp</FileName>
               <FileType>8</FileType>
@@ -1313,6 +1378,11 @@
               <FileName>anycast_locator.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\anycast_locator.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>child.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\child.cpp</FilePath>
             </File>
             <File>
               <FileName>child_supervision.cpp</FileName>
@@ -1415,6 +1485,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\mlr_manager.cpp</FilePath>
             </File>
             <File>
+              <FileName>neighbor.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\neighbor.cpp</FilePath>
+            </File>
+            <File>
               <FileName>neighbor_table.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\neighbor_table.cpp</FilePath>
@@ -1470,6 +1545,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\network_diagnostic.cpp</FilePath>
             </File>
             <File>
+              <FileName>network_diagnostic_tlvs.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\network_diagnostic_tlvs.cpp</FilePath>
+            </File>
+            <File>
               <FileName>panid_query_server.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\panid_query_server.cpp</FilePath>
@@ -1478,6 +1558,11 @@
               <FileName>radio_selector.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\radio_selector.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>router.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\router.cpp</FilePath>
             </File>
             <File>
               <FileName>router_table.cpp</FileName>
@@ -1503,11 +1588,6 @@
               <FileName>tmf.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\tmf.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>topology.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\thread\topology.cpp</FilePath>
             </File>
             <File>
               <FileName>uri_paths.cpp</FileName>
@@ -1550,6 +1630,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\jam_detector.cpp</FilePath>
             </File>
             <File>
+              <FileName>link_metrics_manager.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\link_metrics_manager.cpp</FilePath>
+            </File>
+            <File>
               <FileName>mesh_diag.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\mesh_diag.cpp</FilePath>
@@ -1583,6 +1668,11 @@
               <FileName>srp_client_buffers.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\srp_client_buffers.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>verhoeff_checksum.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\core\utils\verhoeff_checksum.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -1640,9 +1730,19 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_joiner.cpp</FilePath>
             </File>
             <File>
+              <FileName>cli_link_metrics.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_link_metrics.cpp</FilePath>
+            </File>
+            <File>
               <FileName>cli_mac_filter.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_mac_filter.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>cli_mdns.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_mdns.cpp</FilePath>
             </File>
             <File>
               <FileName>cli_network_data.cpp</FileName>
@@ -1650,9 +1750,9 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_network_data.cpp</FilePath>
             </File>
             <File>
-              <FileName>cli_output.cpp</FileName>
+              <FileName>cli_ping.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_output.cpp</FilePath>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_ping.cpp</FilePath>
             </File>
             <File>
               <FileName>cli_srp_client.cpp</FileName>
@@ -1665,6 +1765,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_srp_server.cpp</FilePath>
             </File>
             <File>
+              <FileName>cli_tcat.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_tcat.cpp</FilePath>
+            </File>
+            <File>
               <FileName>cli_tcp.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_tcp.cpp</FilePath>
@@ -1673,6 +1778,11 @@
               <FileName>cli_udp.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_udp.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>cli_utils.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\src\cli\cli_utils.cpp</FilePath>
             </File>
             <File>
               <FileName>cli_extension_example.c</FileName>
@@ -1690,9 +1800,9 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\aes.c</FilePath>
             </File>
             <File>
-              <FileName>aesni.c</FileName>
+              <FileName>aesce.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\aesni.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\aesce.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -1746,9 +1856,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>arc4.c</FileName>
+              <FileName>aesni.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\arc4.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\aesni.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -1876,113 +1986,26 @@
               <FileName>bignum.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\bignum.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>1</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
             </File>
             <File>
-              <FileName>blowfish.c</FileName>
+              <FileName>bignum_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\blowfish.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\bignum_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>bignum_mod.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\bignum_mod.c</FilePath>
+            </File>
+            <File>
+              <FileName>bignum_mod_raw.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\bignum_mod_raw.c</FilePath>
+            </File>
+            <File>
+              <FileName>block_cipher.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\block_cipher.c</FilePath>
             </File>
             <File>
               <FileName>camellia.c</FileName>
@@ -2044,62 +2067,6 @@
               <FileName>ccm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ccm.c</FilePath>
-            </File>
-            <File>
-              <FileName>certs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\certs.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
             </File>
             <File>
               <FileName>chacha20.c</FileName>
@@ -2432,6 +2399,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ecp_curves.c</FilePath>
             </File>
             <File>
+              <FileName>ecp_curves_new.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ecp_curves_new.c</FilePath>
+            </File>
+            <File>
               <FileName>entropy.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\entropy.c</FilePath>
@@ -2605,62 +2577,6 @@
               </FileOption>
             </File>
             <File>
-              <FileName>havege.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\havege.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>hkdf.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\hkdf.c</FilePath>
@@ -2722,121 +2638,19 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\hmac_drbg.c</FilePath>
             </File>
             <File>
+              <FileName>lmots.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\lmots.c</FilePath>
+            </File>
+            <File>
+              <FileName>lms.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\lms.c</FilePath>
+            </File>
+            <File>
               <FileName>md.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\md.c</FilePath>
-            </File>
-            <File>
-              <FileName>md2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\md2.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>md4.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\md4.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
             </File>
             <File>
               <FileName>md5.c</FileName>
@@ -3144,6 +2958,11 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\pk.c</FilePath>
             </File>
             <File>
+              <FileName>pk_ecc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\pk_ecc.c</FilePath>
+            </File>
+            <File>
               <FileName>pk_wrap.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\pk_wrap.c</FilePath>
@@ -3205,9 +3024,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>pkcs11.c</FileName>
+              <FileName>pkcs7.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\pkcs11.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\pkcs7.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -3413,14 +3232,19 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\psa_crypto_client.c</FilePath>
             </File>
             <File>
-              <FileName>psa_crypto_driver_wrappers.c</FileName>
+              <FileName>psa_crypto_driver_wrappers_no_static.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\psa_crypto_driver_wrappers.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\psa_crypto_driver_wrappers_no_static.c</FilePath>
             </File>
             <File>
               <FileName>psa_crypto_ecp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\psa_crypto_ecp.c</FilePath>
+            </File>
+            <File>
+              <FileName>psa_crypto_ffdh.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\psa_crypto_ffdh.c</FilePath>
             </File>
             <File>
               <FileName>psa_crypto_hash.c</FileName>
@@ -3431,6 +3255,11 @@
               <FileName>psa_crypto_mac.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\psa_crypto_mac.c</FilePath>
+            </File>
+            <File>
+              <FileName>psa_crypto_pake.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\psa_crypto_pake.c</FilePath>
             </File>
             <File>
               <FileName>psa_crypto_rsa.c</FileName>
@@ -3456,6 +3285,11 @@
               <FileName>psa_its_file.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\psa_its_file.c</FilePath>
+            </File>
+            <File>
+              <FileName>psa_util.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\psa_util.c</FilePath>
             </File>
             <File>
               <FileName>ripemd160.c</FileName>
@@ -3570,9 +3404,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>rsa_internal.c</FileName>
+              <FileName>rsa_alt_helpers.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\rsa_internal.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\rsa_alt_helpers.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -3680,6 +3514,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>sha3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\sha3.c</FilePath>
             </File>
             <File>
               <FileName>sha256.c</FileName>
@@ -3804,9 +3643,9 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_ciphersuites.c</FilePath>
             </File>
             <File>
-              <FileName>ssl_cli.c</FileName>
+              <FileName>ssl_client.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_cli.c</FilePath>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_client.c</FilePath>
             </File>
             <File>
               <FileName>ssl_cookie.c</FileName>
@@ -3814,14 +3653,14 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_cookie.c</FilePath>
             </File>
             <File>
+              <FileName>ssl_debug_helpers_generated.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_debug_helpers_generated.c</FilePath>
+            </File>
+            <File>
               <FileName>ssl_msg.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_msg.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssl_srv.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_srv.c</FilePath>
             </File>
             <File>
               <FileName>ssl_ticket.c</FileName>
@@ -3885,9 +3724,34 @@
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_tls.c</FilePath>
             </File>
             <File>
+              <FileName>ssl_tls12_client.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_tls12_client.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssl_tls12_server.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_tls12_server.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssl_tls13_client.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_tls13_client.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssl_tls13_generic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_tls13_generic.c</FilePath>
+            </File>
+            <File>
               <FileName>ssl_tls13_keys.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_tls13_keys.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssl_tls13_server.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\ssl_tls13_server.c</FilePath>
             </File>
             <File>
               <FileName>threading.c</FileName>
@@ -4241,6 +4105,11 @@
               </FileOption>
             </File>
             <File>
+              <FileName>x509write.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\x509write.c</FilePath>
+            </File>
+            <File>
               <FileName>x509write_crt.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\x509write_crt.c</FilePath>
@@ -4300,62 +4169,6 @@
               <FileName>x509write_csr.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\x509write_csr.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>xtea.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\openthread\third_party\mbedtls\repo\library\xtea.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -5152,7 +4965,7 @@
             <File>
               <FileName>port.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\..\Middleware\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c</FilePath>
+              <FilePath>..\freertos\port.c</FilePath>
             </File>
           </Files>
         </Group>

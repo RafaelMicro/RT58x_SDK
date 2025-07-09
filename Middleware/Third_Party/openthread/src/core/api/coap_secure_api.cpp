@@ -35,19 +35,22 @@
 
 #if OPENTHREAD_CONFIG_COAP_SECURE_API_ENABLE
 
-#include <openthread/coap_secure.h>
-#include <openthread/ip6.h>
-
-#include "coap/coap_message.hpp"
-#include "coap/coap_secure.hpp"
-#include "common/as_core_type.hpp"
-#include "common/locator_getters.hpp"
+#include "instance/instance.hpp"
 
 using namespace ot;
 
 otError otCoapSecureStart(otInstance *aInstance, uint16_t aPort)
 {
     return AsCoreType(aInstance).GetApplicationCoapSecure().Start(aPort);
+}
+
+otError otCoapSecureStartWithMaxConnAttempts(otInstance                  *aInstance,
+                                             uint16_t                     aPort,
+                                             uint16_t                     aMaxAttempts,
+                                             otCoapSecureAutoStopCallback aCallback,
+                                             void                        *aContext)
+{
+    return AsCoreType(aInstance).GetApplicationCoapSecure().Start(aPort, aMaxAttempts, aCallback, aContext);
 }
 
 #ifdef MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
@@ -122,6 +125,8 @@ bool otCoapSecureIsConnectionActive(otInstance *aInstance)
     return AsCoreType(aInstance).GetApplicationCoapSecure().IsConnectionActive();
 }
 
+bool otCoapSecureIsClosed(otInstance *aInstance) { return AsCoreType(aInstance).GetApplicationCoapSecure().IsClosed(); }
+
 void otCoapSecureStop(otInstance *aInstance) { AsCoreType(aInstance).GetApplicationCoapSecure().Stop(); }
 
 #if OPENTHREAD_CONFIG_COAP_BLOCKWISE_TRANSFER_ENABLE
@@ -167,11 +172,11 @@ void otCoapSecureRemoveResource(otInstance *aInstance, otCoapResource *aResource
     AsCoreType(aInstance).GetApplicationCoapSecure().RemoveResource(AsCoreType(aResource));
 }
 
-void otCoapSecureSetClientConnectedCallback(otInstance                     *aInstance,
-                                            otHandleCoapSecureClientConnect aHandler,
-                                            void                           *aContext)
+void otCoapSecureSetClientConnectEventCallback(otInstance                     *aInstance,
+                                               otHandleCoapSecureClientConnect aHandler,
+                                               void                           *aContext)
 {
-    AsCoreType(aInstance).GetApplicationCoapSecure().SetClientConnectedCallback(aHandler, aContext);
+    AsCoreType(aInstance).GetApplicationCoapSecure().SetConnectEventCallback(aHandler, aContext);
 }
 
 void otCoapSecureSetDefaultHandler(otInstance *aInstance, otCoapRequestHandler aHandler, void *aContext)

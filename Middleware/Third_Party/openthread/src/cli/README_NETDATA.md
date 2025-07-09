@@ -297,6 +297,7 @@ Publish an external route entry.
 
 - s: Stable flag
 - n: NAT64 flag
+- a: Advertising PIO (AP) flag
 - prf: Preference, which may be: 'high', 'med', or 'low'.
 
 ```bash
@@ -312,6 +313,7 @@ If there is no previously published external route matching old prefix, this com
 
 - s: Stable flag
 - n: NAT64 flag
+- a: Advertising PIO (AP) flag
 - prf: Preference, which may be: 'high', 'med', or 'low'.
 
 ```bash
@@ -332,9 +334,11 @@ Done
 
 ### show
 
-Usage: `netdata show [local] [-x]`
+Usage: `netdata show [local] [-x] [\<rloc16\>]`
 
 Print entries in Network Data, on-mesh prefixes, external routes, services, and 6LoWPAN context information.
+
+If the optional `rloc16` input is specified, prints the entries associated with the given RLOC16 only. The RLOC16 filtering can be used when `-x` or `local` are not used.
 
 On-mesh prefixes are listed under `Prefixes` header:
 
@@ -358,6 +362,7 @@ External Routes are listed under `Routes` header:
 - Flags
   - s: Stable flag
   - n: NAT64 flag
+  - a: Advertising PIO (AP) flag
 - Preference `high`, `med`, or `low`
 - RLOC16 of device which added the route prefix
 
@@ -369,12 +374,22 @@ Service entries are listed under `Services` header:
 - Flags
   - s: Stable flag
 - RLOC16 of devices which added the service entry
+- Service ID
 
 6LoWPAN Context IDs are listed under `Contexts` header:
 
 - The prefix
 - Context ID
 - Compress flag (`c` if marked or `-` otherwise).
+
+Commissioning Dataset information is printed under `Commissioning` header:
+
+- Session ID if present in Dataset or `-` otherwise
+- Border Agent RLOC16 (in hex) if present in Dataset or `-` otherwise
+- Joiner UDP port number if present in Dataset or `-` otherwise
+- Steering Data (as hex bytes) if present in Dataset or `-` otherwise
+- Flags:
+  - e: if Dataset contains any extra unknown TLV
 
 Print Network Data received from the Leader.
 
@@ -386,9 +401,24 @@ Routes:
 fd00:1234:0:0::/64 s med a000
 fd00:4567:0:0::/64 s med 8000
 Services:
-44970 5d fddead00beef00007bad0069ce45948504d2 s a000
+44970 5d fddead00beef00007bad0069ce45948504d2 s a000 0
 Contexts:
 fd00:dead:beef:cafe::/64 1 c
+Commissioning:
+1248 dc00 9988 00000000000120000000000000000000 e
+Done
+```
+
+Print Network Data entries from the Leader associated with `0xa00` RLOC16.
+
+```bash
+> netdata show 0xa00
+Prefixes:
+fd00:dead:beef:cafe::/64 paros med a000
+Routes:
+fd00:1234:0:0::/64 s med a000
+Services:
+44970 5d fddead00beef00007bad0069ce45948504d2 s a000 0
 Done
 ```
 

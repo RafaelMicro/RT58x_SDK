@@ -27,13 +27,13 @@
  */
 
 // Spans multiple lines to avoid being processed by unifdef
-#ifndef \
-    MBEDTLS_CONFIG_H
-#define MBEDTLS_CONFIG_H
+#ifndef MBEDTLS_CHECK_CONFIG_H
+#define MBEDTLS_CHECK_CONFIG_H
 
 #include "openthread-core-config.h"
 
 #include <stdio.h>
+#include <limits.h>
 #include <stdlib.h>
 
 #include <openthread/config.h>

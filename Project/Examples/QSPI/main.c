@@ -57,7 +57,7 @@ void SetClockFreq(void);
 #define SUBSYSTEM_CFG_PMU_MODE              0x4B0
 #define SUBSYSTEM_CFG_LDO_MODE_DISABLE      0x02
 /*this is pin mux setting*/
-void init_default_pin_mux(void)
+void Init_Default_Pin_Mux(void)
 {
 
     /*uart0 pinmux, This is default setting,
@@ -567,7 +567,9 @@ int main(void)
     uint8_t  status0, status1;
 
     /*we should set pinmux here or in SystemInit */
-    init_default_pin_mux();
+    Change_Ahb_System_Clk(SYS_48MHZ_CLK);
+
+    Init_Default_Pin_Mux();
 
     /*init debug uart port for printf*/
     console_drv_init(PRINTF_BAUDRATE);

@@ -10,6 +10,7 @@ The diagnostics module supports common diagnostics features that are listed belo
 - [diag start](#diag-start)
 - [diag channel](#diag-channel)
 - [diag cw](#diag-cw-start)
+- [diag frame](#diag-frame)
 - [diag stream](#diag-stream-start)
 - [diag power](#diag-power)
 - [diag powersettings](#diag-powersettings)
@@ -74,6 +75,26 @@ Stop transmitting continuous carrier wave.
 
 ```bash
 > diag cw stop
+Done
+```
+
+### diag frame
+
+Usage: `diag frame [-b MaxCsmaBackoffs] [-c] [-C RxChannelAfterTxDone] [-d TxDelay] [-p TxPower] [-r MaxFrameRetries] [-s] [-u] <frame>`
+
+Set the frame (hex encoded) to be used by `diag send` and `diag repeat`. The frame may be overwritten by `diag send` and `diag repeat`.
+
+- Specify `-b` to specify the `mInfo.mTxInfo.mMaxCsmaBackoffs` field for this frame.
+- Specify `-c` to enable CSMA/CA for this frame in the radio layer.
+- Specify `-C` to specify the `mInfo.mTxInfo.mRxChannelAfterTxDone` field for this frame.
+- Specify `-d` to specify the `mInfo.mTxInfo.mTxDelay` field for this frame and the `mInfo.mTxInfo.mTxDelayBaseTime` field is set to the current radio time.
+- Specify `-p` to specify the tx power in dBm for this frame.
+- Specify `-r` to specify the `mInfo.mTxInfo.mMaxFrameRetries` field for this frame.
+- Specify `-s` to indicate that tx security is already processed thus it should be skipped in the radio layer.
+- Specify `-u` to specify the `mInfo.mTxInfo.mIsHeaderUpdated` field for this frame.
+
+```bash
+> diag frame 11223344
 Done
 ```
 
@@ -143,11 +164,11 @@ RawPowerSetting: 223344
 Done
 ```
 
-### diag send \<packets\> \<length\>
+### diag send \<packets\> [length]
 
-Transmit a fixed number of packets with fixed length.
+Transmit a fixed number of packets.
 
-Length parameter has to be in range [3, 127].
+Send the frame set by `diag frame` if length is omitted. Otherwise overwrite the frame set by `diag frame` and send a frame of the given length(MUST be in range [3, 127]).
 
 ```bash
 > diag send 20 100
@@ -155,11 +176,11 @@ sending 0x14 packet(s), length 0x64
 status 0x00
 ```
 
-### diag repeat \<delay\> \<length\>
+### diag repeat \<delay\> [length]
 
 Transmit packets repeatedly with a fixed interval.
 
-Length parameter has to be in range [3, 127].
+Send the frame set by `diag frame` if length is omitted. Otherwise overwrite the frame set by `diag frame` and send a frame of the given length (MUST be in range [3, 127]).
 
 ```bash
 > diag repeat 100 100
@@ -197,6 +218,26 @@ set radio from sleep to receive on channel 11
 status 0x00
 ```
 
+### diag radio receive \[async\] \<number\> \[lpr\]
+
+Set the radio to receive mode and receive a specified number of frames.
+
+- async: Use the non-blocking mode.
+- number: The number of frames expected to be received.
+- l: Show Lqi.
+- p: Show Psdu.
+- r: Show Rssi.
+
+```bash
+> diag radio receive 5 lpr
+0, rssi:-49, lqi:119, len:10, psdu:000102030405060771e
+1, rssi:-51, lqi:112, len:10, psdu:000102030405060771e
+2, rssi:-42, lqi:120, len:10, psdu:000102030405060771e
+3, rssi:-54, lqi:111, len:10, psdu:000102030405060771e
+4, rssi:-56, lqi:108, len:10, psdu:000102030405060771e
+Done
+```
+
 ### diag radio state
 
 Return the state of the radio.
@@ -204,6 +245,24 @@ Return the state of the radio.
 ```bash
 > diag radio state
 sleep
+```
+
+### diag radio enable
+
+Enable radio interface and put it in receive mode.
+
+```bash
+> diag radio enable
+Done
+```
+
+### diag radio disable
+
+Disable radio interface.
+
+```bash
+> diag radio disable
+Done
 ```
 
 ### diag rawpowersetting

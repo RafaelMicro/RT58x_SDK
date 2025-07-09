@@ -21,7 +21,7 @@ extern "C" {
 #if (MODULE_ENABLE(SUPPORT_MULTITASKING))
 #define MEM_MGMT_HEAP_SIZE           ((size_t)(SYS_HEAP_SIZE_BY_K << 10))
 #else
-#define MEM_MGMT_HEAP_SIZE           ((size_t)(10 << 10))
+#define MEM_MGMT_HEAP_SIZE           ((size_t)(16 << 10))
 #endif
 //=============================================================================
 //                Public ENUM

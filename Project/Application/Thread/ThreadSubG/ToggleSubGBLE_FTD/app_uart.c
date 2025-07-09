@@ -141,78 +141,82 @@ static void __uart1_signal(void)
 
 static int __uart_rx_callback(void *p_arg)
 {
-    uint32_t len = 0;
-    if (g_uart_rx_io.start >= g_uart_rx_io.end)
+    uint32_t new_data_len = 0;
+    uint16_t start = g_uart_rx_io.start;
+    uint16_t end = g_uart_rx_io.end;
+
+    // Calculate the available buffer space for writing
+    new_data_len = (start - end - 1 + RX_BUFF_SIZE) % RX_BUFF_SIZE;
+
+    if (new_data_len == 0)
     {
-        g_uart_rx_io.start += hosal_uart_receive(p_arg, g_uart_rx_io.uart_cache + g_uart_rx_io.start,
-                              RX_BUFF_SIZE - g_uart_rx_io.start - 1);
-        if (g_uart_rx_io.start == (RX_BUFF_SIZE - 1))
-        {
-            g_uart_rx_io.start = hosal_uart_receive(p_arg, g_uart_rx_io.uart_cache,
-                                                    (RX_BUFF_SIZE + g_uart_rx_io.end - 1) % RX_BUFF_SIZE);
-        }
-    }
-    else if (((g_uart_rx_io.start + 1) % RX_BUFF_SIZE) != g_uart_rx_io.end)
-    {
-        g_uart_rx_io.start += hosal_uart_receive(p_arg, g_uart_rx_io.uart_cache,
-                              g_uart_rx_io.end - g_uart_rx_io.start - 1);
+        return 0;  // No space to write to
     }
 
-    if (g_uart_rx_io.start != g_uart_rx_io.end)
-    {
+    uint32_t received = hosal_uart_receive(p_arg, g_uart_rx_io.uart_cache + end, new_data_len);
+    g_uart_rx_io.end = (g_uart_rx_io.end + received) % RX_BUFF_SIZE;
 
-        len = (g_uart_rx_io.start + RX_BUFF_SIZE - g_uart_rx_io.end) % RX_BUFF_SIZE;
-        if (g_uart_rx_io.recvLen != len)
-        {
-            g_uart_rx_io.recvLen = len;
-            UART1_NOTIFY_ISR(UART1_EVENT_UART_IN);
-        }
-    }
+    // Update receiving length
+    g_uart_rx_io.recvLen = (RX_BUFF_SIZE + g_uart_rx_io.start - g_uart_rx_io.end) % RX_BUFF_SIZE;
 
     return 0;
 }
 
-static int __uart_read(uint8_t *p_data)
+static int __uart_read(uint8_t *p_data, uint32_t p_data_len)
 {
     uint32_t byte_cnt = 0;
-    hosal_uart_ioctl(&uart1_dev, HOSAL_UART_DISABLE_INTERRUPT, (void *)NULL);
 
-    if (g_uart_rx_io.start != g_uart_rx_io.end)
+    if (p_data == NULL || p_data_len == 0)
     {
-        if (g_uart_rx_io.start > g_uart_rx_io.end)
-        {
-            memcpy(p_data, g_uart_rx_io.uart_cache + g_uart_rx_io.end, g_uart_rx_io.start - g_uart_rx_io.end);
-            byte_cnt = g_uart_rx_io.start - g_uart_rx_io.end;
-            g_uart_rx_io.end = g_uart_rx_io.start;
-        }
-        else
-        {
-            memcpy(p_data, g_uart_rx_io.uart_cache + g_uart_rx_io.end, RX_BUFF_SIZE - g_uart_rx_io.end);
-            byte_cnt = RX_BUFF_SIZE - g_uart_rx_io.end;
-            g_uart_rx_io.end = RX_BUFF_SIZE - 1;
+        return 0;
+    }
+    enter_critical_section();
 
-            if (g_uart_rx_io.start)
-            {
-                memcpy(&p_data[byte_cnt], g_uart_rx_io.uart_cache, g_uart_rx_io.start);
-                byte_cnt += g_uart_rx_io.start;
-                g_uart_rx_io.end = (RX_BUFF_SIZE + g_uart_rx_io.start - 1) % RX_BUFF_SIZE;
-            }
-        }
+    uint16_t start = g_uart_rx_io.start;
+    uint16_t end = g_uart_rx_io.end;
+    uint32_t available = (RX_BUFF_SIZE + end - start) % RX_BUFF_SIZE; // Calculate the length of data that can be read
+
+    if (available == 0)
+    {
+        leave_critical_section();
+        return 0;  // No new data to read
     }
 
-    g_uart_rx_io.start = g_uart_rx_io.end = 0;
-    g_uart_rx_io.recvLen = 0;
-    hosal_uart_ioctl(&uart1_dev, HOSAL_UART_ENABLE_INTERRUPT, (void *)NULL);
+    byte_cnt = (available < p_data_len) ? available : p_data_len;
+
+    if (start + byte_cnt < RX_BUFF_SIZE)
+    {
+        memcpy(p_data, g_uart_rx_io.uart_cache + start, byte_cnt);
+        g_uart_rx_io.start = (start + byte_cnt) % RX_BUFF_SIZE;  // Update start pointer after read
+    }
+    else
+    {
+        uint32_t first_part = RX_BUFF_SIZE - start;
+        memcpy(p_data, g_uart_rx_io.uart_cache + start, first_part);
+
+        uint32_t second_part = byte_cnt - first_part;
+        if (second_part > 0)
+        {
+            memcpy(p_data + first_part, g_uart_rx_io.uart_cache, second_part);
+        }
+
+        g_uart_rx_io.start = second_part;  // update start pointer after wraparound
+    }
+
+    g_uart_rx_io.recvLen = (RX_BUFF_SIZE + g_uart_rx_io.start - g_uart_rx_io.end) % RX_BUFF_SIZE;
+
+    leave_critical_section();
+
     return byte_cnt;
 }
 
 static void __uart1_process()
 {
-    uint8_t tmp_buff[128];
+    static uint8_t tmp_buff[128];
     uint16_t len = 0;
 
 
-    len = __uart_read(tmp_buff);
+    len = __uart_read(tmp_buff, 128);
 
     // util_log_mem(UTIL_LOG_INFO, "  ", (uint8_t *)tmp_buff, len, 0);
     app_uart_command_parse((uint8_t *)&tmp_buff, len);
