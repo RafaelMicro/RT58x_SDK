@@ -17,14 +17,14 @@ jobs:
 
       - name: 打包整個專案（包含 submodule）
         run: |
-            zip -r RT58x_SDK_v1.9.6.zip . \
+            zip -r RT58x_SDK_v1.9.5.zip . \
               -x ".git/*" ".gitignore" ".github/*"
 
       - name: 建立 GitHub Release 並上傳打包檔案
         env:
           GH_TOKEN: ${{ secrets.RAFAEL_PRIV_TOKEN }}  # 使用 GitHub 提供的 token 來執行動作
         run: |
-          gh release create "v1.9.6" \
-            --title "RT58x_SDK_v1.9.6" \
-            --notes "RT58x_SDK_v1.9.6" \
-            RT58x_SDK_v1.9.6.zip
+          gh release create "v1.9.5" \
+            --title "RT58x_SDK_v1.9.5" \
+            --notes "RT58x_SDK_v1.9.5" \
+            RT58x_SDK_v1.9.5.zip
