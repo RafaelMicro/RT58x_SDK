@@ -20,8 +20,8 @@ jobs:
           zip -r full_release_with_submodule.zip .
 
       - name: 建立 GitHub Release 並上傳打包檔案
-        #env:
-        #  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.RAFAEL_PRIV_TOKEN }}  # 使用 GitHub 提供的 token 來執行動作
         run: |
           gh release create "RT58x_SDK_vTest" \
             --title "Release RT58x_SDK_vTest" \
