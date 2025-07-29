@@ -17,7 +17,7 @@ jobs:
 
       - name: 打包整個專案（包含 submodule）
         run: |
-            zip -r full_release_with_submodule.zip . \
+            zip -r RT58x_SDK_v1.9.6.zip . \
               -x ".git/*" ".gitignore" ".github/*"
 
       - name: 建立 GitHub Release 並上傳打包檔案
