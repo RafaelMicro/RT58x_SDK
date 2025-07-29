@@ -1,3 +1,5 @@
+name: rt58x sdk release
+
 on:
   workflow_dispatch:
 
