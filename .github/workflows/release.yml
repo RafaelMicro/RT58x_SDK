@@ -1,0 +1,27 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 主專案並初始化 submodule
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: 安裝 zip 工具（如尚未安裝）
+        run: sudo apt-get install -y zip
+
+      - name: 打包整個專案（包含 submodule）
+        run: |
+          zip -r full_release_with_submodule.zip .
+
+      - name: 建立 GitHub Release 並上傳打包檔案
+        #env:
+        #  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "RT58x_SDK_vTest" \
+            --title "Release RT58x_SDK_vTest" \
+            --notes "RT58x_SDK_vTest" \
+            full_release_with_submodule.zip
