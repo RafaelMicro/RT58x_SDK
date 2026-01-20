@@ -7,10 +7,10 @@
  About the content of Software Release Note
 [RT58x SDK Release Note](https://github.com/RafaelMicro/RT58x_SDK/blob/main/RT58x_SDK_Release_Notes.pdf "link")
 
-## Supported ICs
-- RT581
-- RT582
-- RT583
+## Supported ICs List<a id="supportic"></a>
+- **[RT581, RT582, RT583](#supportic)**
+
+---
 
 ## Evaluation Kit Board
 The RT58x EVK provides an SWD interface with connector for use with an ICE debugger (J-Link Adapter) via 20pin IDE cable.
